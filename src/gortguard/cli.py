@@ -49,6 +49,7 @@ def _build(args):
     split = lambda s: [x.strip() for x in (s or "").split(",") if x.strip()]
     pk = P.pack(args.preset, split(args.bundles), split(args.exclude))
     text = pk.policy()
+    cases = pk.evals(args.depth, split(args.focus))  # before writing, so a bad --focus writes nothing
     if args.output == "-":
         sys.stdout.write(text)
     else:
@@ -59,11 +60,12 @@ def _build(args):
         print("Place it in your system prompt with a {{gort_policy}} placeholder.")
         print(f"Wrote {args.checklist}: {len(pk.patterns) - n} fixes for code, the chat widget or your")
         print("process, kept out of the prompt because the model cannot carry them out.")
-        cases = pk.evals()
         with Path(args.evals).open("w", encoding="utf-8") as f:
             f.writelines(json.dumps(c, ensure_ascii=False) + "\n" for c in cases)
         n_counter = sum(c["counter"] for c in cases)
-        print(f"Wrote {args.evals}: {len(cases)} eval cases ({n_counter} check for over-correction).")
+        focus = f", focus {args.focus}" if args.focus else ""
+        print(f"Wrote {args.evals}: {len(cases)} {args.depth} eval cases{focus} "
+              f"({n_counter} check for over-correction).")
         print("Not yet run. `gort test` will run them against your agent.")
 
 
@@ -85,6 +87,10 @@ def main(argv=None):
     s.add_argument("-o", "--output", default="gort-policy.md", help="policy file to write, or - for stdout")
     s.add_argument("--checklist", default="gort-checklist.md", help="file for fixes that are not prompt text")
     s.add_argument("--evals", default="gort-evals.jsonl", help="file for eval cases, one JSON object per line")
+    s.add_argument("--depth", choices=P.DEPTHS, default="lite",
+                   help="lite: one case and one over-correction case per pattern; deep: every case")
+    s.add_argument("--focus", help="comma-separated: bundle, family, place (prompt, code, ui, process), "
+                   "Pattern ID or over-correct")
     s.set_defaults(fn=_build)
     args = parser.parse_args(argv)
     if not args.cmd:

@@ -13,6 +13,8 @@ gort search "transfer"            # find the bundle for a topic
 gort show handoff                 # patterns in one bundle
 gort build --preset support-bot --exclude cold-transfer   # writes gort-policy.md (prompt) and gort-checklist.md (code, chat widget, process)
 # also writes gort-evals.jsonl: eval cases from the library tests for the same patterns (not yet run)
+gort build --preset support-bot --depth deep             # lite (default): 1 case + 1 over-correction case per pattern; deep: every case
+gort build --preset support-bot --focus handoff,over-correct   # one type: bundle, family, place (prompt, code, ui, process), Pattern ID or over-correct
 ```
 
 ```python

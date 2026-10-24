@@ -92,6 +92,33 @@ def _rule(text: str) -> str:
     return re.sub(r"^Rule \d+:\s*", "", text).strip()
 
 
+DEPTHS = ("lite", "deep")
+_FAMILIES = {p["family"] for p in PATTERNS}
+
+
+def _focus(name: str):
+    """One --focus value as (kind, test). Values of one kind are OR'd; different kinds are AND'd."""
+    name = str(name).strip().lower()
+    if name in ("over-correct", "over-correction", "counter"):
+        return "counter", lambda p, c: c["counter"]
+    if name in PLACES or name == "prompt":
+        return "place", lambda p, c: name in p["place"]
+    if name in _FAMILIES:
+        return "topic", lambda p, c: p["family"] == name
+    if name in BY_ID:
+        return "topic", lambda p, c: p["id"] == name
+    if name in BUNDLES or name in _ALIASES:
+        fams = set(BUNDLES[resolve_bundle(name)]["families"])
+        return "topic", lambda p, c: p["family"] in fams
+    known = ["over-correct", "prompt", *PLACES, *BUNDLES, *_ALIASES, *_FAMILIES, *BY_ID]
+    close = difflib.get_close_matches(name, known, n=3)
+    hint = f" Did you mean: {', '.join(close)}?" if close else ""
+    raise ValueError(
+        f"Unknown focus '{name}'.{hint} Use a bundle, family, place (prompt, code, ui, process), "
+        "Pattern ID or over-correct."
+    )
+
+
 class Pack:
     def __init__(self, preset=None, bundles=(), exclude=()):
         names = list(PRESETS[resolve_preset(preset)]["bundles"]) if preset else []
@@ -130,14 +157,34 @@ class Pack:
                 out += [f"- [ ] {_rule(p['starter_rule'])} [{p['id']}]" for p in items]
         return "\n".join(out) + "\n"
 
-    def evals(self) -> list[dict]:
-        """One eval case per item, from the library's test files (or page designs), for this pack only."""
+    def evals(self, depth: str = "deep", focus=()) -> list[dict]:
+        """Eval cases from the library's test files (or page designs), for this pack only.
+
+        depth: "lite" keeps the first ordinary case and the first over-correction case per pattern;
+        "deep" keeps every case. focus narrows to a type: a bundle or alias, a family, a place
+        (prompt, code, ui, process), a Pattern ID, or "over-correct". "handoff,over-correct"
+        means handoff cases that check for over-correction; "ui,code" means either place.
+        """
+        if depth not in DEPTHS:
+            raise ValueError(f"Unknown depth '{depth}'. Use one of: {', '.join(DEPTHS)}.")
+        keep: dict[str, list] = {}
+        for f in focus:
+            kind, test = _focus(f)
+            keep.setdefault(kind, []).append(test)
         cases = []
         for p in self.patterns:
             ev = EVALS.get(p["id"])
             if not ev:
                 continue
-            for c in ev["cases"]:
+            picked = ev["cases"]
+            if depth == "lite":
+                picked = [c for c in (
+                    next((c for c in picked if not c["counter"]), None),
+                    next((c for c in picked if c["counter"]), None),
+                ) if c]
+            for c in picked:
+                if not all(any(t(p, c) for t in tests) for tests in keep.values()):
+                    continue
                 cases.append({
                     "pattern": p["id"],
                     "name": p["name"],
@@ -150,6 +197,8 @@ class Pack:
                     "source": ev["source"],
                     "page": p["page"],
                 })
+        if keep and not cases:
+            raise ValueError(f"No eval cases in this pack match --focus {', '.join(focus)}.")
         return cases
 
 

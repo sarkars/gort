@@ -52,13 +52,34 @@ def test_every_chat_pattern_has_evals(tmp_path):
     assert all(P.EVALS.get(p["id"], {}).get("cases") for p in chat)
     ev = tmp_path / "gort-evals.jsonl"
     args = ["build", "--bundles", "handoff", "-o", str(tmp_path / "p.md"), "--checklist", str(tmp_path / "c.md")]
-    assert main([*args, "--evals", str(ev)]) == 0
+    assert main([*args, "--evals", str(ev), "--depth", "deep"]) == 0
     cases = [json.loads(ln) for ln in ev.read_text(encoding="utf-8").splitlines()]
     ids = {p["id"] for p in P.bundle_patterns("handoff")}
     assert {c["pattern"] for c in cases} == ids
     assert any(c["counter"] for c in cases)
     first = next(c for c in cases if c["pattern"] == "talk-to-a-human-ignored-or-looped")
     assert first["case"] == "Plain request" and [r["line"] for r in first["rubric"]] == ["R1", "R3"]
+
+
+def test_eval_depth_and_focus():
+    pk = P.pack("support-bot")
+    deep, lite = pk.evals("deep"), pk.evals("lite")
+    per = {}
+    for c in lite:
+        per.setdefault(c["pattern"], []).append(c["counter"])
+    assert len(lite) < len(deep) and all(sorted(v) in ([False], [False, True]) for v in per.values())
+    assert all(c["counter"] for c in pk.evals("deep", ["over-correct"]))
+    assert all("ui" in c["place"] for c in pk.evals("lite", ["ui"]))
+    assert {c["pattern"] for c in pk.evals("deep", ["escalation"])} == {p["id"] for p in P.bundle_patterns("handoff")}
+    assert {c["pattern"] for c in pk.evals("deep", ["cold-transfer"])} == {"cold-transfer"}
+    both = pk.evals("deep", ["handoff", "over-correct"])  # different kinds: AND
+    assert both and all(c["counter"] and c["pattern"] in {p["id"] for p in P.bundle_patterns("handoff")} for c in both)
+    either = pk.evals("deep", ["ui", "code"])  # same kind: OR
+    assert {c["pattern"] for c in either} == {p["id"] for p in pk.patterns if {"ui", "code"} & set(p["place"])}
+    with pytest.raises(ValueError, match="Unknown focus"):
+        pk.evals("lite", ["handof"])
+    with pytest.raises(ValueError, match="No eval cases"):
+        pk.evals("lite", ["money"])  # money is not in support-bot
 
 
 def test_widget_rules_stay_out_of_prompt():
