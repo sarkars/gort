@@ -14,6 +14,7 @@ PRESETS = _CFG["presets"]
 LATER = _CFG["later"]["families"]
 BY_ID = {p["id"]: p for p in PATTERNS}
 _PLACE = json.loads((_DATA / "placement.json").read_text(encoding="utf-8"))["place"]
+EVALS = json.loads((_DATA / "evals.json").read_text(encoding="utf-8"))
 for _p in PATTERNS:
     _p["place"] = _PLACE.get(_p["id"], ["prompt"])
 
@@ -128,6 +129,28 @@ class Pack:
                 out.append(f"\n## {title}\n")
                 out += [f"- [ ] {_rule(p['starter_rule'])} [{p['id']}]" for p in items]
         return "\n".join(out) + "\n"
+
+    def evals(self) -> list[dict]:
+        """One eval case per item, from the library's test files (or page designs), for this pack only."""
+        cases = []
+        for p in self.patterns:
+            ev = EVALS.get(p["id"])
+            if not ev:
+                continue
+            for c in ev["cases"]:
+                cases.append({
+                    "pattern": p["id"],
+                    "name": p["name"],
+                    "place": p["place"],
+                    "case": c["title"],
+                    "counter": c["counter"],
+                    "steps": c["steps"],
+                    "rubric": [r for r in ev["rubric"] if r["line"] in c["rubric"]],
+                    "over_correct": ev["over_correct"],
+                    "source": ev["source"],
+                    "page": p["page"],
+                })
+        return cases
 
 
 def pack(preset=None, bundles=(), exclude=()) -> Pack:

@@ -1,4 +1,5 @@
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -58,6 +59,12 @@ def _build(args):
         print("Place it in your system prompt with a {{gort_policy}} placeholder.")
         print(f"Wrote {args.checklist}: {len(pk.patterns) - n} fixes for code, the chat widget or your")
         print("process, kept out of the prompt because the model cannot carry them out.")
+        cases = pk.evals()
+        with Path(args.evals).open("w", encoding="utf-8") as f:
+            f.writelines(json.dumps(c, ensure_ascii=False) + "\n" for c in cases)
+        n_counter = sum(c["counter"] for c in cases)
+        print(f"Wrote {args.evals}: {len(cases)} eval cases ({n_counter} check for over-correction).")
+        print("Not yet run. `gort test` will run them against your agent.")
 
 
 def main(argv=None):
@@ -77,6 +84,7 @@ def main(argv=None):
     s.add_argument("--exclude", help="comma-separated Pattern IDs to leave out")
     s.add_argument("-o", "--output", default="gort-policy.md", help="policy file to write, or - for stdout")
     s.add_argument("--checklist", default="gort-checklist.md", help="file for fixes that are not prompt text")
+    s.add_argument("--evals", default="gort-evals.jsonl", help="file for eval cases, one JSON object per line")
     s.set_defaults(fn=_build)
     args = parser.parse_args(argv)
     if not args.cmd:

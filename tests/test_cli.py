@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from gortguard import pack as P
@@ -43,6 +45,20 @@ def test_support_bot_build_has_only_its_patterns(tmp_path):
         assert (f"{p['id']}]" in text or f"{p['id']}," in text) == (ours and "prompt" in p["place"]), p["id"]
         assert (f"[{p['id']}]" in checklist) == (ours and p["place"] != ["prompt"]), p["id"]
     assert text.splitlines()[1] == P.PRECEDENCE
+
+
+def test_every_chat_pattern_has_evals(tmp_path):
+    chat = [p for p in P.PATTERNS if P.bundle_of(p["family"])]
+    assert all(P.EVALS.get(p["id"], {}).get("cases") for p in chat)
+    ev = tmp_path / "gort-evals.jsonl"
+    args = ["build", "--bundles", "handoff", "-o", str(tmp_path / "p.md"), "--checklist", str(tmp_path / "c.md")]
+    assert main([*args, "--evals", str(ev)]) == 0
+    cases = [json.loads(ln) for ln in ev.read_text(encoding="utf-8").splitlines()]
+    ids = {p["id"] for p in P.bundle_patterns("handoff")}
+    assert {c["pattern"] for c in cases} == ids
+    assert any(c["counter"] for c in cases)
+    first = next(c for c in cases if c["pattern"] == "talk-to-a-human-ignored-or-looped")
+    assert first["case"] == "Plain request" and [r["line"] for r in first["rubric"]] == ["R1", "R3"]
 
 
 def test_widget_rules_stay_out_of_prompt():

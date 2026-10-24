@@ -12,6 +12,7 @@ gort bundles                      # presets and bundles, with aliases
 gort search "transfer"            # find the bundle for a topic
 gort show handoff                 # patterns in one bundle
 gort build --preset support-bot --exclude cold-transfer   # writes gort-policy.md (prompt) and gort-checklist.md (code, chat widget, process)
+# also writes gort-evals.jsonl: eval cases from the library tests for the same patterns (not yet run)
 ```
 
 ```python
