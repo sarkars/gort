@@ -11,7 +11,7 @@ Best-practice packs and checks for AI agents, built from the failure patterns at
 gort bundles                      # presets and bundles, with aliases
 gort search "transfer"            # find the bundle for a topic
 gort show handoff                 # patterns in one bundle
-gort build --preset support-bot --exclude cold-transfer   # writes gort-policy.md
+gort build --preset support-bot --exclude cold-transfer   # writes gort-policy.md (prompt) and gort-checklist.md (code, chat widget, process)
 ```
 
 ```python

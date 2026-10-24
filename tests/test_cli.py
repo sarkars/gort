@@ -34,13 +34,22 @@ def test_alias_resolves():
 
 
 def test_support_bot_build_has_only_its_patterns(tmp_path):
-    out = tmp_path / "gort-policy.md"
-    assert main(["build", "--preset", "support-bot", "-o", str(out)]) == 0
-    text = out.read_text(encoding="utf-8")
+    out, chk = tmp_path / "gort-policy.md", tmp_path / "gort-checklist.md"
+    assert main(["build", "--preset", "support-bot", "-o", str(out), "--checklist", str(chk)]) == 0
+    text, checklist = out.read_text(encoding="utf-8"), chk.read_text(encoding="utf-8")
     fams = {f for b in P.PRESETS["support-bot"]["bundles"] for f in P.BUNDLES[b]["families"]}
     for p in P.PATTERNS:
-        assert (p["id"] in text) == (p["family"] in fams), p["id"]
+        ours = p["family"] in fams
+        assert (f"{p['id']}]" in text or f"{p['id']}," in text) == (ours and "prompt" in p["place"]), p["id"]
+        assert (f"[{p['id']}]" in checklist) == (ours and p["place"] != ["prompt"]), p["id"]
     assert text.splitlines()[1] == P.PRECEDENCE
+
+
+def test_widget_rules_stay_out_of_prompt():
+    text = P.pack(bundles=["access-and-language"]).policy()
+    assert "live region" not in text
+    assert all(set(v) <= {"prompt", "code", "ui", "process"} for v in P._PLACE.values())
+    assert set(P._PLACE) <= set(P.BY_ID)
 
 
 def test_exclude_and_constants():

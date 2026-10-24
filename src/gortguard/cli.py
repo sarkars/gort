@@ -52,8 +52,12 @@ def _build(args):
         sys.stdout.write(text)
     else:
         Path(args.output).write_text(text, encoding="utf-8")
-        print(f"Wrote {args.output}: {len(pk.patterns)} patterns from {', '.join(pk.bundles)}.")
+        Path(args.checklist).write_text(pk.checklist(), encoding="utf-8")
+        n = len(pk.prompt_patterns)
+        print(f"Wrote {args.output}: {n} prompt rules from {', '.join(pk.bundles)}.")
         print("Place it in your system prompt with a {{gort_policy}} placeholder.")
+        print(f"Wrote {args.checklist}: {len(pk.patterns) - n} fixes for code, the chat widget or your")
+        print("process, kept out of the prompt because the model cannot carry them out.")
 
 
 def main(argv=None):
@@ -71,7 +75,8 @@ def main(argv=None):
     s.add_argument("--preset")
     s.add_argument("--bundles", help="comma-separated bundle names or aliases")
     s.add_argument("--exclude", help="comma-separated Pattern IDs to leave out")
-    s.add_argument("-o", "--output", default="gort-policy.md", help="file to write, or - for stdout")
+    s.add_argument("-o", "--output", default="gort-policy.md", help="policy file to write, or - for stdout")
+    s.add_argument("--checklist", default="gort-checklist.md", help="file for fixes that are not prompt text")
     s.set_defaults(fn=_build)
     args = parser.parse_args(argv)
     if not args.cmd:

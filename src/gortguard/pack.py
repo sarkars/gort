@@ -13,6 +13,15 @@ BUNDLES = _CFG["bundles"]
 PRESETS = _CFG["presets"]
 LATER = _CFG["later"]["families"]
 BY_ID = {p["id"]: p for p in PATTERNS}
+_PLACE = json.loads((_DATA / "placement.json").read_text(encoding="utf-8"))["place"]
+for _p in PATTERNS:
+    _p["place"] = _PLACE.get(_p["id"], ["prompt"])
+
+PLACES = {
+    "code": "Code checks in your agent's server (guardrails)",
+    "ui": "Chat widget",
+    "process": "Tests and reviews your team runs",
+}
 
 PRECEDENCE = (
     "Precedence: your own business rules come first, then safety, then the style lines below. "
@@ -97,14 +106,28 @@ class Pack:
         fams = {f for b in self.bundles for f in BUNDLES[b]["families"]}
         self.patterns = [p for p in PATTERNS if p["family"] in fams and p["id"] not in set(exclude)]
 
+    @property
+    def prompt_patterns(self) -> list[dict]:
+        return [p for p in self.patterns if "prompt" in p["place"]]
+
     def policy(self) -> str:
-        """The policy block: precedence line, then one line per rule tagged with its Pattern IDs."""
+        """The policy block: precedence line, then one line per rule the model can follow."""
         merged: dict[str, list[str]] = {}
-        for p in self.patterns:
+        for p in self.prompt_patterns:
             merged.setdefault(_rule(p["starter_rule"]), []).append(p["id"])
         lines = [f"- {rule} [{', '.join(ids)}]" for rule, ids in merged.items()]
-        head = f"<!-- gort policy. Bundles: {', '.join(self.bundles)}. {len(self.patterns)} patterns. -->"
+        head = f"<!-- gort policy. Bundles: {', '.join(self.bundles)}. {len(merged)} lines. -->"
         return "\n".join([head, PRECEDENCE, "", *lines]) + "\n"
+
+    def checklist(self) -> str:
+        """Fixes that do not belong in the prompt, grouped by where they go."""
+        out = [f"# GORT checklist: not prompt text\n\nBundles: {', '.join(self.bundles)}."]
+        for place, title in PLACES.items():
+            items = [p for p in self.patterns if place in p["place"]]
+            if items:
+                out.append(f"\n## {title}\n")
+                out += [f"- [ ] {_rule(p['starter_rule'])} [{p['id']}]" for p in items]
+        return "\n".join(out) + "\n"
 
 
 def pack(preset=None, bundles=(), exclude=()) -> Pack:
