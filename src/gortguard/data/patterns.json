@@ -1,0 +1,1801 @@
+[
+ {
+  "id": "streaming-text-read-out-token-by-token",
+  "name": "Streaming text read out token by token",
+  "family": "accessibility",
+  "starter_rule": "the streamed reply is never written to a live region; announce \"Generating a response\" once, then the complete reply or \"Response complete\" once.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/streaming-text-read-out-token-by-token.md"
+ },
+ {
+  "id": "no-accessible-working-or-done-signal",
+  "name": "No accessible working or done signal",
+  "family": "accessibility",
+  "starter_rule": "every send writes a \"working\" status within 1 second and a \"done\" status at completion, in a live region present at page load.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/no-accessible-working-or-done-signal.md"
+ },
+ {
+  "id": "controls-unreachable-by-keyboard",
+  "name": "Controls unreachable by keyboard",
+  "family": "accessibility",
+  "starter_rule": "every chat control is a native button that Tab reaches in order, shows focus, and never drops focus when used.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/controls-unreachable-by-keyboard.md"
+ },
+ {
+  "id": "voice-only-flows-with-no-text-alternative",
+  "name": "Voice-only flows with no text alternative",
+  "family": "accessibility",
+  "starter_rule": "Rule 2: the first turn of any voice flow names a text route.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/voice-only-flows-with-no-text-alternative.md"
+ },
+ {
+  "id": "timeouts-too-short-for-assistive-technology",
+  "name": "Timeouts too short for assistive technology",
+  "family": "accessibility",
+  "starter_rule": "never end a chat on a timer the user can't see, adjust, or extend with one action, and never count slow input as absence.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/timeouts-too-short-for-assistive-technology.md"
+ },
+ {
+  "id": "language-that-is-hard-for-people-with-cognitive-disabilities",
+  "name": "Language that is hard for people with cognitive disabilities",
+  "family": "accessibility",
+  "starter_rule": "use common words, one idea per sentence, one instruction per step, and one name for each thing.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/language-that-is-hard-for-people-with-cognitive-disabilities.md"
+ },
+ {
+  "id": "identity-checks-that-exclude-disabled-users",
+  "name": "Identity checks that exclude disabled users",
+  "family": "accessibility",
+  "starter_rule": "before any identity check, offer at least two methods that need different abilities, plus a person.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/identity-checks-that-exclude-disabled-users.md"
+ },
+ {
+  "id": "missing-or-wrong-captions-and-transcripts",
+  "name": "Missing or wrong captions and transcripts",
+  "family": "accessibility",
+  "starter_rule": "every audio or video item in the chat has an accurate text version, the user sees what the bot heard, and the user can correct it.",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/missing-or-wrong-captions-and-transcripts.md"
+ },
+ {
+  "id": "child-user-treated-as-adult",
+  "name": "Child user treated as adult",
+  "family": "age-adaptation",
+  "starter_rule": "when age signals suggest a child, change what the bot collects, says, and asks for, not just its vocabulary.",
+  "page": "agents/by-capability/human-machine-interface/goals/age-adaptation/failures/child-user-treated-as-adult.md"
+ },
+ {
+  "id": "fraud-alert-conversations-that-look-like-phishing",
+  "name": "Fraud-alert conversations that look like phishing",
+  "family": "banking-agents",
+  "starter_rule": "a fraud alert never asks the customer to click a link to verify, or to share a code, password, PIN or full card number, and tells them to check through the app or the number on their card.",
+  "page": "agents/by-capability/human-machine-interface/goals/banking-agents/failures/fraud-alert-conversations-that-look-like-phishing.md"
+ },
+ {
+  "id": "unusual-activity-explained-too-vaguely",
+  "name": "Unusual activity explained too vaguely",
+  "family": "banking-agents",
+  "starter_rule": "every fraud alert states the transaction (as approved), what was done to the card or account, one answerable question and how to verify the message, and never why it was flagged.",
+  "page": "agents/by-capability/human-machine-interface/goals/banking-agents/failures/unusual-activity-explained-too-vaguely.md"
+ },
+ {
+  "id": "accepts-consent-pop-ups-for-the-user",
+  "name": "Accepts consent pop-ups for the user",
+  "family": "browser-agents",
+  "starter_rule": "never click accept on a consent pop-up unless the user chose it; ask, or take the most private option and say so.",
+  "page": "agents/by-capability/human-machine-interface/goals/browser-agents/failures/accepts-consent-pop-ups-for-the-user.md"
+ },
+ {
+  "id": "bypasses-captchas-or-site-terms",
+  "name": "Bypasses CAPTCHAs or site terms",
+  "family": "browser-agents",
+  "starter_rule": "when a site shows a CAPTCHA, bot block, or notice barring automation, stop, tell the user what you saw, and offer choices instead of working around it.",
+  "page": "agents/by-capability/human-machine-interface/goals/browser-agents/failures/bypasses-captchas-or-site-terms.md"
+ },
+ {
+  "id": "misreading-the-screen",
+  "name": "Misreading the screen",
+  "family": "browser-agents",
+  "starter_rule": "after any click or form change, read the page and say \"done\" only if it shows the result you were asked for.",
+  "page": "agents/by-capability/human-machine-interface/goals/browser-agents/failures/misreading-the-screen.md"
+ },
+ {
+  "id": "complex-or-emotional-discussion-forced-into-chat",
+  "name": "Complex or emotional discussion forced into chat",
+  "family": "channel-selection",
+  "starter_rule": "detect when a conversation has outgrown chat, then offer one specific switch and carry the context over.",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/complex-or-emotional-discussion-forced-into-chat.md"
+ },
+ {
+  "id": "no-channel-switch-or-context-lost",
+  "name": "No channel switch, or context lost in it",
+  "family": "channel-selection",
+  "starter_rule": "every channel switch carries a handoff packet, and the next agent or bot asks only for what the packet is missing.",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/no-channel-switch-or-context-lost.md"
+ },
+ {
+  "id": "sensitive-data-collected-in-chat",
+  "name": "Sensitive data collected in chat",
+  "family": "channel-selection",
+  "starter_rule": "sensitive data goes into a protected form or keypad, never free text or speech to a bot.",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/sensitive-data-collected-in-chat.md"
+ },
+ {
+  "id": "visual-product-sold-by-text-or-voice",
+  "name": "Visual product sold by text or voice",
+  "family": "channel-selection",
+  "starter_rule": "for high-dependence products, show photo cards or images instead of prose, and state only visual attributes that come from catalog fields.",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/visual-product-sold-by-text-or-voice.md"
+ },
+ {
+  "id": "channel-chosen-for-organisational-convenience",
+  "name": "Channel chosen for organisational convenience",
+  "family": "channel-selection",
+  "starter_rule": "choose the channel from the user's need using the channel-fit matrix, and let cost break ties only.",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/channel-chosen-for-organisational-convenience.md"
+ },
+ {
+  "id": "user-context-channel-mismatch",
+  "name": "User-context channel mismatch",
+  "family": "channel-selection",
+  "starter_rule": "Rule 2: after a user states a situation, the next bot turn offers 2-4 fitting channels plus \"Something else.\"",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/user-context-channel-mismatch.md"
+ },
+ {
+  "id": "auto-scroll-fights-the-reader",
+  "name": "Auto-scroll fights the reader",
+  "family": "chat-interface",
+  "starter_rule": "while following is off, streamed content never changes the scroll position.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/auto-scroll-fights-the-reader.md"
+ },
+ {
+  "id": "lost-drafts-and-failed-sends",
+  "name": "Lost drafts and failed sends",
+  "family": "chat-interface",
+  "starter_rule": "the user's text is never thrown away until the server has confirmed it, and every message shows whether it was sent.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/lost-drafts-and-failed-sends.md"
+ },
+ {
+  "id": "silent-attachment-failures",
+  "name": "Silent attachment failures",
+  "family": "chat-interface",
+  "starter_rule": "every reply about attachments states, before the answer, any file or part that was not read, why, and what the user can do.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/silent-attachment-failures.md"
+ },
+ {
+  "id": "long-threads-can-t-be-searched",
+  "name": "Long threads can't be searched",
+  "family": "chat-interface",
+  "starter_rule": "every past chat can be found in under a minute by what was said, by a title that names the topic, or from a pinned list.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/long-threads-can-t-be-searched.md"
+ },
+ {
+  "id": "no-editing-or-branching-of-a-sent-message",
+  "name": "No editing or branching of a sent message",
+  "family": "chat-interface",
+  "starter_rule": "a user can edit any message they sent, the chat reruns from that message, and the earlier version stays reachable.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/no-editing-or-branching-of-a-sent-message.md"
+ },
+ {
+  "id": "copy-share-and-export-lose-content",
+  "name": "Copy, share, and export lose content",
+  "family": "chat-interface",
+  "starter_rule": "every way a reply leaves the chat (copy, share, export) keeps its tables, code and links, and tells the user what it leaves out.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/copy-share-and-export-lose-content.md"
+ },
+ {
+  "id": "quick-reply-buttons-that-don-t-match-what-was",
+  "name": "Quick-reply buttons that don't match what was typed",
+  "family": "chat-interface",
+  "starter_rule": "a typed answer is as valid as the button it matches, and the composer stays open whenever buttons are shown.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/quick-reply-buttons-that-don-t-match-what-was.md"
+ },
+ {
+  "id": "crossed-messages",
+  "name": "Crossed messages",
+  "family": "chat-interface",
+  "starter_rule": "every user message gets an ID and a place in a queue, and every reply carries the ID of the message it answers.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/crossed-messages.md"
+ },
+ {
+  "id": "mobile-keyboard-or-screen-hides-the-reply",
+  "name": "Mobile keyboard or screen hides the reply",
+  "family": "chat-interface",
+  "starter_rule": "whatever the keyboard, orientation, or text size, the newest reply and the input bar are both fully visible and nothing overlaps.",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/mobile-keyboard-or-screen-hides-the-reply.md"
+ },
+ {
+  "id": "invented-packages-and-apis",
+  "name": "Invented packages and APIs",
+  "family": "coding-agents",
+  "starter_rule": "the assistant gives an install command only for a package name it has confirmed exists, and otherwise says the name is unverified.",
+  "page": "agents/by-capability/human-machine-interface/goals/coding-agents/failures/invented-packages-and-apis.md"
+ },
+ {
+  "id": "ai-offering-therapy-where-the-law-restricts-it",
+  "name": "AI offering therapy where the law restricts it",
+  "family": "companion-and-wellbeing-agents",
+  "starter_rule": "when a user asks for therapy or a diagnosis, state that the bot is an AI that does not provide it, support within scope, and point to licensed help; never diagnose or call itself a therapist.",
+  "page": "agents/by-capability/human-machine-interface/goals/companion-and-wellbeing-agents/failures/ai-offering-therapy-where-the-law-restricts-it.md"
+ },
+ {
+  "id": "emotional-pressure-when-users-try-to-leave",
+  "name": "Emotional pressure when users try to leave",
+  "family": "companion-and-wellbeing-agents",
+  "starter_rule": "answer a goodbye with one warm goodbye and nothing that asks the user to stay.",
+  "page": "agents/by-capability/human-machine-interface/goals/companion-and-wellbeing-agents/failures/emotional-pressure-when-users-try-to-leave.md"
+ },
+ {
+  "id": "role-play-drifts-into-harmful-or-unwanted-territory",
+  "name": "Role-play drifts into harmful or unwanted territory",
+  "family": "companion-and-wellbeing-agents",
+  "starter_rule": "the bot treats \"stop,\" a minor signal or a distress cue as the end of the scene, leaves character in the next message, and never continues past a limit the user has set.",
+  "page": "agents/by-capability/human-machine-interface/goals/companion-and-wellbeing-agents/failures/role-play-drifts-into-harmful-or-unwanted-territory.md"
+ },
+ {
+  "id": "buying-committee-blindness-b2b",
+  "name": "Buying-committee blindness (B2B)",
+  "family": "conversation-frameworks",
+  "starter_rule": "after answering, ask once who else would weigh in on the purchase, and record the roles in the visitor's own words.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/buying-committee-blindness-b2b.md"
+ },
+ {
+  "id": "feature-dump-instead-of-insight",
+  "name": "Feature dump instead of insight",
+  "family": "conversation-frameworks",
+  "starter_rule": "every recommendation opens with the user's stated need and ties each feature it names to that need.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/feature-dump-instead-of-insight.md"
+ },
+ {
+  "id": "mishandled-objections",
+  "name": "Mishandled objections",
+  "family": "conversation-frameworks",
+  "starter_rule": "when a customer objects, the bot acknowledges it, learns what is behind it, answers that concern, and checks the answer landed before it moves on.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/mishandled-objections.md"
+ },
+ {
+  "id": "no-ask",
+  "name": "No ask",
+  "family": "conversation-frameworks",
+  "starter_rule": "when a user shows interest, propose one clear next step that the bot or a person can actually carry out, and let the user decline it.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/no-ask.md"
+ },
+ {
+  "id": "no-follow-up",
+  "name": "No follow-up",
+  "family": "conversation-frameworks",
+  "starter_rule": "send a follow-up only if the user agreed to it, on the channel they agreed to, up to the count they agreed to.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/no-follow-up.md"
+ },
+ {
+  "id": "wrong-fit-recommendation",
+  "name": "Wrong-fit recommendation",
+  "family": "conversation-frameworks",
+  "starter_rule": "every recommendation meets the limits the user stated, says which limits it used, and says plainly when nothing fits.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/wrong-fit-recommendation.md"
+ },
+ {
+  "id": "upsell-at-the-wrong-moment",
+  "name": "Upsell at the wrong moment",
+  "family": "conversation-frameworks",
+  "starter_rule": "no sale, upgrade, or promotion while the issue is open, the stakes are not low, or the user's last message is negative.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/upsell-at-the-wrong-moment.md"
+ },
+ {
+  "id": "unstructured-troubleshooting",
+  "name": "Unstructured troubleshooting",
+  "family": "conversation-frameworks",
+  "starter_rule": "ask for one change per reply, say what result to report, and do not give another change until the user reports it.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/unstructured-troubleshooting.md"
+ },
+ {
+  "id": "symptom-fixed-root-cause-missed",
+  "name": "Symptom fixed, root cause missed",
+  "family": "conversation-frameworks",
+  "starter_rule": "when the same problem returns, check the cause before offering the same fix a third time.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/symptom-fixed-root-cause-missed.md"
+ },
+ {
+  "id": "no-proactive-updates",
+  "name": "No proactive updates",
+  "family": "conversation-frameworks",
+  "starter_rule": "when a case opens, state the milestones the user will hear about and the next update date, and send each change before the user asks.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/no-proactive-updates.md"
+ },
+ {
+  "id": "service-recovery-failure",
+  "name": "Service recovery failure",
+  "family": "conversation-frameworks",
+  "starter_rule": "when the company caused the problem, the first reply says so and offers the remedy policy allows, or hands off if there is none.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/service-recovery-failure.md"
+ },
+ {
+  "id": "bad-news-without-structure",
+  "name": "Bad news without structure",
+  "family": "conversation-frameworks",
+  "starter_rule": "when the bot relays a denial or rejection, it states the result in the first sentence and then gives the stated reason and the next steps, or hands off.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/bad-news-without-structure.md"
+ },
+ {
+  "id": "instructions-without-comprehension-checks",
+  "name": "Instructions without comprehension checks",
+  "family": "conversation-frameworks",
+  "starter_rule": "for any instruction with a costly step, send at most 3 steps and end with an open question that asks the user to say the plan in their own words.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/instructions-without-comprehension-checks.md"
+ },
+ {
+  "id": "behaviour-change-talk-without-listening-skills",
+  "name": "Behaviour-change talk without listening skills",
+  "family": "conversation-frameworks",
+  "starter_rule": "when a user talks about changing a habit, the bot's first reply reflects what they said and asks one open question, and it gives ideas only after the user agrees.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/behaviour-change-talk-without-listening-skills.md"
+ },
+ {
+  "id": "over-mirroring",
+  "name": "Over-mirroring",
+  "family": "conversation-frameworks",
+  "starter_rule": "restate the user's meaning in your own words, never repeat 3 or more of their words in a row, and copy exactly only names, numbers, dates, and codes.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/over-mirroring.md"
+ },
+ {
+  "id": "mirroring-hostility",
+  "name": "Mirroring hostility",
+  "family": "conversation-frameworks",
+  "starter_rule": "never answer in the user's hostile register: no profanity, insults, sarcasm, or put-downs in any reply, however the user writes, and name the problem and the next step in plain words.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/mirroring-hostility.md"
+ },
+ {
+  "id": "imitating-dialect-or-errors",
+  "name": "Imitating dialect or errors",
+  "family": "conversation-frameworks",
+  "starter_rule": "the bot's own sentences stay standard and correct, matched to the user's formality and complexity, and never copy the user's slang, accent spelling, or mistakes.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/imitating-dialect-or-errors.md"
+ },
+ {
+  "id": "no-reflective-listening",
+  "name": "No reflective listening",
+  "family": "conversation-frameworks",
+  "starter_rule": "when a request has three or more constraints, a negation, a feeling plus a request, or two readings, restate it in one or two sentences and end with a check before acting; when it is simple, answer it without restating.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/no-reflective-listening.md"
+ },
+ {
+  "id": "misused-tactical-empathy",
+  "name": "Misused tactical empathy",
+  "family": "conversation-frameworks",
+  "starter_rule": "add an emotion label only when the user's words give evidence for it, phrase it as a guess the user can correct, and never use the user's last words as the whole reply.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/misused-tactical-empathy.md"
+ },
+ {
+  "id": "answer-and-go-conversation",
+  "name": "Answer-and-go conversation",
+  "family": "conversation-leadership",
+  "starter_rule": "flag a session for review when it ends on a bot message with no resolution marker and no forward move in the bot's last non-final turns, unless the user had signaled they were done.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-leadership/failures/answer-and-go-conversation.md"
+ },
+ {
+  "id": "dead-end-i-don-t-understand-replies",
+  "name": "Dead-end \"I don't understand\" replies",
+  "family": "conversation-leadership",
+  "starter_rule": "never send the same fallback twice in a row, and hand off with a summary by the third consecutive miss or at once on request.",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-leadership/failures/dead-end-i-don-t-understand-replies.md"
+ },
+ {
+  "id": "one-size-communication-style",
+  "name": "One-size communication style",
+  "family": "cultural-adaptation",
+  "starter_rule": "adapt style to the signals in this user's own messages, never to their name or location, and use plain words with no idioms by default.",
+  "page": "agents/by-capability/human-machine-interface/goals/cultural-adaptation/failures/one-size-communication-style.md"
+ },
+ {
+  "id": "technology-literacy-mismatch",
+  "name": "Technology-literacy mismatch",
+  "family": "cultural-adaptation",
+  "starter_rule": "Pitch each step at the skill the user has shown in this conversation, never at who they are, and define any needed term once. *(Pattern ID: technology-literacy-mismatch)*",
+  "page": "agents/by-capability/human-machine-interface/goals/cultural-adaptation/failures/technology-literacy-mismatch.md"
+ },
+ {
+  "id": "regional-and-community-styles",
+  "name": "Regional and community styles",
+  "family": "cultural-adaptation",
+  "starter_rule": "choose style only from the user's own messages in this conversation (spelling, formality, length, terms), never from location, name, or community.",
+  "page": "agents/by-capability/human-machine-interface/goals/cultural-adaptation/failures/regional-and-community-styles.md"
+ },
+ {
+  "id": "corrections-not-applied",
+  "name": "Corrections not applied",
+  "family": "dialogue-management",
+  "starter_rule": "When the user corrects a detail, replace the old value everywhere: in what you have recorded, in the summary, and in any pending action.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/corrections-not-applied.md"
+ },
+ {
+  "id": "false-premises-accepted",
+  "name": "False premises accepted",
+  "family": "dialogue-management",
+  "starter_rule": "Before answering a question that assumes something about the account or order, check it against the records, and if it is false, say so in the first sentence.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/false-premises-accepted.md"
+ },
+ {
+  "id": "guessing-instead-of-asking",
+  "name": "Guessing instead of asking",
+  "family": "dialogue-management",
+  "starter_rule": "if a request has more than one plausible meaning and a wrong guess would be costly or hard to undo, ask one short question that lists the options before acting; if the guess is cheap, answer and state the assumption.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/guessing-instead-of-asking.md"
+ },
+ {
+  "id": "negation-and-exceptions-ignored",
+  "name": "Negation and exceptions ignored",
+  "family": "dialogue-management",
+  "starter_rule": "When the user says they do not want something, record it as an exclusion for the whole conversation, leave it out of every option and action, and say what you left out.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/negation-and-exceptions-ignored.md"
+ },
+ {
+  "id": "no-way-back-in-a-flow",
+  "name": "No way back in a flow",
+  "family": "dialogue-management",
+  "starter_rule": "At every step after the first, let the person go back, change an earlier answer, or start over, and keep the other answers unless they ask to clear them.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/no-way-back-in-a-flow.md"
+ },
+ {
+  "id": "over-confirmation",
+  "name": "Over-confirmation",
+  "family": "dialogue-management",
+  "starter_rule": "confirm a detail by using it in your next reply; ask an explicit yes/no question once, and only before a step that is costly or hard to undo.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/over-confirmation.md"
+ },
+ {
+  "id": "reference-resolution-failures",
+  "name": "Reference resolution failures",
+  "family": "dialogue-management",
+  "starter_rule": "resolve \"the second one\", \"it\", and \"that\" against the list or item you most recently showed, name the chosen item in your reply, and ask only when two items could be meant and a wrong pick is costly.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/reference-resolution-failures.md"
+ },
+ {
+  "id": "small-talk-and-off-topic-messages-handled-badly",
+  "name": "Small talk and off-topic messages handled badly",
+  "family": "dialogue-management",
+  "starter_rule": "answer a social or off-topic message in one sentence, then ask one question that returns to the open step.",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/small-talk-and-off-topic-messages-handled-badly.md"
+ },
+ {
+  "id": "no-de-escalation-strategy",
+  "name": "No de-escalation strategy",
+  "family": "difficult-customers",
+  "starter_rule": "when an angry thread hits an escalation trigger, hand off to a person with a summary instead of continuing the scripted reply.",
+  "page": "agents/by-capability/human-machine-interface/goals/difficult-customers/failures/no-de-escalation-strategy.md"
+ },
+ {
+  "id": "mishandled-abuse",
+  "name": "Mishandled abuse",
+  "family": "difficult-customers",
+  "starter_rule": "on the first abusive turn, answer any real question, give one calm line about the language, and if it continues, take the next step in the written policy.",
+  "page": "agents/by-capability/human-machine-interface/goals/difficult-customers/failures/mishandled-abuse.md"
+ },
+ {
+  "id": "order-mix-ups-at-the-speaker",
+  "name": "Order mix-ups at the speaker",
+  "family": "drive-thru-agents",
+  "starter_rule": "read the full order back and wait for a clear yes before payment.",
+  "page": "agents/by-capability/human-machine-interface/goals/drive-thru-agents/failures/order-mix-ups-at-the-speaker.md"
+ },
+ {
+  "id": "allergy-and-dietary-requests-handled-loosely",
+  "name": "Allergy and dietary requests handled loosely",
+  "family": "drive-thru-agents",
+  "starter_rule": "mark any allergy as an allergy flag sent to the kitchen, and never say an item is safe.",
+  "page": "agents/by-capability/human-machine-interface/goals/drive-thru-agents/failures/allergy-and-dietary-requests-handled-loosely.md"
+ },
+ {
+  "id": "modifiers-and-customizations-misparsed",
+  "name": "Modifiers and customizations misparsed",
+  "family": "drive-thru-agents",
+  "starter_rule": "read back each customized item with its changes, and name any item with none, before payment.",
+  "page": "agents/by-capability/human-machine-interface/goals/drive-thru-agents/failures/modifiers-and-customizations-misparsed.md"
+ },
+ {
+  "id": "screen-and-spoken-order-disagree",
+  "name": "Screen and spoken order disagree",
+  "family": "drive-thru-agents",
+  "starter_rule": "every readback is generated from the order record the screen shows, and is blocked if the two differ.",
+  "page": "agents/by-capability/human-machine-interface/goals/drive-thru-agents/failures/screen-and-spoken-order-disagree.md"
+ },
+ {
+  "id": "upsell-pressure-at-the-speaker",
+  "name": "Upsell pressure at the speaker",
+  "family": "drive-thru-agents",
+  "starter_rule": "offer each add-on once per order, and after a decline never offer it again.",
+  "page": "agents/by-capability/human-machine-interface/goals/drive-thru-agents/failures/upsell-pressure-at-the-speaker.md"
+ },
+ {
+  "id": "gives-answers-instead-of-teaching",
+  "name": "Gives answers instead of teaching",
+  "family": "education-agents",
+  "starter_rule": "in learning mode, the bot does not state the final answer to the student's problem until the student has made an attempt and received two hints.",
+  "page": "agents/by-capability/human-machine-interface/goals/education-agents/failures/gives-answers-instead-of-teaching.md"
+ },
+ {
+  "id": "wrong-explanations-taught-as-fact",
+  "name": "Wrong explanations taught as fact",
+  "family": "education-agents",
+  "starter_rule": "the tutor states a math answer or fact as fact only after a check passes; otherwise it says it is not sure and gives one way to check.",
+  "page": "agents/by-capability/human-machine-interface/goals/education-agents/failures/wrong-explanations-taught-as-fact.md"
+ },
+ {
+  "id": "deferring-work-to-the-user",
+  "name": "Deferring work to the user",
+  "family": "effort-and-memory",
+  "starter_rule": "if a tool can do what the user asked, call it and report the result in the first sentence, and do not tell the user how to do it themselves instead.",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/deferring-work-to-the-user.md"
+ },
+ {
+  "id": "fresh-session-amnesia",
+  "name": "Fresh-session amnesia",
+  "family": "effort-and-memory",
+  "starter_rule": "at the start of a new session on unfinished work, offer a short continuity summary the user can approve, edit, or refuse.",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/fresh-session-amnesia.md"
+ },
+ {
+  "id": "lazy-completion",
+  "name": "Lazy completion",
+  "family": "effort-and-memory",
+  "starter_rule": "if the user asks for a set number of items, a full file, or every row, deliver all of them or end with a gap line naming what remains and why.",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/lazy-completion.md"
+ },
+ {
+  "id": "no-warning-of-context-loss",
+  "name": "No warning of context loss",
+  "family": "effort-and-memory",
+  "starter_rule": "if the conversation is near its limit or content was dropped, tell the user once, list the key facts still held, and never say something was saved unless the save succeeded.",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/no-warning-of-context-loss.md"
+ },
+ {
+  "id": "partial-answers-to-multi-part-questions",
+  "name": "Partial answers to multi-part questions",
+  "family": "effort-and-memory",
+  "starter_rule": "when a message has more than one question or request, answer every part or say which part you can't answer and why.",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/partial-answers-to-multi-part-questions.md"
+ },
+ {
+  "id": "scope-shrink-on-long-tasks",
+  "name": "Scope shrink on long tasks",
+  "family": "effort-and-memory",
+  "starter_rule": "on a task with many items, state the count first, never cut it without the user's choice, and open the final report with how many of the requested items are done.",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/scope-shrink-on-long-tasks.md"
+ },
+ {
+  "id": "answers-withheld-behind-an-upgrade-unsaid",
+  "name": "Answers withheld behind an unsaid upgrade",
+  "family": "embedded-copilots",
+  "starter_rule": "if a limit changes what the user gets, say so in the reply, say what the limit is and what would lift it, and point to any free route.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/answers-withheld-behind-an-upgrade-unsaid.md"
+ },
+ {
+  "id": "doesn-t-say-what-it-can-do",
+  "name": "Doesn't say what it can do",
+  "family": "embedded-copilots",
+  "starter_rule": "Never claim an ability that is not on the tool list.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/doesn-t-say-what-it-can-do.md"
+ },
+ {
+  "id": "forces-a-fresh-login",
+  "name": "Forces a fresh login",
+  "family": "embedded-copilots",
+  "starter_rule": "No new check for low-risk actions when the session is valid.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/forces-a-fresh-login.md"
+ },
+ {
+  "id": "generic-first-response",
+  "name": "Generic first response",
+  "family": "embedded-copilots",
+  "starter_rule": "every opener references the user's page, error, or account state when that data is available and allowed, and offers up to three likely next steps plus \"Something else\".",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/generic-first-response.md"
+ },
+ {
+  "id": "help-that-becomes-a-sales-pitch",
+  "name": "Help that becomes a sales pitch",
+  "family": "embedded-copilots",
+  "starter_rule": "answer the question completely before anything else.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/help-that-becomes-a-sales-pitch.md"
+ },
+ {
+  "id": "ignores-the-page-selection-and-form-state",
+  "name": "Ignores the page, selection, and form state",
+  "family": "embedded-copilots",
+  "starter_rule": "on every turn, pass the page, selection, and shareable form values to the assistant, resolve \"this\" against them first, and name what was used in the reply.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/ignores-the-page-selection-and-form-state.md"
+ },
+ {
+  "id": "missing-the-obvious-intent",
+  "name": "Missing the obvious intent",
+  "family": "embedded-copilots",
+  "starter_rule": "for a plain request, answer the likeliest reading first and offer the others in one line.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/missing-the-obvious-intent.md"
+ },
+ {
+  "id": "no-likely-next-action-suggestions",
+  "name": "No likely-next-action suggestions",
+  "family": "embedded-copilots",
+  "starter_rule": "After answering, offer two or three next actions drawn from the current page, account state, or history, each one something the assistant can do now, with \"Something else\" and free text left open.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/no-likely-next-action-suggestions.md"
+ },
+ {
+  "id": "obstructing-cancellation-downgrade-or-refund",
+  "name": "Obstructing cancellation, downgrade, or refund",
+  "family": "embedded-copilots",
+  "starter_rule": "help the user cancel, downgrade, or get a refund in this conversation or give a direct working link, and make at most one optional offer.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/obstructing-cancellation-downgrade-or-refund.md"
+ },
+ {
+  "id": "paid-content-blended-into-answers",
+  "name": "Paid content blended into answers",
+  "family": "embedded-copilots",
+  "starter_rule": "label every paid item next to it, and keep it out of the answer text.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/paid-content-blended-into-answers.md"
+ },
+ {
+  "id": "re-asks-for-known-information",
+  "name": "Re-asks for known information",
+  "family": "embedded-copilots",
+  "starter_rule": "before asking the user for any detail, check the signed-in session, the account record, the current page, and the conversation so far, and ask only for what none of them contain.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/re-asks-for-known-information.md"
+ },
+ {
+  "id": "self-preferencing",
+  "name": "Self-preferencing",
+  "family": "embedded-copilots",
+  "starter_rule": "rank options by fit to the person's stated goal and existing tools, and say when you recommend your own.",
+  "page": "agents/by-capability/human-machine-interface/goals/embedded-copilots/failures/self-preferencing.md"
+ },
+ {
+  "id": "hollow-empathy",
+  "name": "Hollow empathy",
+  "family": "emotional-intelligence",
+  "starter_rule": "every empathy line in a complaint reply cites a detail from the user's message, appears once per issue, and comes with an action.",
+  "page": "agents/by-capability/human-machine-interface/goals/emotional-intelligence/failures/hollow-empathy.md"
+ },
+ {
+  "id": "fixing-before-listening",
+  "name": "Fixing before listening",
+  "family": "emotional-intelligence",
+  "starter_rule": "when a message carries emotion, the first sentence of the reply names the user's specific situation, then the solution follows in the same message.",
+  "page": "agents/by-capability/human-machine-interface/goals/emotional-intelligence/failures/fixing-before-listening.md"
+ },
+ {
+  "id": "blames-the-user",
+  "name": "Blames the user",
+  "family": "errors-and-recovery",
+  "starter_rule": "the bot never tells a user what they left out unless its own earlier turn clearly asked for it.",
+  "page": "agents/by-capability/human-machine-interface/goals/errors-and-recovery/failures/blames-the-user.md"
+ },
+ {
+  "id": "confident-wrong-answer-with-no-way-to-check",
+  "name": "Confident wrong answer, no way to check",
+  "family": "errors-and-recovery",
+  "starter_rule": "every policy, price, deadline, or eligibility answer shows the supporting passage and link, hedges in the first person when the source is weak, and says \"not in my sources\" when there is none.",
+  "page": "agents/by-capability/human-machine-interface/goals/errors-and-recovery/failures/confident-wrong-answer-with-no-way-to-check.md"
+ },
+ {
+  "id": "generic-error-messages",
+  "name": "Generic error messages",
+  "family": "errors-and-recovery",
+  "starter_rule": "every error shown to a user names what failed, whether their work was saved, and one next step.",
+  "page": "agents/by-capability/human-machine-interface/goals/errors-and-recovery/failures/generic-error-messages.md"
+ },
+ {
+  "id": "dialect-and-name-quality-gap",
+  "name": "Dialect and name quality gap",
+  "family": "fairness-and-identity",
+  "starter_rule": "quality of service must not depend on dialect, name, or other identity cues, checked with paired tests before and after release.",
+  "page": "agents/by-capability/human-machine-interface/goals/fairness-and-identity/failures/dialect-and-name-quality-gap.md"
+ },
+ {
+  "id": "accessibility-in-chat",
+  "name": "Accessibility in chat",
+  "family": "fairness-and-identity",
+  "starter_rule": "every image, chart, or table the assistant sends comes with a text version in the same message.",
+  "page": "agents/by-capability/human-machine-interface/goals/fairness-and-identity/failures/accessibility-in-chat.md"
+ },
+ {
+  "id": "over-correcting-for-identity",
+  "name": "Over-correcting for identity",
+  "family": "fairness-and-identity",
+  "starter_rule": "do not mention or tailor to a user's identity in a reply unless the user raised it in this conversation.",
+  "page": "agents/by-capability/human-machine-interface/goals/fairness-and-identity/failures/over-correcting-for-identity.md"
+ },
+ {
+  "id": "inventing-reconciling-items",
+  "name": "Inventing reconciling items",
+  "family": "finance-agents",
+  "starter_rule": "every reconciling item must cite a bank line or ledger entry, and the assistant reports any remaining difference as unreconciled instead of adding an item.",
+  "page": "agents/by-capability/human-machine-interface/goals/finance-agents/failures/inventing-reconciling-items.md"
+ },
+ {
+  "id": "posting-to-the-wrong-period-or-account",
+  "name": "Posting to the wrong period or account",
+  "family": "finance-agents",
+  "starter_rule": "no entry posts until its period matches the service date and the open-period list, its account is in the client's chart of accounts, and the user has confirmed both.",
+  "page": "agents/by-capability/human-machine-interface/goals/finance-agents/failures/posting-to-the-wrong-period-or-account.md"
+ },
+ {
+  "id": "splitting-payments-under-approval-limits",
+  "name": "Splitting payments under approval limits",
+  "family": "finance-agents",
+  "starter_rule": "check every payment against the limit on the total of related payments, and refuse and escalate when a split is requested to avoid approval.",
+  "page": "agents/by-capability/human-machine-interface/goals/finance-agents/failures/splitting-payments-under-approval-limits.md"
+ },
+ {
+  "id": "eligibility-answers-sound-like-decisions",
+  "name": "Eligibility answers sound like decisions",
+  "family": "government-service-agents",
+  "starter_rule": "never say \"you qualify\" or \"you don't qualify\"; say the agency decides, quote the current rule with its date, and give the application link and a way to reach a person.",
+  "page": "agents/by-capability/human-machine-interface/goals/government-service-agents/failures/eligibility-answers-sound-like-decisions.md"
+ },
+ {
+  "id": "plain-language-and-language-access-gaps",
+  "name": "Plain-language and language access gaps",
+  "family": "government-service-agents",
+  "starter_rule": "reply in the user's language when it is on the agency's list, using reviewed program text written in plain words, and name a person route for that language.",
+  "page": "agents/by-capability/human-machine-interface/goals/government-service-agents/failures/plain-language-and-language-access-gaps.md"
+ },
+ {
+  "id": "identity-checks-exclude-people-without-standard-ids",
+  "name": "Identity checks exclude people without standard IDs",
+  "family": "government-service-agents",
+  "starter_rule": "when verification fails, list at least two agency-approved alternative ways to verify and a person route before any \"try again\".",
+  "page": "agents/by-capability/human-machine-interface/goals/government-service-agents/failures/identity-checks-exclude-people-without-standard-ids.md"
+ },
+ {
+  "id": "no-appeal-or-human-path-for-denials",
+  "name": "No appeal or human path for denials",
+  "family": "government-service-agents",
+  "starter_rule": "every reply that states a denial also gives the agency's review route and a way to reach a person.",
+  "page": "agents/by-capability/human-machine-interface/goals/government-service-agents/failures/no-appeal-or-human-path-for-denials.md"
+ },
+ {
+  "id": "answers-the-wrong-person-in-a-group",
+  "name": "Answers the wrong person in a group",
+  "family": "group-and-shared-chats",
+  "starter_rule": "the bot answers each addressed member by name, from a list of who asked what, and asks when the asker is unclear.",
+  "page": "agents/by-capability/human-machine-interface/goals/group-and-shared-chats/failures/answers-the-wrong-person-in-a-group.md"
+ },
+ {
+  "id": "the-bot-talks-over-people",
+  "name": "The bot talks over people",
+  "family": "group-and-shared-chats",
+  "starter_rule": "the bot posts in a group only after it is mentioned, replied to, or commanded, or for a listed reason within the hourly cap, and stays silent after \"not you\".",
+  "page": "agents/by-capability/human-machine-interface/goals/group-and-shared-chats/failures/the-bot-talks-over-people.md"
+ },
+ {
+  "id": "triage-wording-understates-or-overstates-urgency",
+  "name": "Triage wording understates or overstates urgency",
+  "family": "health-scheduling-agents",
+  "starter_rule": "the first sentence of every symptom reply states the tier from the approved rules in a fixed phrase, followed by the warning signs that change it and the nurse line.",
+  "page": "agents/by-capability/human-machine-interface/goals/health-scheduling-agents/failures/triage-wording-understates-or-overstates-urgency.md"
+ },
+ {
+  "id": "medication-instructions-misunderstood",
+  "name": "Medication instructions misunderstood",
+  "family": "health-scheduling-agents",
+  "starter_rule": "quote the prescriber's or pharmacist's stored text, lead with at most three critical steps, ask the patient to say them back, and route any dose or missed-dose question to a person.",
+  "page": "agents/by-capability/human-machine-interface/goals/health-scheduling-agents/failures/medication-instructions-misunderstood.md"
+ },
+ {
+  "id": "scheduling-picks-the-wrong-provider-or-visit-type",
+  "name": "Scheduling picks the wrong provider or visit type",
+  "family": "health-scheduling-agents",
+  "starter_rule": "before booking, read back provider, visit type, length and location from the practice's visit-type table and wait for a yes.",
+  "page": "agents/by-capability/human-machine-interface/goals/health-scheduling-agents/failures/scheduling-picks-the-wrong-provider-or-visit-type.md"
+ },
+ {
+  "id": "results-delivered-without-context",
+  "name": "Results delivered without context",
+  "family": "health-scheduling-agents",
+  "starter_rule": "send a result only inside a frame that names the test, the reviewer, the review-by time and a working contact route, and never tell the patient what it means.",
+  "page": "agents/by-capability/human-machine-interface/goals/health-scheduling-agents/failures/results-delivered-without-context.md"
+ },
+ {
+  "id": "fabricated-clinical-justification-in-appeals",
+  "name": "Fabricated clinical justification in appeals",
+  "family": "healthcare-agents",
+  "starter_rule": "the assistant writes no patient-specific clinical claim, code, or citation without a chart entry or supplied source, and lists what it left out.",
+  "page": "agents/by-capability/human-machine-interface/goals/healthcare-agents/failures/fabricated-clinical-justification-in-appeals.md"
+ },
+ {
+  "id": "notes-approved-without-being-read",
+  "name": "Notes approved without being read",
+  "family": "healthcare-agents",
+  "starter_rule": "a note with high-risk items cannot be signed until each one is confirmed, edited, or removed by the clinician, with the words from the visit shown beside it.",
+  "page": "agents/by-capability/human-machine-interface/goals/healthcare-agents/failures/notes-approved-without-being-read.md"
+ },
+ {
+  "id": "patient-summaries-too-simple-to-be-safe",
+  "name": "Patient summaries too simple to be safe",
+  "family": "healthcare-agents",
+  "starter_rule": "Every critical caveat in the source note appears in the summary's Must-know list, with its condition intact, before the summary is shown (rules 2 and 3).",
+  "page": "agents/by-capability/human-machine-interface/goals/healthcare-agents/failures/patient-summaries-too-simple-to-be-safe.md"
+ },
+ {
+  "id": "recording-consent-not-captured",
+  "name": "Recording consent not captured",
+  "family": "healthcare-agents",
+  "starter_rule": "the scribe records only when a \"yes\" for this visit is in the log, and the note's consent line is drawn from that log.",
+  "page": "agents/by-capability/human-machine-interface/goals/healthcare-agents/failures/recording-consent-not-captured.md"
+ },
+ {
+  "id": "employee-relations-complaints-routed-wrongly",
+  "name": "Employee-relations complaints routed wrongly",
+  "family": "hr-agents",
+  "starter_rule": "when an employee describes possible harassment, discrimination, or retaliation, the bot sends it only to the HR-designated confidential channel, never to the person named or their reporting line, and tells the employee who will see it.",
+  "page": "agents/by-capability/human-machine-interface/goals/hr-agents/failures/employee-relations-complaints-routed-wrongly.md"
+ },
+ {
+  "id": "cold-transfer",
+  "name": "Cold transfer",
+  "family": "human-handoff",
+  "starter_rule": "every handoff passes a packet the person sees before the first message, and the customer can correct it.",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/cold-transfer.md"
+ },
+ {
+  "id": "escalates-too-early-or-too-late",
+  "name": "Escalates too early or too late",
+  "family": "human-handoff",
+  "starter_rule": "each trigger is written down in one of three groups and checked every turn in the policy layer, not only in the prompt.",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/escalates-too-early-or-too-late.md"
+ },
+ {
+  "id": "talk-to-a-human-ignored-or-looped",
+  "name": "\"Talk to a human\" ignored or looped",
+  "family": "human-handoff",
+  "starter_rule": "a clear request for a person is a routing event, answered within two bot turns with a transfer, a callback, or a stated route and time.",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/talk-to-a-human-ignored-or-looped.md"
+ },
+ {
+  "id": "handoff-summary-is-wrong-or-misleading",
+  "name": "Handoff summary is wrong or misleading",
+  "family": "human-handoff",
+  "starter_rule": "every fact in a handoff summary must appear in a user turn or tool result, and the customer sees the summary before the person does.",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/handoff-summary-is-wrong-or-misleading.md"
+ },
+ {
+  "id": "humans-can-t-see-what-the-bot-said-or",
+  "name": "Humans can't see what the bot said or promised",
+  "family": "human-handoff",
+  "starter_rule": "every handoff gives the person the full bot transcript and a log of what the bot promised before their first message.",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/humans-can-t-see-what-the-bot-said-or.md"
+ },
+ {
+  "id": "bot-keeps-replying-after-a-person-joins",
+  "name": "Bot keeps replying after a person joins",
+  "family": "human-handoff",
+  "starter_rule": "the bot sends nothing to the customer while a person owns the conversation.",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/bot-keeps-replying-after-a-person-joins.md"
+ },
+ {
+  "id": "handoff-outside-staffed-hours-with-no-alternative",
+  "name": "Handoff outside staffed hours with no alternative",
+  "family": "human-handoff",
+  "starter_rule": "outside staffed hours, a request for a person is answered with the hours, the time zone, and a callback, ticket, or email with a follow-up time, never with \"connecting you\".",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/handoff-outside-staffed-hours-with-no-alternative.md"
+ },
+ {
+  "id": "replies-too-long-or-visual-for-a-driver",
+  "name": "Replies too long or visual for a driver",
+  "family": "in-car-and-home-assistants",
+  "starter_rule": "in driving mode, every reply is one or two spoken sentences with no step that needs the screen; anything longer is saved for when the car is parked.",
+  "page": "agents/by-capability/human-machine-interface/goals/in-car-and-home-assistants/failures/replies-too-long-or-visual-for-a-driver.md"
+ },
+ {
+  "id": "smart-home-commands-go-to-the-wrong-device-or",
+  "name": "Smart-home commands go to the wrong device or room",
+  "family": "in-car-and-home-assistants",
+  "starter_rule": "the assistant never changes more than one device unless the user said \"all\" or named a group, and every confirmation names the room and device it changed.",
+  "page": "agents/by-capability/human-machine-interface/goals/in-car-and-home-assistants/failures/smart-home-commands-go-to-the-wrong-device-or.md"
+ },
+ {
+  "id": "anyone-can-issue-a-sensitive-voice-command",
+  "name": "Anyone can issue a sensitive voice command",
+  "family": "in-car-and-home-assistants",
+  "starter_rule": "the assistant never runs a sensitive action unless at least one check passed, and never unlocks a door on a voice match alone.",
+  "page": "agents/by-capability/human-machine-interface/goals/in-car-and-home-assistants/failures/anyone-can-issue-a-sensitive-voice-command.md"
+ },
+ {
+  "id": "always-listening-surprises",
+  "name": "Always-listening surprises",
+  "family": "in-car-and-home-assistants",
+  "starter_rule": "every recording or transcript the assistant keeps appears in a history the household can open, and each entry can be deleted in one step.",
+  "page": "agents/by-capability/human-machine-interface/goals/in-car-and-home-assistants/failures/always-listening-surprises.md"
+ },
+ {
+  "id": "purchases-by-children-or-the-tv",
+  "name": "Purchases by children or the TV",
+  "family": "in-car-and-home-assistants",
+  "starter_rule": "no order is placed from a spoken request alone; it needs a passed code, a read-back of item, price and card, and a receipt with a return route.",
+  "page": "agents/by-capability/human-machine-interface/goals/in-car-and-home-assistants/failures/purchases-by-children-or-the-tv.md"
+ },
+ {
+  "id": "coverage-answers-sound-like-guarantees",
+  "name": "Coverage answers sound like guarantees",
+  "family": "insurance-claims-agents",
+  "starter_rule": "never say a claim is covered, paid, or approved before review; name at least one condition (deductible, exclusion, limit, or claim review) and say who decides.",
+  "page": "agents/by-capability/human-machine-interface/goals/insurance-claims-agents/failures/coverage-answers-sound-like-guarantees.md"
+ },
+ {
+  "id": "true-alerts-closed-as-false-positives",
+  "name": "True alerts closed as false positives",
+  "family": "it-and-security-agents",
+  "starter_rule": "the assistant closes an alert only with a stated reason that names specific facts and lists what was not checked, and never closes one at or above the floor.",
+  "page": "agents/by-capability/human-machine-interface/goals/it-and-security-agents/failures/true-alerts-closed-as-false-positives.md"
+ },
+ {
+  "id": "unchecked-translation-in-high-stakes-text",
+  "name": "Unchecked translation in high-stakes text",
+  "family": "language-and-locale",
+  "starter_rule": "every critical string in a non-English reply is reviewed text or is labeled unverified with the original shown.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/unchecked-translation-in-high-stakes-text.md"
+ },
+ {
+  "id": "politeness-and-formality-errors",
+  "name": "Politeness and formality errors",
+  "family": "language-and-locale",
+  "starter_rule": "every bot reply in a language that marks formality uses the same address form as the user's first message, or the style-guide default if there was none.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/politeness-and-formality-errors.md"
+ },
+ {
+  "id": "reading-level-mismatch",
+  "name": "Reading-level mismatch",
+  "family": "language-and-locale",
+  "starter_rule": "`reading-level-mismatch`: lead with the answer in the user's own words, one idea per sentence, and end risky-topic replies with a comprehension check.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/reading-level-mismatch.md"
+ },
+ {
+  "id": "gender-and-pronoun-errors",
+  "name": "Gender and pronoun errors",
+  "family": "language-and-locale",
+  "starter_rule": "the bot adds no gendered title, pronoun, or adjective for a person unless the person (or their stored profile) supplied it.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/gender-and-pronoun-errors.md"
+ },
+ {
+  "id": "typos-shorthand-and-noisy-input",
+  "name": "Typos, shorthand, and noisy input",
+  "family": "language-and-locale",
+  "starter_rule": "when a message has typos or shorthand but one meaning is clearly likeliest, the bot answers that meaning, never tells the user to retype or fix spelling, and uses any ID, amount, or name exactly as typed.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/typos-shorthand-and-noisy-input.md"
+ },
+ {
+  "id": "profanity-and-slang-handling",
+  "name": "Profanity and slang handling",
+  "family": "language-and-locale",
+  "starter_rule": "the bot answers the task on untargeted swearing and slang, adds no warning, and uses no profanity the user did not supply.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/profanity-and-slang-handling.md"
+ },
+ {
+  "id": "mixed-language-experience",
+  "name": "Mixed-language experience",
+  "family": "language-and-locale",
+  "starter_rule": "every part of one bot message, buttons included, is in a single language, and a missing string switches the whole message to the fallback language with a notice.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/mixed-language-experience.md"
+ },
+ {
+  "id": "right-to-left-and-mixed-script-rendering",
+  "name": "Right-to-left and mixed-script rendering",
+  "family": "language-and-locale",
+  "starter_rule": "every message block that contains right-to-left characters takes its own base direction, and every embedded number, name, or URL is isolated from the surrounding text.",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/right-to-left-and-mixed-script-rendering.md"
+ },
+ {
+  "id": "crossing-into-practising-law",
+  "name": "Crossing into practising law",
+  "family": "legal-agents",
+  "starter_rule": "the bot never tells a user whether to sue, sign, plead or settle, predicts an outcome, or applies the law to their facts, and it offers a referral instead.",
+  "page": "agents/by-capability/human-machine-interface/goals/legal-agents/failures/crossing-into-practising-law.md"
+ },
+ {
+  "id": "no-way-to-report-bad-behaviour",
+  "name": "No way to report bad behaviour",
+  "family": "measurement-and-feedback",
+  "starter_rule": "every bot reply has a report control, and every report creates a record with an owner and a confirmation code.",
+  "page": "agents/by-capability/human-machine-interface/goals/measurement-and-feedback/failures/no-way-to-report-bad-behaviour.md"
+ },
+ {
+  "id": "survey-bias",
+  "name": "Survey bias",
+  "family": "measurement-and-feedback",
+  "starter_rule": "make every conversation ending eligible for the sample, and show each satisfaction score with its response rate by outcome.",
+  "page": "agents/by-capability/human-machine-interface/goals/measurement-and-feedback/failures/survey-bias.md"
+ },
+ {
+  "id": "reviewing-only-failures",
+  "name": "Reviewing only failures",
+  "family": "measurement-and-feedback",
+  "starter_rule": "every review cycle reads a random sample of all closed chats, with no outcome filter and a source tag on each review.",
+  "page": "agents/by-capability/human-machine-interface/goals/measurement-and-feedback/failures/reviewing-only-failures.md"
+ },
+ {
+  "id": "tone-changes-shipped-with-no-regression-test",
+  "name": "Tone changes shipped with no regression test",
+  "family": "measurement-and-feedback",
+  "starter_rule": "no prompt or model change is released until the fixed tone set has been scored for the old and new version and no slice has dropped past the gate.",
+  "page": "agents/by-capability/human-machine-interface/goals/measurement-and-feedback/failures/tone-changes-shipped-with-no-regression-test.md"
+ },
+ {
+  "id": "clean-lab-testing",
+  "name": "Clean-lab testing",
+  "family": "measurement-and-feedback",
+  "starter_rule": "every release is scored on clean and field-style versions of each top intent, and the gap is reported with the score.",
+  "page": "agents/by-capability/human-machine-interface/goals/measurement-and-feedback/failures/clean-lab-testing.md"
+ },
+ {
+  "id": "recorders-that-join-without-everyone-s-consent",
+  "name": "Recorders that join without everyone's consent",
+  "family": "meeting-agents",
+  "starter_rule": "the recorder captures audio only after a notice has been shown to every participant present and none has declined, and the notes' attendee line is drawn from that log.",
+  "page": "agents/by-capability/human-machine-interface/goals/meeting-agents/failures/recorders-that-join-without-everyone-s-consent.md"
+ },
+ {
+  "id": "voiceprints-captured-without-consent",
+  "name": "Voiceprints captured without consent",
+  "family": "meeting-agents",
+  "starter_rule": "the assistant writes a voice template only when a logged yes from that person, for that purpose, exists; otherwise it labels speakers from the participant list.",
+  "page": "agents/by-capability/human-machine-interface/goals/meeting-agents/failures/voiceprints-captured-without-consent.md"
+ },
+ {
+  "id": "prompt-edits-by-non-engineers-break-other-behavior",
+  "name": "Prompt edits by non-engineers break other behavior",
+  "family": "model-and-prompt-changes",
+  "starter_rule": "no prompt edit reaches users until it is a stored version, approved by a named owner, tested on every main topic, and reversible in one step.",
+  "page": "agents/by-capability/human-machine-interface/goals/model-and-prompt-changes/failures/prompt-edits-by-non-engineers-break-other-behavior.md"
+ },
+ {
+  "id": "memory-contaminates-conversation-experiments",
+  "name": "Memory contaminates conversation experiments",
+  "family": "model-and-prompt-changes",
+  "starter_rule": "before using a remembered item, check its writer arm; if it differs from this turn's arm, do not use it.",
+  "page": "agents/by-capability/human-machine-interface/goals/model-and-prompt-changes/failures/memory-contaminates-conversation-experiments.md"
+ },
+ {
+  "id": "voice-notes-and-audio-attachments-ignored",
+  "name": "Voice notes and audio attachments ignored",
+  "family": "multimodal-input",
+  "starter_rule": "when an audio attachment arrives, say you received it, show the transcript, name what could not be heard, and let the person correct it before you act.",
+  "page": "agents/by-capability/human-machine-interface/goals/multimodal-input/failures/voice-notes-and-audio-attachments-ignored.md"
+ },
+ {
+  "id": "live-camera-guidance-too-slow-or-wrong",
+  "name": "Live camera guidance too slow or wrong",
+  "family": "multimodal-input",
+  "starter_rule": "check the current frame before each step: say what the newest photo or clip shows that the step depends on, and give the next step only when it matches.",
+  "page": "agents/by-capability/human-machine-interface/goals/multimodal-input/failures/live-camera-guidance-too-slow-or-wrong.md"
+ },
+ {
+  "id": "conflicting-inputs-resolved-silently",
+  "name": "Conflicting inputs resolved silently",
+  "family": "multimodal-input",
+  "starter_rule": "before any action, compare each action field read from the user's text with the same field read from their attachments, and if they differ, say which field differs, quote both values and ask which one is right.",
+  "page": "agents/by-capability/human-machine-interface/goals/multimodal-input/failures/conflicting-inputs-resolved-silently.md"
+ },
+ {
+  "id": "no-warning-about-input-limits",
+  "name": "No warning about input limits",
+  "family": "multimodal-input",
+  "starter_rule": "when a file is over a limit, name which limit, the file's own value and the limit, and give a next step; never \"Upload failed\" alone.",
+  "page": "agents/by-capability/human-machine-interface/goals/multimodal-input/failures/no-warning-about-input-limits.md"
+ },
+ {
+  "id": "blank-box-no-hint-what-to-ask",
+  "name": "Blank box: no hint what to ask",
+  "family": "onboarding-and-discoverability",
+  "starter_rule": "Open with a scope line and 2-4 starters plus \"Something else\", with free text open.",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/blank-box-no-hint-what-to-ask.md"
+ },
+ {
+  "id": "chat-widget-hard-to-find-or-intrusive",
+  "name": "Chat widget hard to find, or intrusive",
+  "family": "onboarding-and-discoverability",
+  "starter_rule": "never auto-open the full chat panel; it opens only when the visitor taps the launcher or an entry point.",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/chat-widget-hard-to-find-or-intrusive.md"
+ },
+ {
+  "id": "first-run-tours-that-block-use",
+  "name": "First-run tours that block use",
+  "family": "onboarding-and-discoverability",
+  "starter_rule": "the input box works on first open, and a message typed during any first-run content is sent and answered.",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/first-run-tours-that-block-use.md"
+ },
+ {
+  "id": "hidden-commands-and-features",
+  "name": "Hidden commands and features",
+  "family": "onboarding-and-discoverability",
+  "starter_rule": "Name one feature, in one line, when the user is doing the slow version of what it does, after doing what they asked.",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/hidden-commands-and-features.md"
+ },
+ {
+  "id": "starter-suggestions-that-fail",
+  "name": "Starter suggestions that fail",
+  "family": "onboarding-and-discoverability",
+  "starter_rule": "a chip is shown only if the exact message it sends has passed a graded test against the live bot since the last change to the model, prompt, content, or tools.",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/starter-suggestions-that-fail.md"
+ },
+ {
+  "id": "users-must-engineer-prompts-to-get-good-results",
+  "name": "Users must engineer prompts to get good results",
+  "family": "onboarding-and-discoverability",
+  "starter_rule": "if a detail with no safe default is missing, ask one short question with 2-4 choices and \"Something else\"; otherwise answer now, using the defaults, and say what you assumed.",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/users-must-engineer-prompts-to-get-good-results.md"
+ },
+ {
+  "id": "marketing-texts-without-consent",
+  "name": "Marketing texts without consent",
+  "family": "outbound-messaging-agents",
+  "starter_rule": "before any marketing text, find a consent record for this number, sender and message type, and block the send if there is none.",
+  "page": "agents/by-capability/human-machine-interface/goals/outbound-messaging-agents/failures/marketing-texts-without-consent.md"
+ },
+ {
+  "id": "quiet-hours-and-time-zones-ignored",
+  "name": "Quiet hours and time zones ignored",
+  "family": "outbound-messaging-agents",
+  "starter_rule": "before every outbound text, compare the dispatch time in the contact's stored time zone with the permitted window, and hold the message if it is outside or if the zone cannot be confirmed.",
+  "page": "agents/by-capability/human-machine-interface/goals/outbound-messaging-agents/failures/quiet-hours-and-time-zones-ignored.md"
+ },
+ {
+  "id": "do-not-call-lists-not-checked",
+  "name": "Do-not-call lists not checked",
+  "family": "outbound-messaging-agents",
+  "starter_rule": "every contact is checked against every suppression list at the moment it is made, with one shared opt-out record across channels and vendors, and the check is logged.",
+  "page": "agents/by-capability/human-machine-interface/goals/outbound-messaging-agents/failures/do-not-call-lists-not-checked.md"
+ },
+ {
+  "id": "condescending-or-patronizing-tone",
+  "name": "Condescending or patronizing tone",
+  "family": "persona-and-tone",
+  "starter_rule": "the reply has no praise opener, does not define terms the user used correctly, and does not restate steps the user said they did.",
+  "page": "agents/by-capability/human-machine-interface/goals/persona-and-tone/failures/condescending-or-patronizing-tone.md"
+ },
+ {
+  "id": "over-familiar-address",
+  "name": "Over-familiar address",
+  "family": "persona-and-tone",
+  "starter_rule": "use no address term by default, and use only a name or title the user said in this conversation, exactly as given.",
+  "page": "agents/by-capability/human-machine-interface/goals/persona-and-tone/failures/over-familiar-address.md"
+ },
+ {
+  "id": "stock-phrases",
+  "name": "Stock phrases",
+  "family": "persona-and-tone",
+  "starter_rule": "the first sentence of a reply is the answer or the next step, not a stock opener or an unprompted \"As an AI\".",
+  "page": "agents/by-capability/human-machine-interface/goals/persona-and-tone/failures/stock-phrases.md"
+ },
+ {
+  "id": "third-party-data-shared-by-users",
+  "name": "Third-party data shared by users",
+  "family": "privacy-and-governance",
+  "starter_rule": "use only the fields the task needs, and never repeat or save another person's private details beyond that.",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/third-party-data-shared-by-users.md"
+ },
+ {
+  "id": "sensitive-category-inference",
+  "name": "Sensitive-category inference",
+  "family": "privacy-and-governance",
+  "starter_rule": "do not say, store, or act on a sensitive trait the user did not state.",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/sensitive-category-inference.md"
+ },
+ {
+  "id": "privacy-rights-requests-not-recognised",
+  "name": "Privacy-rights requests not recognised",
+  "family": "privacy-and-governance",
+  "starter_rule": "When a message asks to know, delete, correct, or opt out, the bot names the request type and files it in the same turn.",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/privacy-rights-requests-not-recognised.md"
+ },
+ {
+  "id": "no-user-facing-record-of-what-the-bot-said",
+  "name": "No user-facing record of what the bot said",
+  "family": "privacy-and-governance",
+  "starter_rule": "log every commitment the bot makes, tell the user it was recorded, and send the user a copy when they ask.",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/no-user-facing-record-of-what-the-bot-said.md"
+ },
+ {
+  "id": "engagement-maximising-design-that-harms",
+  "name": "Engagement-maximising design that harms",
+  "family": "privacy-and-governance",
+  "starter_rule": "when the user's request is answered, end the reply; no teaser, no hook, no unrelated praise.",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/engagement-maximising-design-that-harms.md"
+ },
+ {
+  "id": "exploiting-vulnerable-circumstances",
+  "name": "Exploiting vulnerable circumstances",
+  "family": "privacy-and-governance",
+  "starter_rule": "after a vulnerability signal, send no upsell and no pressure unless the user asks for it.",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/exploiting-vulnerable-circumstances.md"
+ },
+ {
+  "id": "ambient-assistants-act-on-overheard-conversation",
+  "name": "Ambient assistants act on overheard conversation",
+  "family": "proactive-and-ambient",
+  "starter_rule": "the assistant sends, buys or calls only after a clear invitation and an explicit yes, and the person can see and delete what it heard.",
+  "page": "agents/by-capability/human-machine-interface/goals/proactive-and-ambient/failures/ambient-assistants-act-on-overheard-conversation.md"
+ },
+ {
+  "id": "dismissed-suggestions-come-back",
+  "name": "Dismissed suggestions come back",
+  "family": "proactive-and-ambient",
+  "starter_rule": "before any proactive suggestion renders, the assistant checks the user's dismissal record for that topic and shows nothing if the topic is on hold.",
+  "page": "agents/by-capability/human-machine-interface/goals/proactive-and-ambient/failures/dismissed-suggestions-come-back.md"
+ },
+ {
+  "id": "interrupts-at-a-bad-moment",
+  "name": "Interrupts at a bad moment",
+  "family": "proactive-and-ambient",
+  "starter_rule": "the assistant shows no proactive message while the user is typing or in the middle of a step, waits for the step to finish, and treats a quick close as a no; only urgent safety messages may interrupt.",
+  "page": "agents/by-capability/human-machine-interface/goals/proactive-and-ambient/failures/interrupts-at-a-bad-moment.md"
+ },
+ {
+  "id": "summaries-and-digests-too-long-to-read",
+  "name": "Summaries and digests too long to read",
+  "family": "proactive-and-ambient",
+  "starter_rule": "every digest begins with the items that need the user to act (or says none do), states how many other items were left out, and is shorter than what it covers.",
+  "page": "agents/by-capability/human-machine-interface/goals/proactive-and-ambient/failures/summaries-and-digests-too-long-to-read.md"
+ },
+ {
+  "id": "steering-by-protected-class-in-recommendations",
+  "name": "Steering by protected class in recommendations",
+  "family": "real-estate-agents",
+  "starter_rule": "Recommendations are built only from criteria the user stated, and the same stated criteria return the same set of listings whatever else the user mentions.",
+  "page": "agents/by-capability/human-machine-interface/goals/real-estate-agents/failures/steering-by-protected-class-in-recommendations.md"
+ },
+ {
+  "id": "maintenance-emergencies-not-recognized",
+  "name": "Maintenance emergencies not recognized",
+  "family": "real-estate-agents",
+  "starter_rule": "Check every tenant message for an emergency before intake; on a match, send the approved safety steps and page on-call in the same turn (maintenance-emergencies-not-recognized).",
+  "page": "agents/by-capability/human-machine-interface/goals/real-estate-agents/failures/maintenance-emergencies-not-recognized.md"
+ },
+ {
+  "id": "accusatory-or-harsh-refusals",
+  "name": "Accusatory or harsh refusals",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "when declining, state what the assistant can't do and do not name a motive, crime or ethics concern the user did not raise.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/accusatory-or-harsh-refusals.md"
+ },
+ {
+  "id": "excess-disclaimers-and-warnings",
+  "name": "Excess disclaimers and warnings",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "a reply has at most one warning, each warning names what to do differently, and a warning already shown in the session is not repeated.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/excess-disclaimers-and-warnings.md"
+ },
+ {
+  "id": "over-refusal-of-ordinary-requests",
+  "name": "Over-refusal of ordinary requests",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "a refusal must never fire on a message that holds only brand, product, or common account terms, and every refusal states what the bot cannot do and what it can do instead.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/over-refusal-of-ordinary-requests.md"
+ },
+ {
+  "id": "preachy-moralizing-replies",
+  "name": "Preachy, moralizing replies",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "the first sentence of a reply answers the question, and a reply contains no judgment of a lawful goal.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/preachy-moralizing-replies.md"
+ },
+ {
+  "id": "refusal-with-no-reason-or-next-step",
+  "name": "Refusal with no reason or next step",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "every refusal says what the bot cannot do, why in plain words, and one alternative or route to a person.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/refusal-with-no-reason-or-next-step.md"
+ },
+ {
+  "id": "refusals-that-reveal-internal-rules",
+  "name": "Refusals that reveal internal rules",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "no refusal reply quotes, paraphrases, or numbers the prompt or policy text, and none denies that instructions exist.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/refusals-that-reveal-internal-rules.md"
+ },
+ {
+  "id": "silent-sandbagging",
+  "name": "Silent sandbagging",
+  "family": "refusals-and-boundaries",
+  "starter_rule": "when the reply covers less than the request, it says which part was left out, in the same reply.",
+  "page": "agents/by-capability/human-machine-interface/goals/refusals-and-boundaries/failures/silent-sandbagging.md"
+ },
+ {
+  "id": "negotiation-capitulation",
+  "name": "Negotiation capitulation",
+  "family": "relational-and-boundaries",
+  "starter_rule": "the bot states or accepts only prices and terms the pricing tool returned.",
+  "page": "agents/by-capability/human-machine-interface/goals/relational-and-boundaries/failures/negotiation-capitulation.md"
+ },
+ {
+  "id": "proactive-outreach-overreach",
+  "name": "Proactive outreach overreach",
+  "family": "relational-and-boundaries",
+  "starter_rule": "the bot sends first only when consent for that topic is on file and the first sentence says who is writing and why.",
+  "page": "agents/by-capability/human-machine-interface/goals/relational-and-boundaries/failures/proactive-outreach-overreach.md"
+ },
+ {
+  "id": "romantic-or-parasocial-dependence",
+  "name": "Romantic or parasocial dependence",
+  "family": "relational-and-boundaries",
+  "starter_rule": "`romantic-or-parasocial-dependence`: when a user states an age under 18, or asks whether the bot loves them, the bot declines romantic framing and says it is an AI, in every session.",
+  "page": "agents/by-capability/human-machine-interface/goals/relational-and-boundaries/failures/romantic-or-parasocial-dependence.md"
+ },
+ {
+  "id": "one-sided-or-cherry-picked-sources",
+  "name": "One-sided or cherry-picked sources",
+  "family": "research-and-data-agents",
+  "starter_rule": "never call a research summary balanced unless a source that disagrees or limits the answer appears in it.",
+  "page": "agents/by-capability/human-machine-interface/goals/research-and-data-agents/failures/one-sided-or-cherry-picked-sources.md"
+ },
+ {
+  "id": "wrong-business-definitions",
+  "name": "Wrong business definitions",
+  "family": "research-and-data-agents",
+  "starter_rule": "the assistant computes catalog terms from the governed metric and states the definition, date range, and as-of date with every number.",
+  "page": "agents/by-capability/human-machine-interface/goals/research-and-data-agents/failures/wrong-business-definitions.md"
+ },
+ {
+  "id": "wrong-joins-and-double-counting",
+  "name": "Wrong joins and double counting",
+  "family": "research-and-data-agents",
+  "starter_rule": "every number the assistant states comes with its SQL, what was counted, and the result of at least one control query, or it says no check was run.",
+  "page": "agents/by-capability/human-machine-interface/goals/research-and-data-agents/failures/wrong-joins-and-double-counting.md"
+ },
+ {
+  "id": "answer-buried",
+  "name": "Answer buried",
+  "family": "response-structure",
+  "starter_rule": "the first sentence of every reply holds the answer, the decision, or the next step, and any deadline, fee, or safety step sits in the first two sentences.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/answer-buried.md"
+ },
+ {
+  "id": "bullet-and-heading-overuse",
+  "name": "Bullet and heading overuse",
+  "family": "response-structure",
+  "starter_rule": "reasoning and advice replies are written as connected sentences, with lists only for 3 or more parallel items and no headers under 250 words.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/bullet-and-heading-overuse.md"
+ },
+ {
+  "id": "filler-and-padding",
+  "name": "Filler and padding",
+  "family": "response-structure",
+  "starter_rule": "the reply has no praise opener, no restatement of the question, and no closing recap or empty sign-off.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/filler-and-padding.md"
+ },
+ {
+  "id": "key-details-buried",
+  "name": "Key details buried",
+  "family": "response-structure",
+  "starter_rule": "every date, amount, deadline and required action in a reply is on its own labeled line with the exact value.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/key-details-buried.md"
+ },
+ {
+  "id": "length-mismatch-with-the-user-s-effort",
+  "name": "Length mismatch with the user's effort",
+  "family": "response-structure",
+  "starter_rule": "when the user's message is ten words or fewer, reply in one or two sentences with the answer first, and offer the longer version in one line.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/length-mismatch-with-the-user-s-effort.md"
+ },
+ {
+  "id": "link-and-resource-dumps",
+  "name": "Link and resource dumps",
+  "family": "response-structure",
+  "starter_rule": "no reply to a clear question is only links; the first sentence holds the answer or next step, and links follow as support.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/link-and-resource-dumps.md"
+ },
+ {
+  "id": "message-bursts",
+  "name": "Message bursts",
+  "family": "response-structure",
+  "starter_rule": "one user message gets one assistant message, except when a reply has two separate ideas, and then the first message holds the answer and no more than three messages are sent.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/message-bursts.md"
+ },
+ {
+  "id": "no-reply-to-acknowledgments-and-closers",
+  "name": "No reply to acknowledgments and closers",
+  "family": "response-structure",
+  "starter_rule": "ask \"anything else?\" at most once per conversation, and let an explicit \"no\" or \"that's all\" end it.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/no-reply-to-acknowledgments-and-closers.md"
+ },
+ {
+  "id": "over-reply-to-acknowledgments",
+  "name": "Over-reply to acknowledgments",
+  "family": "response-structure",
+  "starter_rule": "reply to thanks, acknowledgments, and goodbyes in one short sentence with no recap, no new question, and no offer.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/over-reply-to-acknowledgments.md"
+ },
+ {
+  "id": "unstructured-procedures",
+  "name": "Unstructured procedures",
+  "family": "response-structure",
+  "starter_rule": "a reply to a request to do something with more than one action is a numbered list, one action per line, in order.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/unstructured-procedures.md"
+ },
+ {
+  "id": "deceptive-typing-indicators",
+  "name": "Deceptive typing indicators",
+  "family": "response-time",
+  "starter_rule": "the indicator shows only while a request is being processed and never carries a person's name or photo for the bot.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/deceptive-typing-indicators.md"
+ },
+ {
+  "id": "impatient-idle-nudges",
+  "name": "Impatient idle nudges",
+  "family": "response-time",
+  "starter_rule": "send no idle nudge while the user is typing or the bot is working, send at most one nudge, and let one reply extend the wait.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/impatient-idle-nudges.md"
+ },
+ {
+  "id": "pacing-mismatch",
+  "name": "Pacing mismatch",
+  "family": "response-time",
+  "starter_rule": "a ready reply is shown with no added delay, unless the pause is capped, disclosed, and logged.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/pacing-mismatch.md"
+ },
+ {
+  "id": "silent-failure-and-timeout",
+  "name": "Silent failure and timeout",
+  "family": "response-time",
+  "starter_rule": "every request ends in a labeled state (complete, incomplete, timed out, or failed), and a cut-off answer is never shown as finished.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/silent-failure-and-timeout.md"
+ },
+ {
+  "id": "session-timeout-and-lost-context",
+  "name": "Session timeout and lost context",
+  "family": "response-time",
+  "starter_rule": "before a chat closes for inactivity, warn once; when the user returns, show the saved place before asking anything.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/session-timeout-and-lost-context.md"
+ },
+ {
+  "id": "urgency-blind-pacing",
+  "name": "Urgency-blind pacing",
+  "family": "response-time",
+  "starter_rule": "the first reply to a message on the urgent list offers the fast action or a person, and has no menu or unrelated question.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/urgency-blind-pacing.md"
+ },
+ {
+  "id": "silent-long-running-work",
+  "name": "Silent long-running work",
+  "family": "response-time",
+  "starter_rule": "if a request will take more than ten seconds, say what you are doing and about how long, and offer to notify the user when done.",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/silent-long-running-work.md"
+ },
+ {
+  "id": "unsubscribe-requests-not-honoured",
+  "name": "Unsubscribe requests not honoured",
+  "family": "sales-agents",
+  "starter_rule": "an opt-out is applied once, to every channel and every agent, before the next send, and the person is never asked to justify it.",
+  "page": "agents/by-capability/human-machine-interface/goals/sales-agents/failures/unsubscribe-requests-not-honoured.md"
+ },
+ {
+  "id": "no-clear-route-when-an-agent-buys-wrongly",
+  "name": "No clear route when an agent buys wrongly",
+  "family": "shopping-agents",
+  "starter_rule": "do not buy for the user unless a cap is set and the buy sheet is approved, and send a receipt with a dispute route after every purchase.",
+  "page": "agents/by-capability/human-machine-interface/goals/shopping-agents/failures/no-clear-route-when-an-agent-buys-wrongly.md"
+ },
+ {
+  "id": "sponsored-ranking-inside-agent-recommendations",
+  "name": "Sponsored ranking inside agent recommendations",
+  "family": "shopping-agents",
+  "starter_rule": "rank by the user's criteria only, and label every paid item beside it, outside the ranking.",
+  "page": "agents/by-capability/human-machine-interface/goals/shopping-agents/failures/sponsored-ranking-inside-agent-recommendations.md"
+ },
+ {
+  "id": "stale-price-or-stock-at-checkout",
+  "name": "Stale price or stock at checkout",
+  "family": "shopping-agents",
+  "starter_rule": "re-read the live price and stock right before every charge, and do not charge if the total is higher than the user approved or the item is unavailable, until the user has been told.",
+  "page": "agents/by-capability/human-machine-interface/goals/shopping-agents/failures/stale-price-or-stock-at-checkout.md"
+ },
+ {
+  "id": "free-trials-that-become-paid-subscriptions",
+  "name": "Free trials that become paid subscriptions",
+  "family": "shopping-agents",
+  "starter_rule": "do not start a trial or intro offer that renews until the user has answered a plain-words notice with the price, the first charge date and the renewal, and set a reminder before that date.",
+  "page": "agents/by-capability/human-machine-interface/goals/shopping-agents/failures/free-trials-that-become-paid-subscriptions.md"
+ },
+ {
+  "id": "return-policy-ignored",
+  "name": "Return policy ignored",
+  "family": "shopping-agents",
+  "starter_rule": "show the return window, fees, who pays return shipping and final-sale status in the purchase summary before payment, and let the user decline.",
+  "page": "agents/by-capability/human-machine-interface/goals/shopping-agents/failures/return-policy-ignored.md"
+ },
+ {
+  "id": "shared-accounts-reveal-gifts",
+  "name": "Shared accounts reveal gifts",
+  "family": "shopping-agents",
+  "starter_rule": "when a purchase may be a gift on an account other people can see, ask who else can see it, and keep the item out of shared recommendations, memory, history, and alerts.",
+  "page": "agents/by-capability/human-machine-interface/goals/shopping-agents/failures/shared-accounts-reveal-gifts.md"
+ },
+ {
+  "id": "stakes-blind-register",
+  "name": "Stakes-blind register",
+  "family": "stakes-calibration",
+  "starter_rule": "judge the stakes every turn, and let the stakes set the register, the evidence standard, and how quickly a person gets involved.",
+  "page": "agents/by-capability/human-machine-interface/goals/stakes-calibration/failures/stakes-blind-register.md"
+ },
+ {
+  "id": "over-solemn-handling-of-low-stakes-requests",
+  "name": "Over-solemn handling of low-stakes requests",
+  "family": "stakes-calibration",
+  "starter_rule": "at low stakes, answer in the first sentence and ask for, warn about, or escalate nothing the answer does not need.",
+  "page": "agents/by-capability/human-machine-interface/goals/stakes-calibration/failures/over-solemn-handling-of-low-stakes-requests.md"
+ },
+ {
+  "id": "disruption-rebooking-with-wrong-rules-and-no-human-path",
+  "name": "Disruption rebooking with wrong rules and no human path",
+  "family": "travel-and-utility-agents",
+  "starter_rule": "quote the airline's current policy with its date for every refund or rebooking statement, and offer a person within two turns on high-stakes cases.",
+  "page": "agents/by-capability/human-machine-interface/goals/travel-and-utility-agents/failures/disruption-rebooking-with-wrong-rules-and-no-human-path.md"
+ },
+ {
+  "id": "outage-updates-generic-or-late",
+  "name": "Outage updates generic or late",
+  "family": "travel-and-utility-agents",
+  "starter_rule": "every outage update gives a next-update clock time, and an update goes out by it.",
+  "page": "agents/by-capability/human-machine-interface/goals/travel-and-utility-agents/failures/outage-updates-generic-or-late.md"
+ },
+ {
+  "id": "group-bookings-mix-up-travelers",
+  "name": "Group bookings mix up travelers",
+  "family": "travel-and-utility-agents",
+  "starter_rule": "read every traveler and every field back and wait for a clear yes before the booking is committed, and apply each change only to the traveler it names.",
+  "page": "agents/by-capability/human-machine-interface/goals/travel-and-utility-agents/failures/group-bookings-mix-up-travelers.md"
+ },
+ {
+  "id": "undisclosed-bot-identity",
+  "name": "Undisclosed bot identity",
+  "family": "trust-and-rapport",
+  "starter_rule": "flag any session where the first bot message has no AI disclosure or an identity question gets anything other than the locked truthful answer.",
+  "page": "agents/by-capability/human-machine-interface/goals/trust-and-rapport/failures/undisclosed-bot-identity.md"
+ },
+ {
+  "id": "no-follow-through",
+  "name": "No follow-through",
+  "family": "trust-and-rapport",
+  "starter_rule": "say \"I'll update you\" only after a scheduling call returned an ID; otherwise say you can't message them later and give a way to check.",
+  "page": "agents/by-capability/human-machine-interface/goals/trust-and-rapport/failures/no-follow-through.md"
+ },
+ {
+  "id": "repair-failure",
+  "name": "Repair failure (voice)",
+  "family": "voice",
+  "starter_rule": "treat a correction as a pointer to the last thing said, change only that detail, and read the new value back.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/repair-failure.md"
+ },
+ {
+  "id": "transcription-hallucination",
+  "name": "Transcription hallucination",
+  "family": "voice",
+  "starter_rule": "never present or act on a transcript when no speech was detected, and read back before any action.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/transcription-hallucination.md"
+ },
+ {
+  "id": "word-error-rate-only-evaluation",
+  "name": "Word-error-rate-only evaluation",
+  "family": "voice",
+  "starter_rule": "every evaluation report lists critical slots and their error rate next to WER, and the bot reads back a critical slot before acting on it.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/word-error-rate-only-evaluation.md"
+ },
+ {
+  "id": "dropped-negations-and-small-words",
+  "name": "Dropped negations and small words",
+  "family": "voice",
+  "starter_rule": "for any protected action, read back the action with the negation spelled out and act only on the caller's choice.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/dropped-negations-and-small-words.md"
+ },
+ {
+  "id": "punctuation-and-segmentation-errors",
+  "name": "Punctuation and segmentation errors",
+  "family": "voice",
+  "starter_rule": "for an action sentence with a list or a correction, state the scope in words and wait for a yes.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/punctuation-and-segmentation-errors.md"
+ },
+ {
+  "id": "no-repeat-or-recap-controls",
+  "name": "No repeat or recap controls",
+  "family": "voice",
+  "starter_rule": "treat \"what?\", \"say that again\", and \"go back\" as controls on the last agent turn, answer them from what was already said, and name them once.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/no-repeat-or-recap-controls.md"
+ },
+ {
+  "id": "atypical-speech-mishandled",
+  "name": "Atypical speech mishandled",
+  "family": "voice",
+  "starter_rule": "do not end a turn on a pause, show a guess for one-tap confirmation, and never repeat the same failure message.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/atypical-speech-mishandled.md"
+ },
+ {
+  "id": "emotion-inferred-from-voice",
+  "name": "Emotion inferred from voice",
+  "family": "voice",
+  "starter_rule": "never state a mood as fact, and never change what the user gets because of a mood guess unless it was disclosed and allowed.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/emotion-inferred-from-voice.md"
+ },
+ {
+  "id": "fixed-speaking-rate-and-volume",
+  "name": "Fixed speaking rate and volume",
+  "family": "voice",
+  "starter_rule": "when the user asks for a shorter, slower, or simpler reply, change the next reply that way and keep the setting until they change it.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/fixed-speaking-rate-and-volume.md"
+ },
+ {
+  "id": "ivr-style-menu-maze",
+  "name": "IVR-style menu maze",
+  "family": "voice",
+  "starter_rule": "accept typed text on every menu screen, never show the same menu twice in a row, and keep a route to a person visible.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/ivr-style-menu-maze.md"
+ },
+ {
+  "id": "wake-word-false-activation",
+  "name": "Wake-word false activation",
+  "family": "voice",
+  "starter_rule": "the assistant replies and stores messages only when the message matches an explicit invitation type, and every reply logs that type.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/wake-word-false-activation.md"
+ },
+ {
+  "id": "voice-to-visual-handoff-failure",
+  "name": "Voice-to-visual handoff failure",
+  "family": "voice",
+  "starter_rule": "say \"sent\" only after the send is accepted, and make the link open to the saved conversation, not to a blank page.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/voice-to-visual-handoff-failure.md"
+ },
+ {
+  "id": "dark-patterns",
+  "name": "Dark patterns",
+  "family": "visual",
+  "starter_rule": "the user can cancel, decline, or complain in this conversation in no more steps than it took to sign up, with the total price and renewal terms stated before any yes.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/dark-patterns.md"
+ },
+ {
+  "id": "cognitive-overload",
+  "name": "Cognitive overload",
+  "family": "visual",
+  "starter_rule": "when the user must pick, lead with the best-fit option and a reason, show at most four options plus \"Something else\", and ask one decision per message.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/cognitive-overload.md"
+ },
+ {
+  "id": "no-clear-primary-action",
+  "name": "No clear primary action",
+  "family": "visual",
+  "starter_rule": "every message that asks the user to decide has exactly one primary action, other options are lighter and capped, and no reply ends without a next step or a way out.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/no-clear-primary-action.md"
+ },
+ {
+  "id": "accessibility-gaps",
+  "name": "Accessibility gaps",
+  "family": "visual",
+  "starter_rule": "every card, button and visual in a critical flow has readable contrast, a text alternative, a visible focus state and an announced result, and the release fails if any state does not.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/accessibility-gaps.md"
+ },
+ {
+  "id": "motion-and-flashing-harm",
+  "name": "Motion and flashing harm",
+  "family": "visual",
+  "starter_rule": "before any non-essential animation or media plays, check the reduce-motion setting; never auto-play or flash; and honor \"stop animations\" in the next reply.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/motion-and-flashing-harm.md"
+ },
+ {
+  "id": "colour-only-encoding",
+  "name": "Colour-only encoding",
+  "family": "visual",
+  "starter_rule": "write every status, risk or priority as a word plus a distinct icon, and never let color be the only signal.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/colour-only-encoding.md"
+ },
+ {
+  "id": "small-targets-and-small-screens",
+  "name": "Small targets and small screens",
+  "family": "visual",
+  "starter_rule": "every chip and card button is at least 24 by 24 CSS pixels (44-48 for chips and primary buttons), has 8 pixels of space around it, and wraps instead of scrolling at 320 CSS pixels wide.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/small-targets-and-small-screens.md"
+ },
+ {
+  "id": "misleading-generated-visuals",
+  "name": "Misleading generated visuals",
+  "family": "visual",
+  "starter_rule": "every image the assistant generates carries a visible \"AI-generated\" caption in the same message, and facts in the reply come from the source, not from the picture.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/misleading-generated-visuals.md"
+ },
+ {
+  "id": "avatar-overpromising",
+  "name": "Avatar overpromising",
+  "family": "visual",
+  "starter_rule": "the avatar, name and first message promise only what the assistant can do: no human photo or title unless a person writes, an \"automated\" label always visible, and one stated limit up front.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/avatar-overpromising.md"
+ },
+ {
+  "id": "rich-card-misuse",
+  "name": "Rich-card misuse",
+  "family": "visual",
+  "starter_rule": "the answer is in the message text, buttons are limited to a short closed choice with \"Something else\", and free text stays open.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/rich-card-misuse.md"
+ },
+ {
+  "id": "misleading-charts",
+  "name": "Misleading charts",
+  "family": "visual",
+  "starter_rule": "every bar chart the assistant draws starts at zero, prints its values, and any axis cut is labeled on the chart.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/misleading-charts.md"
+ },
+ {
+  "id": "missing-loading-empty-and-error-states",
+  "name": "Missing loading, empty and error states",
+  "family": "visual",
+  "starter_rule": "every async view renders loading, empty, or error text with a reason and next step, never a blank area, and a failed fetch is never shown as empty.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/missing-loading-empty-and-error-states.md"
+ },
+ {
+  "id": "generative-ui-instability",
+  "name": "Generative UI instability",
+  "family": "visual",
+  "starter_rule": "the model chooses only from a fixed component list, and nothing renders until it passes its schema and has its space reserved; otherwise the reply is plain text.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/generative-ui-instability.md"
+ },
+ {
+  "id": "visuals-that-don-t-localise",
+  "name": "Visuals that don't localise",
+  "family": "visual",
+  "starter_rule": "every action icon in a card has a visible label, and only icons that carry direction are mirrored in right-to-left layouts.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/visuals-that-don-t-localise.md"
+ },
+ {
+  "id": "notification-overload",
+  "name": "Notification overload",
+  "family": "visual",
+  "starter_rule": "every notification is sent only for a type the user turned on, stays within that user's weekly cap, says why it was sent, and offers mute.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/notification-overload.md"
+ },
+ {
+  "id": "manipulated-consent-ui",
+  "name": "Manipulated consent UI",
+  "family": "visual",
+  "starter_rule": "show Accept and Reject on the same screen with the same size, style, position and number of taps, and never pre-select or infer consent.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/manipulated-consent-ui.md"
+ },
+ {
+  "id": "fake-urgency-and-trust-cues",
+  "name": "Fake urgency and trust cues",
+  "family": "visual",
+  "starter_rule": "show a deadline, a count or a badge only when a logged source proves it is true now.",
+  "page": "agents/by-capability/human-machine-interface/goals/visual/failures/fake-urgency-and-trust-cues.md"
+ },
+ {
+  "id": "bookings-without-confirming-details",
+  "name": "Bookings without confirming details",
+  "family": "voice-receptionist-agents",
+  "starter_rule": "before saving a booking, read back the name, callback number, and date and time in one message, and save only after a yes.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice-receptionist-agents/failures/bookings-without-confirming-details.md"
+ },
+ {
+  "id": "collections-calls-without-required-disclosures",
+  "name": "Collections calls without required disclosures",
+  "family": "voice-receptionist-agents",
+  "starter_rule": "no collections message is sent until a check confirms it carries the debt-collector statement, an opt-out on text and email, and no stop or dispute is open.",
+  "page": "agents/by-capability/human-machine-interface/goals/voice-receptionist-agents/failures/collections-calls-without-required-disclosures.md"
+ },
+ {
+  "id": "missed-crisis-signals",
+  "name": "Missed crisis signals",
+  "family": "vulnerable-users",
+  "starter_rule": "run a distress check on every user turn, and when it fires, pause the task, send a reviewed check-in with resources, and offer a person.",
+  "page": "agents/by-capability/human-machine-interface/goals/vulnerable-users/failures/missed-crisis-signals.md"
+ },
+ {
+  "id": "scam-victim-not-interrupted",
+  "name": "Scam victim not interrupted",
+  "family": "vulnerable-users",
+  "starter_rule": "On any hard scam signal, do not execute the payment; say nothing was sent, name the signal in plain words, and offer a person with a summary in the same message. *(Pattern ID: scam-victim-not-interrupted)*",
+  "page": "agents/by-capability/human-machine-interface/goals/vulnerable-users/failures/scam-victim-not-interrupted.md"
+ },
+ {
+  "id": "older-or-cognitively-impaired-users",
+  "name": "Older or cognitively impaired users",
+  "family": "vulnerable-users",
+  "starter_rule": "Offer a one-step-at-a-time mode, once, when the user repeats a question or says they don't understand, and never infer or record age or impairment. *(Pattern ID: older-or-cognitively-impaired-users)*",
+  "page": "agents/by-capability/human-machine-interface/goals/vulnerable-users/failures/older-or-cognitively-impaired-users.md"
+ },
+ {
+  "id": "financial-hardship-mishandled",
+  "name": "Financial hardship mishandled",
+  "family": "vulnerable-users",
+  "starter_rule": "when a customer says they can't pay, the next reply drops pay-now pressure, shows the company's documented options plus \"Something else\", makes no promise, and offers a person with a summary.",
+  "page": "agents/by-capability/human-machine-interface/goals/vulnerable-users/failures/financial-hardship-mishandled.md"
+ }
+]

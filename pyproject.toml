@@ -19,3 +19,6 @@ gort = "gortguard.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+gortguard = ["data/*.json"]

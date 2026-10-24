@@ -1,0 +1,35 @@
+{
+ "bundles": {
+  "core": {"about": "Basic chat quality: understanding the request, recovering from errors, remembering context, clear replies, steady behaviour across model changes.", "aliases": ["basics", "default", "quality", "errors", "memory", "context", "formatting"], "families": ["dialogue-management", "errors-and-recovery", "effort-and-memory", "conversation-leadership", "conversation-frameworks", "response-structure", "response-time", "chat-interface", "onboarding-and-discoverability", "channel-selection", "model-and-prompt-changes", "measurement-and-feedback"]},
+  "honesty": {"about": "No overclaiming, no false confidence, fitting refusals, matching care to the stakes.", "aliases": ["truth", "hallucination", "overclaiming", "refusal", "refusals", "confidence"], "families": ["trust-and-rapport", "stakes-calibration", "refusals-and-boundaries"]},
+  "handoff": {"about": "Getting the user to a person when they ask or need it, with the context passed on.", "aliases": ["transfer", "escalation", "escalate", "human", "live-agent", "person"], "families": ["human-handoff"]},
+  "upset-users": {"about": "Angry, frustrated or hostile users; tone, empathy and the bot's persona.", "aliases": ["angry", "complaints", "tone", "empathy", "persona", "frustration"], "families": ["difficult-customers", "emotional-intelligence", "persona-and-tone"]},
+  "safety": {"about": "Distress, self-harm signs, vulnerable users and unhealthy attachment to the bot.", "aliases": ["distress", "crisis", "self-harm", "vulnerable", "wellbeing"], "families": ["vulnerable-users", "relational-and-boundaries"]},
+  "privacy": {"about": "Personal data, consent, retention and what the bot may store or share.", "aliases": ["data", "consent", "pii", "gdpr", "governance"], "families": ["privacy-and-governance"]},
+  "access-and-language": {"about": "Accessibility, languages and locales, culture, age, and fair treatment of every user.", "aliases": ["accessibility", "a11y", "language", "translation", "locale", "fairness", "bias", "culture"], "families": ["accessibility", "language-and-locale", "cultural-adaptation", "fairness-and-identity", "age-adaptation"]},
+  "rich-ui": {"about": "Surface add-on: cards, buttons, charts and other visual parts of a chat widget.", "aliases": ["cards", "buttons", "widgets", "visual", "dark-patterns"], "families": ["visual"]},
+  "group-chat": {"about": "Surface add-on: bots in shared or group chats.", "aliases": ["group", "shared", "team-chat", "slack"], "families": ["group-and-shared-chats"]},
+  "copilot": {"about": "Surface add-on: assistants embedded in a product page, and image or file input.", "aliases": ["embedded", "in-app", "sidebar", "images", "uploads", "multimodal"], "families": ["embedded-copilots", "multimodal-input"]},
+  "outbound": {"about": "Surface add-on: messages the bot starts, reminders and notifications.", "aliases": ["proactive", "notifications", "reminders", "campaigns"], "families": ["proactive-and-ambient", "outbound-messaging-agents"]},
+  "money": {"about": "Industry add-on: banking, payments, investing and insurance claims.", "aliases": ["banking", "finance", "payments", "insurance", "claims"], "families": ["banking-agents", "finance-agents", "insurance-claims-agents"]},
+  "health": {"about": "Industry add-on: health advice, symptoms and appointment booking.", "aliases": ["healthcare", "medical", "clinic", "appointments"], "families": ["healthcare-agents", "health-scheduling-agents"]},
+  "companion": {"about": "Industry add-on: companion and wellbeing bots.", "aliases": ["wellness", "mental-health", "friend"], "families": ["companion-and-wellbeing-agents"]},
+  "commerce": {"about": "Industry add-on: shopping, sales, real estate, travel and utilities.", "aliases": ["shopping", "sales", "ecommerce", "retail", "travel", "booking", "real-estate"], "families": ["shopping-agents", "sales-agents", "real-estate-agents", "travel-and-utility-agents"]},
+  "public-and-work": {"about": "Industry add-on: government services, legal, education, HR and IT help desks.", "aliases": ["government", "legal", "education", "school", "hr", "it", "helpdesk"], "families": ["government-service-agents", "legal-agents", "education-agents", "hr-agents", "it-and-security-agents"]}
+ },
+ "later": {
+  "about": "Not chat-layer families; built after the chat layer works (owner, 2026-10-24).",
+  "families": ["voice", "voice-receptionist-agents", "drive-thru-agents", "in-car-and-home-assistants", "browser-agents", "coding-agents", "meeting-agents", "research-and-data-agents"]
+ },
+ "presets": {
+  "support-bot": {"about": "Customer support chat.", "bundles": ["core", "honesty", "handoff", "upset-users", "safety", "privacy", "access-and-language"]},
+  "faq-bot": {"about": "Answers questions from a help centre; no account actions.", "bundles": ["core", "honesty", "handoff", "access-and-language"]},
+  "booking-bot": {"about": "Books appointments, tables or trips.", "bundles": ["core", "honesty", "handoff", "privacy", "access-and-language", "commerce"]},
+  "sales-bot": {"about": "Recommends and sells products.", "bundles": ["core", "honesty", "handoff", "privacy", "access-and-language", "commerce", "outbound"]},
+  "banking-bot": {"about": "Bank, payments or insurance chat.", "bundles": ["core", "honesty", "handoff", "upset-users", "safety", "privacy", "access-and-language", "money"]},
+  "health-bot": {"about": "Health information or clinic booking.", "bundles": ["core", "honesty", "handoff", "safety", "privacy", "access-and-language", "health"]},
+  "companion-bot": {"about": "Companion or wellbeing chat.", "bundles": ["core", "honesty", "handoff", "upset-users", "safety", "privacy", "companion"]},
+  "kids-bot": {"about": "A bot children or students use.", "bundles": ["core", "honesty", "handoff", "safety", "privacy", "access-and-language", "public-and-work"]},
+  "internal-helpdesk": {"about": "Employee IT or HR help desk.", "bundles": ["core", "honesty", "handoff", "privacy", "public-and-work"]}
+ }
+}
