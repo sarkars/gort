@@ -1,0 +1,348 @@
+{
+ "about": "Where each pattern's fix belongs. prompt: the model can follow it, so it goes in gort-policy.md. code: a check in the agent's server (routing, gating a send or a tool call). ui: the chat widget. process: tests and reviews the team runs. Patterns not listed are prompt only. GORT's own judgment, reviewed by a person; not from the library.",
+ "place": {
+  "accessibility-gaps": [
+   "ui"
+  ],
+  "ambient-assistants-act-on-overheard-conversation": [
+   "code"
+  ],
+  "answer-and-go-conversation": [
+   "process"
+  ],
+  "auto-scroll-fights-the-reader": [
+   "ui"
+  ],
+  "avatar-overpromising": [
+   "ui"
+  ],
+  "bot-keeps-replying-after-a-person-joins": [
+   "code"
+  ],
+  "channel-chosen-for-organisational-convenience": [
+   "process"
+  ],
+  "chat-widget-hard-to-find-or-intrusive": [
+   "ui"
+  ],
+  "clean-lab-testing": [
+   "process"
+  ],
+  "cold-transfer": [
+   "code"
+  ],
+  "collections-calls-without-required-disclosures": [
+   "code"
+  ],
+  "colour-only-encoding": [
+   "prompt",
+   "ui"
+  ],
+  "controls-unreachable-by-keyboard": [
+   "ui"
+  ],
+  "copy-share-and-export-lose-content": [
+   "ui"
+  ],
+  "crossed-messages": [
+   "code"
+  ],
+  "dark-patterns": [
+   "prompt",
+   "ui"
+  ],
+  "dead-end-i-don-t-understand-replies": [
+   "prompt",
+   "code"
+  ],
+  "deceptive-typing-indicators": [
+   "ui"
+  ],
+  "dialect-and-name-quality-gap": [
+   "process"
+  ],
+  "dismissed-suggestions-come-back": [
+   "code"
+  ],
+  "do-not-call-lists-not-checked": [
+   "code"
+  ],
+  "employee-relations-complaints-routed-wrongly": [
+   "prompt",
+   "code"
+  ],
+  "escalates-too-early-or-too-late": [
+   "code"
+  ],
+  "fake-urgency-and-trust-cues": [
+   "code"
+  ],
+  "first-run-tours-that-block-use": [
+   "ui"
+  ],
+  "forces-a-fresh-login": [
+   "code"
+  ],
+  "free-trials-that-become-paid-subscriptions": [
+   "prompt",
+   "code"
+  ],
+  "generative-ui-instability": [
+   "code"
+  ],
+  "generic-error-messages": [
+   "prompt",
+   "ui"
+  ],
+  "handoff-outside-staffed-hours-with-no-alternative": [
+   "prompt",
+   "code"
+  ],
+  "handoff-summary-is-wrong-or-misleading": [
+   "prompt",
+   "code"
+  ],
+  "humans-can-t-see-what-the-bot-said-or": [
+   "code"
+  ],
+  "identity-checks-that-exclude-disabled-users": [
+   "prompt",
+   "code"
+  ],
+  "ignores-the-page-selection-and-form-state": [
+   "code"
+  ],
+  "impatient-idle-nudges": [
+   "code"
+  ],
+  "interrupts-at-a-bad-moment": [
+   "code"
+  ],
+  "long-threads-can-t-be-searched": [
+   "ui"
+  ],
+  "lost-drafts-and-failed-sends": [
+   "ui"
+  ],
+  "maintenance-emergencies-not-recognized": [
+   "prompt",
+   "code"
+  ],
+  "manipulated-consent-ui": [
+   "ui"
+  ],
+  "marketing-texts-without-consent": [
+   "code"
+  ],
+  "memory-contaminates-conversation-experiments": [
+   "code"
+  ],
+  "message-bursts": [
+   "code"
+  ],
+  "misleading-generated-visuals": [
+   "prompt",
+   "code"
+  ],
+  "missed-crisis-signals": [
+   "prompt",
+   "code"
+  ],
+  "missing-loading-empty-and-error-states": [
+   "ui"
+  ],
+  "missing-or-wrong-captions-and-transcripts": [
+   "prompt",
+   "ui"
+  ],
+  "mixed-language-experience": [
+   "ui"
+  ],
+  "mobile-keyboard-or-screen-hides-the-reply": [
+   "ui"
+  ],
+  "motion-and-flashing-harm": [
+   "ui"
+  ],
+  "negotiation-capitulation": [
+   "prompt",
+   "code"
+  ],
+  "no-accessible-working-or-done-signal": [
+   "ui"
+  ],
+  "no-channel-switch-or-context-lost": [
+   "prompt",
+   "code"
+  ],
+  "no-clear-primary-action": [
+   "prompt",
+   "ui"
+  ],
+  "no-clear-route-when-an-agent-buys-wrongly": [
+   "prompt",
+   "code"
+  ],
+  "no-de-escalation-strategy": [
+   "prompt",
+   "code"
+  ],
+  "no-editing-or-branching-of-a-sent-message": [
+   "ui"
+  ],
+  "no-follow-up": [
+   "code"
+  ],
+  "no-proactive-updates": [
+   "prompt",
+   "code"
+  ],
+  "no-user-facing-record-of-what-the-bot-said": [
+   "prompt",
+   "code"
+  ],
+  "no-warning-about-input-limits": [
+   "prompt",
+   "ui"
+  ],
+  "no-way-to-report-bad-behaviour": [
+   "process"
+  ],
+  "notes-approved-without-being-read": [
+   "prompt",
+   "ui"
+  ],
+  "notification-overload": [
+   "code"
+  ],
+  "outage-updates-generic-or-late": [
+   "prompt",
+   "code"
+  ],
+  "pacing-mismatch": [
+   "code"
+  ],
+  "patient-summaries-too-simple-to-be-safe": [
+   "code"
+  ],
+  "posting-to-the-wrong-period-or-account": [
+   "prompt",
+   "code"
+  ],
+  "privacy-rights-requests-not-recognised": [
+   "prompt",
+   "code"
+  ],
+  "proactive-outreach-overreach": [
+   "prompt",
+   "code"
+  ],
+  "prompt-edits-by-non-engineers-break-other-behavior": [
+   "process"
+  ],
+  "quick-reply-buttons-that-don-t-match-what-was": [
+   "ui"
+  ],
+  "quiet-hours-and-time-zones-ignored": [
+   "code"
+  ],
+  "recorders-that-join-without-everyone-s-consent": [
+   "code"
+  ],
+  "recording-consent-not-captured": [
+   "code"
+  ],
+  "results-delivered-without-context": [
+   "prompt",
+   "code"
+  ],
+  "return-policy-ignored": [
+   "prompt",
+   "code"
+  ],
+  "reviewing-only-failures": [
+   "process"
+  ],
+  "right-to-left-and-mixed-script-rendering": [
+   "ui"
+  ],
+  "scam-victim-not-interrupted": [
+   "prompt",
+   "code"
+  ],
+  "sensitive-data-collected-in-chat": [
+   "prompt",
+   "ui"
+  ],
+  "session-timeout-and-lost-context": [
+   "ui"
+  ],
+  "shared-accounts-reveal-gifts": [
+   "prompt",
+   "code"
+  ],
+  "silent-failure-and-timeout": [
+   "prompt",
+   "ui"
+  ],
+  "small-targets-and-small-screens": [
+   "ui"
+  ],
+  "splitting-payments-under-approval-limits": [
+   "prompt",
+   "code"
+  ],
+  "stale-price-or-stock-at-checkout": [
+   "code"
+  ],
+  "starter-suggestions-that-fail": [
+   "process"
+  ],
+  "steering-by-protected-class-in-recommendations": [
+   "prompt",
+   "code"
+  ],
+  "streaming-text-read-out-token-by-token": [
+   "ui"
+  ],
+  "survey-bias": [
+   "process"
+  ],
+  "talk-to-a-human-ignored-or-looped": [
+   "prompt",
+   "code"
+  ],
+  "the-bot-talks-over-people": [
+   "code"
+  ],
+  "timeouts-too-short-for-assistive-technology": [
+   "code"
+  ],
+  "tone-changes-shipped-with-no-regression-test": [
+   "process"
+  ],
+  "true-alerts-closed-as-false-positives": [
+   "code"
+  ],
+  "unchecked-translation-in-high-stakes-text": [
+   "prompt",
+   "code"
+  ],
+  "undisclosed-bot-identity": [
+   "process"
+  ],
+  "unsubscribe-requests-not-honoured": [
+   "code"
+  ],
+  "visual-product-sold-by-text-or-voice": [
+   "prompt",
+   "ui"
+  ],
+  "visuals-that-don-t-localise": [
+   "ui"
+  ],
+  "voiceprints-captured-without-consent": [
+   "code"
+  ]
+ }
+}
