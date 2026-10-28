@@ -1,0 +1,18 @@
+{
+  "name": "refund-agent",
+  "description": "Example only: a text chat agent for an online store that answers refund questions and starts refunds.",
+  "prompt": "You help customers of an online store with refunds. Look up the order before you answer. Start a refund only after the customer confirms the order and the amount. If the customer asks for a person, hand off.",
+  "tools": [
+    {"name": "lookup_order", "description": "Find a customer's orders by email or order number", "risk": ["read"]},
+    {"name": "issue_refund", "description": "Refund an order to the original payment method", "risk": ["write", "external", "irreversible"]},
+    {"name": "handoff_to_person", "description": "Pass the conversation and its summary to a support person", "risk": ["external"]}
+  ],
+  "retrieval": [
+    {"name": "refund-policy", "description": "The store's published refund and return policy"}
+  ],
+  "memory": {"scope": "conversation", "stores_personal_data": true},
+  "channels": ["chat"],
+  "agent_types": ["conversational", "action"],
+  "languages": ["en-US"],
+  "tags": {"team": "support", "region": ["US"]}
+}
