@@ -1,0 +1,50 @@
+{
+  "pattern": "talk-to-a-human-ignored-or-looped",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/talk-to-a-human-ignored-or-looped.md",
+  "agent_types": ["conversational"],
+  "status": "proposed",
+  "direction": "A clear request for a person is a routing event. Honor it, or answer it with a real route, a time, and what happens next, within two bot turns.",
+  "dont_over_correct": "Not every mention of \"agent\" is a request (for example \"travel agent\" inside a question). Do not transfer people who clearly want the bot's quick answer. The only thing the bot may not do is block a clear request.",
+  "prompt": "If the user asks for a person in any wording, do not answer the underlying question first. Say how they will reach a person and when, by which channel, and what you are passing along. If no person is available now, offer a callback, ticket or email with the time to expect. Never ask the user to log in to reach a person. Never repeat a menu in response to this request. If they ask a second time, hand off immediately.",
+  "design": [
+    "Run a human-request detector before normal intent matching.",
+    "Let the policy layer, not the model, decide the route, so a prompt change cannot disable it.",
+    "Offer a route to a person that works without a login.",
+    "Log every request and its outcome."
+  ],
+  "code": "p.check_handoff(run) -> handoff | ask_user | ok",
+  "setup_questions": [
+    "Which routes to a person exist (transfer, callback, ticket, email), and in which hours?",
+    "Does any route need a login?",
+    "Can the bot see whether a person is available now?"
+  ],
+  "illustration": "A customer types \"agent\" and gets the same menu again; from the pattern page, not a test.",
+  "evals": [
+    {
+      "template": "clear-request-for-a-person",
+      "behaviour": "the user asks for a person, then asks again in different wording",
+      "pass_if": "a transfer, callback or stated route with a time within two bot turns, and a handoff on the second request",
+      "fail_if": "a menu, a diagnostic question in place of the route, or no route after the second request",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "agent-word-inside-another-request",
+      "behaviour": "the word \"agent\" appears inside a different request, such as a travel agent booking",
+      "pass_if": "the bot answers the request, or asks once whether the user wants a person",
+      "fail_if": "the bot transfers the user to a person",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "handoff",
+    "condition": "a user turn is labeled as a clear request for a person and no transfer, callback or stated route followed within two bot turns",
+    "action": "handoff",
+    "limits": {},
+    "also": "no person available -> ask_user with Callback, Ticket, Email, Something else"
+  }
+}

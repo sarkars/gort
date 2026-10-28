@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GORT pack entry",
+  "description": "One failure in a pack, with its seven parts: direction, prompt, design, code, setup_questions, evals, guardrail. A part that does not apply is {\"not_applicable\": \"<why>\"}. No framework mapping (owner decision 2, 2026-10-28: library failures only). Limits are always blank (null); gort init asks the team.",
+  "type": "object",
+  "required": ["pattern", "page", "agent_types", "status", "direction", "dont_over_correct", "prompt", "design", "code", "setup_questions", "evals", "guardrail"],
+  "additionalProperties": false,
+  "properties": {
+    "pattern": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Pattern ID from failure taxonomy v1"},
+    "page": {"type": "string", "minLength": 1, "description": "Library page the entry is derived from"},
+    "agent_types": {"type": "array", "minItems": 1, "items": {"enum": ["all", "conversational", "action", "document", "knowledge", "operations", "coding", "multi-agent"]}},
+    "status": {"enum": ["proposed", "reviewed"]},
+    "direction": {"type": "string", "minLength": 1},
+    "dont_over_correct": {"type": "string", "minLength": 1},
+    "prompt": {"anyOf": [{"type": "string", "minLength": 1}, {"$ref": "#/$defs/not_applicable"}]},
+    "design": {"anyOf": [{"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, {"$ref": "#/$defs/not_applicable"}]},
+    "code": {"anyOf": [{"type": "string", "minLength": 1}, {"$ref": "#/$defs/not_applicable"}]},
+    "setup_questions": {"anyOf": [{"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, {"$ref": "#/$defs/not_applicable"}]},
+    "illustration": {"type": "string", "description": "Story from the pattern page; not a test"},
+    "evals": {"anyOf": [{"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/eval"}}, {"$ref": "#/$defs/not_applicable"}]},
+    "guardrail": {"anyOf": [{"$ref": "#/$defs/guardrail"}, {"$ref": "#/$defs/not_applicable"}]}
+  },
+  "$defs": {
+    "not_applicable": {
+      "type": "object",
+      "required": ["not_applicable"],
+      "additionalProperties": false,
+      "properties": {"not_applicable": {"type": "string", "minLength": 1}}
+    },
+    "eval": {
+      "type": "object",
+      "required": ["template", "behaviour", "pass_if", "fail_if", "fill_from", "grader"],
+      "additionalProperties": false,
+      "properties": {
+        "template": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+        "behaviour": {"type": "string", "minLength": 1},
+        "pass_if": {"type": "string", "minLength": 1},
+        "fail_if": {"type": "string", "minLength": 1},
+        "fill_from": {"enum": ["agent.yaml", "team", "confirmed-failures"]},
+        "grader": {"enum": ["rule", "judge"]},
+        "over_correct": {"type": "boolean", "description": "Tests the don't-over-correct side"},
+        "simulated_user": {"type": "boolean", "description": "Multi-turn; needs a simulated user"}
+      }
+    },
+    "guardrail": {
+      "type": "object",
+      "required": ["kind", "checks", "condition", "action", "limits"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["rule", "judge"]},
+        "checks": {"enum": ["user_input", "reply", "retrieved", "memory_write", "tool_call", "handoff", "run"]},
+        "condition": {"type": "string", "minLength": 1},
+        "action": {"enum": ["log", "fix", "retry", "ask_user", "block", "handoff"]},
+        "limits": {"type": "object", "additionalProperties": {"type": "null"}, "description": "Business limits, always blank; set in gort init"},
+        "also": {"type": "string"}
+      }
+    }
+  }
+}

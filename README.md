@@ -24,6 +24,8 @@ system_prompt = my_template.replace("{{gort_policy}}", p.policy())
 ```
 
 Pattern data comes from the library: `python tools/import_library.py <path-to-agent-failure-modes>` rewrites `src/gortguard/data/patterns.json`.
+Pack entries (one failure, seven parts) follow `src/gortguard/data/pack-schema.json`; `gortguard.packformat.load_entry(path)` checks one. Two hand-written examples are in `examples/packs/`. Limits are always blank, and entries carry no framework mapping.
+
 Not published to PyPI.
 
 ## Develop
