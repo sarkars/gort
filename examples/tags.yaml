@@ -1,0 +1,4 @@
+[
+  {"key": "owning_team", "family": "fix", "type": "enum", "source": "map", "table": "teams.csv", "multi": false, "status": "proposed"},
+  {"key": "agent_version", "family": "system", "type": "text", "source": "field", "path": "attributes.gen_ai.agent.version", "status": "approved"}
+]

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GORT records (plan step 6): Run, Step, Finding",
+  "description": "What Stage 1 guardrails write and Stage 2 reads. Every record carries the eleven tag families; a family nothing could fill is the string 'unknown', never dropped. See docs/record-format.md for the mapping to OpenTelemetry GenAI, OpenInference and the chat event schema v0.1.",
+  "$defs": {
+    "tagValue": {
+      "anyOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "boolean"},
+        {"type": "number"},
+        {"type": "array", "items": {"type": "string", "minLength": 1}}
+      ]
+    },
+    "family": {
+      "anyOf": [
+        {"enum": ["unknown"]},
+        {"type": "object", "additionalProperties": {"$ref": "#/$defs/tagValue"}}
+      ]
+    },
+    "tags": {
+      "type": "object",
+      "required": ["what_failed", "system", "guard", "business", "impact", "risk", "time", "volume", "fix", "confidence", "audience"],
+      "additionalProperties": false,
+      "properties": {
+        "what_failed": {"$ref": "#/$defs/family"},
+        "system": {"$ref": "#/$defs/family"},
+        "guard": {"$ref": "#/$defs/family"},
+        "business": {"$ref": "#/$defs/family"},
+        "impact": {"$ref": "#/$defs/family"},
+        "risk": {"$ref": "#/$defs/family"},
+        "time": {"$ref": "#/$defs/family"},
+        "volume": {"$ref": "#/$defs/family"},
+        "fix": {"$ref": "#/$defs/family"},
+        "confidence": {"$ref": "#/$defs/family"},
+        "audience": {"$ref": "#/$defs/family"}
+      }
+    },
+    "run": {
+      "type": "object",
+      "required": ["record", "id", "agent_type", "source", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "record": {"enum": ["run"]},
+        "id": {"type": "string", "minLength": 1},
+        "agent_type": {"enum": ["conversational", "action", "document", "knowledge", "operations", "coding", "multi_agent", "unknown"]},
+        "source": {"enum": ["chat_events", "otel_genai", "openinference"]},
+        "started": {"type": "string", "minLength": 1},
+        "tags": {"$ref": "#/$defs/tags"}
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["record", "id", "run_id", "index", "kind", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "record": {"enum": ["step"]},
+        "id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "parent_id": {"type": "string", "minLength": 1},
+        "index": {"type": "number"},
+        "kind": {"enum": ["user_message", "bot_reply", "model_call", "plan", "tool_call", "retrieval", "memory_read", "memory_write", "guardrail", "handoff", "error", "timeout", "session_event", "unknown"]},
+        "timestamp": {"type": "string", "minLength": 1},
+        "text": {"type": "string"},
+        "attributes": {"type": "object"},
+        "tags": {"$ref": "#/$defs/tags"}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["record", "id", "run_id", "step_id", "pattern", "evidence", "detector", "tags"],
+      "additionalProperties": false,
+      "properties": {
+        "record": {"enum": ["finding"]},
+        "id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "step_id": {"type": "string", "minLength": 1},
+        "pattern": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+        "evidence": {"type": "string", "minLength": 1},
+        "detector": {"enum": ["rule", "judge"]},
+        "caused_by": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "fix": {"type": "string", "minLength": 1},
+        "tags": {"$ref": "#/$defs/tags"}
+      }
+    }
+  }
+}
