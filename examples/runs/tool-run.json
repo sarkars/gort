@@ -1,0 +1,8 @@
+[
+  {"trace_id": "t1", "span_id": "s1", "start_time": "2026-10-28T16:00:00Z", "attributes": {"gen_ai.operation.name": "invoke_agent", "gen_ai.agent.name": "refund-agent", "gen_ai.agent.version": "0.1", "gen_ai.conversation.id": "synthetic-tool-1"}},
+  {"trace_id": "t1", "span_id": "s2", "parent_span_id": "s1", "start_time": "2026-10-28T16:00:01Z", "attributes": {"gen_ai.operation.name": "chat", "gen_ai.request.model": "example-model"}},
+  {"trace_id": "t1", "span_id": "s3", "parent_span_id": "s1", "start_time": "2026-10-28T16:00:02Z", "attributes": {"gen_ai.operation.name": "retrieval", "gen_ai.data_source.id": "refund-policy"}},
+  {"trace_id": "t1", "span_id": "s4", "parent_span_id": "s1", "start_time": "2026-10-28T16:00:03Z", "attributes": {"gen_ai.operation.name": "execute_tool", "gen_ai.tool.name": "lookup_order", "gen_ai.tool.call.id": "call_1"}},
+  {"trace_id": "t1", "span_id": "s5", "parent_span_id": "s1", "start_time": "2026-10-28T16:00:04Z", "attributes": {"gen_ai.operation.name": "execute_tool", "gen_ai.tool.name": "issue_refund", "gen_ai.tool.call.id": "call_2", "error.type": "timeout"}},
+  {"trace_id": "t1", "span_id": "s6", "parent_span_id": "s1", "start_time": "2026-10-28T16:00:09Z", "attributes": {"openinference.span.kind": "GUARDRAIL"}}
+]

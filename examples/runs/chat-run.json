@@ -1,0 +1,8 @@
+[
+  {"schema_version": "0.1", "event_id": "e1", "conversation_id": "synthetic-chat-1", "turn_index": 1, "timestamp": "2026-10-28T15:00:00Z", "channel": "chat", "speaker": "system", "event_type": "open", "context.entry_point": "help-button", "context.signed_in": true},
+  {"schema_version": "0.1", "event_id": "e2", "conversation_id": "synthetic-chat-1", "turn_index": 2, "timestamp": "2026-10-28T15:00:05Z", "channel": "chat", "speaker": "user", "event_type": "message", "text": "Where is my refund for order [ORDER]?", "text_redaction": "partial", "user_label.intent": "refund_status"},
+  {"schema_version": "0.1", "event_id": "e3", "conversation_id": "synthetic-chat-1", "turn_index": 3, "timestamp": "2026-10-28T15:00:07Z", "channel": "chat", "speaker": "bot", "event_type": "message", "text": "Sorry, I didn't understand that. Can you rephrase?", "text_redaction": "none", "bot.turn_type": "fallback", "bot.is_fallback": true},
+  {"schema_version": "0.1", "event_id": "e4", "conversation_id": "synthetic-chat-1", "turn_index": 4, "timestamp": "2026-10-28T15:00:20Z", "channel": "chat", "speaker": "user", "event_type": "message", "text": "I want to talk to a person.", "text_redaction": "none", "user_label.request_for_person": true, "user_label.next_turn_reaction": "rephrase"},
+  {"schema_version": "0.1", "event_id": "e5", "conversation_id": "synthetic-chat-1", "turn_index": 5, "timestamp": "2026-10-28T15:00:22Z", "channel": "chat", "speaker": "bot", "event_type": "handoff"},
+  {"schema_version": "0.1", "event_id": "e6", "conversation_id": "synthetic-chat-1", "turn_index": 6, "timestamp": "2026-10-28T15:04:00Z", "channel": "chat", "speaker": "system", "event_type": "session_end"}
+]

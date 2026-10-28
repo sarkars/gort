@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "tags.yaml (plan step 6): a team's tag registry",
+  "description": "A list of tag definitions on top of the shared catalog. The loader and the four sources run in plan step 19; this file only fixes the format.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["key", "family", "type", "source", "status"],
+    "additionalProperties": false,
+    "properties": {
+      "key": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+      "family": {"enum": ["what_failed", "system", "guard", "business", "impact", "risk", "time", "volume", "fix", "confidence", "audience"]},
+      "type": {"enum": ["enum", "hierarchy", "number", "date", "text"]},
+      "source": {"enum": ["field", "model", "map", "computed"]},
+      "path": {"type": "string", "minLength": 1},
+      "table": {"type": "string", "minLength": 1},
+      "function": {"type": "string", "minLength": 1},
+      "values": {"type": "array", "items": {"type": "string", "minLength": 1}},
+      "multi": {"type": "boolean"},
+      "status": {"enum": ["proposed", "approved"]}
+    }
+  }
+}

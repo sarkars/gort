@@ -7,7 +7,7 @@ from importlib.resources import files
 from gortguard.pack import BY_ID
 
 SCHEMA = json.loads((files("gortguard") / "data" / "pack-schema.json").read_text(encoding="utf-8"))
-_TYPES = {"object": dict, "array": list, "string": str, "boolean": bool, "null": type(None)}
+_TYPES = {"object": dict, "array": list, "string": str, "boolean": bool, "number": (int, float), "null": type(None)}
 
 
 def validate(value, schema=SCHEMA, path="$", root=SCHEMA) -> list[str]:
