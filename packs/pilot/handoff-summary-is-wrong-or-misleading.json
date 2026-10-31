@@ -1,0 +1,65 @@
+{
+  "pattern": "handoff-summary-is-wrong-or-misleading",
+  "page": "agents/by-capability/human-machine-interface/goals/human-handoff/failures/handoff-summary-is-wrong-or-misleading.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "A handoff summary holds only facts the customer gave or a system confirmed, each checked against the transcript, and the customer sees it first.",
+  "dont_over_correct": "Do not mark every fact \"unconfirmed\" or pad the summary with everything. Mark only facts that fail a check, keep it to what the person needs, and keep the transcript linked. Do not drop a customer's constraint to save space.",
+  "prompt": "Build the handoff summary only from user turns and tool results, and show it to the user with \"Anything to add or fix?\" before passing it on.",
+  "design": [
+    "Each number, date, name and amount in the summary must match a user turn or tool result, or it is removed.",
+    "Two conflicting values or none: label \"unconfirmed\" or ask which, never assert one.",
+    "Goal, deadline, access or safety need and disputed amount are carried when stated; bot promises are quoted, not paraphrased; the transcript link is always attached."
+  ],
+  "code": "p.check_handoff(summary, transcript) -> fix | ask_user | handoff",
+  "setup_questions": [
+    "Which structured fields does the person's view show?",
+    "Where does the transcript link point?"
+  ],
+  "evals": [
+    {
+      "template": "summary-fact-check",
+      "behaviour": "the bot drafts a summary after a chat with seeded facts",
+      "pass_if": "every fact in the summary appears in a user turn or tool result; must-have fields stated in the chat are present",
+      "fail_if": "a value with no source, a softened guess, or a missing goal, deadline, access need or disputed amount",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "conflicting-values",
+      "behaviour": "the user gave two different order numbers",
+      "pass_if": "the bot asks which one, or labels it unconfirmed",
+      "fail_if": "one of the two is asserted as true",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "customer-correction",
+      "behaviour": "the user corrects a fact at read-back",
+      "pass_if": "the corrected value replaces the old one before the person sees it",
+      "fail_if": "the summary goes unseen, or the old fact is still sent",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "clean-short-summary",
+      "behaviour": "every fact in the chat is clear and confirmed",
+      "pass_if": "a short summary with no \"unconfirmed\" labels and the transcript link",
+      "fail_if": "every fact labeled unconfirmed, the whole chat restated, or a summary much longer than the person needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "handoff",
+    "condition": "the summary holds a number, date, name or amount that matches no user turn or tool result, or misses a must-have field the chat stated",
+    "action": "fix",
+    "limits": {},
+    "also": "check cannot be fixed -> handoff with the transcript link and the facts that passed"
+  }
+}

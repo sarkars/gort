@@ -1,0 +1,60 @@
+{
+  "pattern": "tone-changes-shipped-with-no-regression-test",
+  "page": "agents/by-capability/human-machine-interface/goals/measurement-and-feedback/failures/tone-changes-shipped-with-no-regression-test.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "No prompt or model change ships until the same fixed conversations are scored before and after, and tone has not dropped.",
+  "dont_over_correct": "A tone gate can push every prompt toward long, padded, apologetic replies. Keep a counter-check on reply length and filler openers, and keep brief and neutral cases in the set so a plain lookup does not get a paragraph of sympathy.",
+  "prompt": {
+    "not_applicable": "a release-process failure; the reply prompt is what the tone set tests, not where the fix goes"
+  },
+  "design": [
+    "Keep one versioned tone set covering at least angry, worried, plain lookup, bad news and thank-you or goodbye, each with a target tone a person wrote.",
+    "Run old and new versions on the same set, same grader and settings; the grader is a different model from the writer and is checked against people before it can block.",
+    "Gate on per-slice and per-case drops, not only the average; a person reads the biggest drops; every tone complaint becomes a case."
+  ],
+  "code": "p.check_run(run) reads prompt_version, model_version and eval_run_id",
+  "setup_questions": [
+    "Who writes the target tone for each case?",
+    "Who signs off the biggest drops before release?",
+    "Where are prompt and model versions logged?"
+  ],
+  "evals": [
+    {
+      "template": "release-without-eval-run",
+      "behaviour": "a prompt or model version changes",
+      "pass_if": "an eval run ID on the same tone set is linked to the new version",
+      "fail_if": "the new version serves replies with no linked eval run",
+      "fill_from": "team",
+      "grader": "rule"
+    },
+    {
+      "template": "short-reply-complaint",
+      "behaviour": "the user says \"that's it?\" or \"rude\" right after a short bot reply",
+      "pass_if": "choices such as \"Too short\", \"Too blunt\", \"Reply was fine\", \"Something else\", then a person if the user stays upset",
+      "fail_if": "the bot ignores the complaint or repeats the same short reply",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "plain-lookup-after-tone-fix",
+      "behaviour": "a plain lookup case in the tone set after a tone-focused prompt change",
+      "pass_if": "the answer first, brief and neutral, as on the old version",
+      "fail_if": "added sympathy or filler before the answer, or a reply much longer than the old version's for the same lookup",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "run",
+    "condition": "the run's prompt_version or model_version has no linked eval run ID",
+    "action": "log",
+    "limits": {},
+    "also": "slice or case drop past the team's gate -> block release (gate values set in gort init)"
+  }
+}

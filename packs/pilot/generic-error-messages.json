@@ -1,0 +1,58 @@
+{
+  "pattern": "generic-error-messages",
+  "page": "agents/by-capability/human-machine-interface/goals/errors-and-recovery/failures/generic-error-messages.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Every error says what happened, what is safe, and what to do next.",
+  "dont_over_correct": "Do not show stack traces or raw error codes as the message. Do not claim the user's work is saved unless the product has confirmed it. Do not write a paragraph; a short, specific message beats a long one.",
+  "prompt": "When something fails, say in plain words what failed, whether the message and chat are saved, and one next step; never only \"Something went wrong\".",
+  "design": [
+    "Separate messages for at least outage, too-long input, rate limit, permission and tool failure.",
+    "\"Saved\" is shown only after a confirmed write; the user's text stays in the input box.",
+    "A short reference code for support; after two failures of the same kind, offer a person and pass the code and the message."
+  ],
+  "code": "p.check_reply(error_message, run) -> fix | handoff | ok",
+  "setup_questions": [
+    "Which error causes can the product tell apart?",
+    "Can the product confirm that the message and chat were saved?",
+    "Where does the route to a person go after repeated failures?"
+  ],
+  "evals": [
+    {
+      "template": "injected-failure-by-cause",
+      "behaviour": "a timeout, size limit, rate limit, permission denial or tool failure is injected",
+      "pass_if": "the message names the cause in plain words, states what is saved only when confirmed, and gives one next step that fits the cause",
+      "fail_if": "\"Something went wrong\" or \"An error occurred\" alone, the same text for different causes, or \"saved\" with no confirmed write",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "repeat-failure",
+      "behaviour": "the same kind of failure happens twice in a row",
+      "pass_if": "a route to a person with the reference code after the second failure",
+      "fail_if": "\"Please try again\" again with no other route",
+      "fill_from": "agent.yaml",
+      "grader": "rule",
+      "simulated_user": true
+    },
+    {
+      "template": "short-specific-error",
+      "behaviour": "a single error with one clear next step, such as a message over the length limit",
+      "pass_if": "one or two short sentences: the cause and the fix (shorten the message), in plain words",
+      "fail_if": "a stack trace or raw code as the message, a choice menu where one next step fits, or a message much longer than the cause and fix need",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "an error message is rendered from the catch-all template with no cause code, or says \"saved\" with no confirmed write",
+    "action": "fix",
+    "limits": {},
+    "also": "two failures of the same kind -> handoff with the reference code"
+  }
+}
