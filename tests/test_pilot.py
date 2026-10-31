@@ -101,7 +101,7 @@ def test_count_page_matches_files():
     """protects=honest count page; fails_when=a number on docs/pilot-count.md differs from the files; no_claim=measured results"""
     page = (ROOT / "docs" / "pilot-count.md").read_text(encoding="utf-8")
     assert "Proposed entries, not measured." in page and "## Schema changes" in page
-    rows = {k: int(n) for k, n in re.findall(r"^\| ([a-z_ ]+) \| (\d+) \|$", page, re.M)}
+    rows = {k: int(n) for k, n in re.findall(r"^\| ([a-z_ ]+) \| (\d+) \|(d+) |?$", page, re.MULTILINE)}
     files = count_files()
     assert rows and all(rows[k] == files[k] for k in rows)
     assert all(k in rows for k, n in files.items() if n)
