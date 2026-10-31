@@ -6,7 +6,7 @@ ROOT = Path(__file__).parent.parent
 PILOT = sorted((ROOT / "packs" / "pilot").glob("*.json"))
 
 # Spec order (sarkars/gort issue 7); entries arrive 10 per run.
-IDS = """
+_IDS = """
 identity-checks-that-exclude-disabled-users voice-only-flows-with-no-text-alternative
 child-user-treated-as-adult complex-or-emotional-discussion-forced-into-chat
 sensitive-data-collected-in-chat lost-drafts-and-failed-sends silent-attachment-failures
@@ -25,7 +25,8 @@ romantic-or-parasocial-dependence answer-buried filler-and-padding
 length-mismatch-with-the-user-s-effort impatient-idle-nudges urgency-blind-pacing
 over-solemn-handling-of-low-stakes-requests stakes-blind-register no-follow-through
 undisclosed-bot-identity missed-crisis-signals scam-victim-not-interrupted
-""".split()
+"""
+IDS = _IDS.split()
 
 
 def entries():
