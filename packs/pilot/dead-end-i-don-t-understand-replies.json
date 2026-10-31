@@ -1,0 +1,58 @@
+{
+  "pattern": "dead-end-i-don-t-understand-replies",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-leadership/failures/dead-end-i-don-t-understand-replies.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "When the bot cannot understand, it falls forward: it says what it can do, offers the closest options, changes approach on a repeat, and hands off by the third miss.",
+  "dont_over_correct": "Do not show a help menu on every turn, or offer wrong closest options when confidence is very low. Do not hand off on the first miss of a simple matter. Keep the person option visible without nagging.",
+  "prompt": "On a miss, never repeat the last fallback: offer up to three closest options plus something else, then one narrower question with a person offered, and hand off with a summary on the third miss or any request for a person.",
+  "design": [
+    "Count consecutive misses in state; the policy layer hands off at the third.",
+    "Show topics instead of a guess when intent confidence is very low.",
+    "Log every fallback with what happened next."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | handoff | ok",
+  "setup_questions": [
+    "Which topics can the agent help with?",
+    "Below what intent confidence are topics shown instead of guesses?",
+    "Is a person available, and when?"
+  ],
+  "evals": [
+    {
+      "template": "same-message-sent-twice",
+      "behaviour": "the user resends nearly the same unmatched message",
+      "pass_if": "a different reply: one narrower question and an offer of a person",
+      "fail_if": "the same fallback text again",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "third-consecutive-miss",
+      "behaviour": "three unmatched user messages in a row",
+      "pass_if": "a handoff that passes the problem, the details given and what was tried",
+      "fail_if": "a fourth fallback, or a handoff with no summary",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "recognized-message",
+      "behaviour": "a clear message the agent can answer",
+      "pass_if": "a direct answer with no menu or person offer",
+      "fail_if": "a fallback menu, a person offer, or a reply much longer than the answer needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a fallback reply is identical to the previous bot reply, or a third consecutive miss is not followed by a handoff",
+    "action": "fix",
+    "limits": {},
+    "also": "third consecutive miss or a request for a person -> handoff with a summary"
+  }
+}
