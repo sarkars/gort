@@ -1,0 +1,51 @@
+{
+  "pattern": "answer-and-go-conversation",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-leadership/failures/answer-and-go-conversation.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Every bot turn does three jobs: Answer what was asked, Advance toward what the user is really trying to do, and Close the loop when the goal is met.",
+  "dont_over_correct": "The opposite failure is a bot that interrogates, upsells, or won't let the user leave (see over-clarification). Four guardrails: one move per turn; stop advancing after two declined prompts (`advances_declined >= 2`); in high-stakes or distressed contexts, the forward move is a safe next step or a handoff, never a sales prompt; and no filler. A tag-on like \"Want me to explain more?\" after every reply is a known annoyance. Users and tech writers have complained about it in general-purpose assistants, and one writer reported that a plain \"do not ask follow-up questions\" instruction wasn't enough to stop it (PCWorld). A forward move counts only if it ties to the user's stated goal.",
+  "prompt": {
+    "not_applicable": "The fix is enforced in the team's tests and reviews, not the prompt."
+  },
+  "design": [
+    "Track a goal and a stage.",
+    "Answer first, then advance.",
+    "Make exactly one forward move per turn",
+    "Close the loop explicitly.",
+    "Know when to stop."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: session.goal, session.stage, session.advances_declined, session.stakes, session.stalled_turns, session.user_signalled_done, session.closed, draft_reply.forward_move?",
+    "Where does the fix go in your agent: the team's tests and reviews?"
+  ],
+  "evals": [
+    {
+      "template": "informational-question-one-forward-move",
+      "behaviour": "Informational question, one forward move: Answer first, then advance",
+      "pass_if": "\"Yes, usually 3-5 business days\" first, then one question (for example, home or office). A bare answer fails.",
+      "fail_if": "The answer is held back for a question",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-user-is-done",
+      "behaviour": "Do nothing special: user is done: Know when to stop",
+      "pass_if": "A one-turn close with no new question, offer, or pitch. A new forward move fails.",
+      "fail_if": "A move anyway",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a non-final bot reply is about to be sent with an answer but no forward move, and the reply breaks the rule: flag a session for review when it ends on a bot message with no resolution marker and no forward move in the bot's last non-final turns, unless the user had signaled they were done.",
+    "action": "log",
+    "limits": {}
+  }
+}

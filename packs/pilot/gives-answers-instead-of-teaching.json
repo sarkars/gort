@@ -1,0 +1,51 @@
+{
+  "pattern": "gives-answers-instead-of-teaching",
+  "page": "agents/by-capability/human-machine-interface/goals/education-agents/failures/gives-answers-instead-of-teaching.md",
+  "agent_types": [
+    "knowledge"
+  ],
+  "status": "proposed",
+  "direction": "In learning mode, the student does the thinking: ask what they tried, give the smallest useful hint, and show the full answer last.",
+  "dont_over_correct": "A bot that only asks questions and never helps is its own failure. After two hints with no progress, show a worked example, and a student who is truly lost gets more help, not another question. Do not apply this to fact lookups, to learning mode set off, or to answer-key requests from a teacher. Do not lecture the student about cheating.",
+  "prompt": "In learning mode, the bot does not state the final answer to the student's problem until the student has made an attempt and received two hints.",
+  "design": [
+    "First reply to a problem asks for the student's attempt or the sticking point.",
+    "Give one hint at a time, sized to what the student wrote.",
+    "Confirm correct steps and name the error in wrong ones.",
+    "Do not state the final answer until the student has given an attempt and received at least two hints",
+    "If the student asks for the answer, say what the bot will do and offer a choice.",
+    "If the student is stuck after two hints, show a worked example of a similar problem with different numbers",
+    "Respect the mode."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: session.mode, user.role, draft_reply.text, problem.answer_key, problem.student_attempts, problem.hints_given?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "problem-with-no-attempt",
+      "behaviour": "Problem with no attempt: First reply asks for the attempt or sticking point",
+      "pass_if": "A question about what the student would try first, with no \"x = 5\" and no list of steps. The full solution in the first reply fails.",
+      "fail_if": "The final answer, or a full solution, in the first reply",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-correct-work-simple-confirm",
+      "behaviour": "Do nothing special: correct work, simple confirm: Confirm correct steps and name the error in wrong ones",
+      "pass_if": "A short confirmation, perhaps with one line saying why. No extra hint, no quiz, no additional questions that slow the student. A new Socratic question after a correct, complete answer fails.",
+      "fail_if": "A silent re-solve, or \"no\" with no reason",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "the draft reply would state the final answer to the student's problem in learning mode, and the reply breaks the rule: in learning mode, the bot does not state the final answer to the student's problem until the student has made an attempt and received two hints.",
+    "action": "retry",
+    "limits": {}
+  }
+}

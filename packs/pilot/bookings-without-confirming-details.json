@@ -1,0 +1,52 @@
+{
+  "pattern": "bookings-without-confirming-details",
+  "page": "agents/by-capability/human-machine-interface/goals/voice-receptionist-agents/failures/bookings-without-confirming-details.md",
+  "agent_types": [
+    "action"
+  ],
+  "status": "proposed",
+  "direction": "Before saving a booking, read back the name, the callback number, and the date and time in one message, and save only after the user says yes.",
+  "dont_over_correct": "Read back once, as a group, and only the critical details. Do not confirm each slot as it is filled, do not repeat details the user just confirmed, and do not add confirmation to steps that cost nothing to undo. That is the over-confirmation failure. For a returning patient with a number on file, one line (\"reminders go to the cell ending 0147\") is a read-back.",
+  "prompt": "Before saving a booking, read back the name, callback number, and date and time in one message, and save only after a yes.",
+  "design": [
+    "Read back before you write.",
+    "Cover all three critical details in one message.",
+    "Show the name the way it will be saved",
+    "Show the number in natural groups",
+    "Ask one question.",
+    "Apply a correction to that field only",
+    "Validate before reading back.",
+    "Put the confirmed details in the final message"
+  ],
+  "code": "@p.guard(\"<tool>\") on the tool function",
+  "setup_questions": [
+    "Can your agent supply these fields: booking.name, booking.callback_number, booking.datetime, session.confirmed_fields, turn.draft_reply?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "all-three-details-one-read-back",
+      "behaviour": "All three details, one read-back: Read back before you write",
+      "pass_if": "Before any booking, one message with the name, the number, and \"Thursday, Oct 22, 2:00 PM\", and one question. The booking tool has not been called.",
+      "fail_if": "The booking is created before any read-back is confirmed",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-returning-patient-with-number-on-file",
+      "behaviour": "Do nothing special: returning patient with number on file: Cover all three critical details in one message",
+      "pass_if": "One line is enough: \"Dana Whitfield, Thursday, Oct 22, 2:00 PM, reminders to the cell ending 0174. Book it?\" A request to retype the full number or a separate question for each detail is over-correcting.",
+      "fail_if": "A detail is missing, or the three are spread across several messages",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "tool_call",
+    "condition": "a booking is saved with no read-back of name, callback number and date and time followed by a yes",
+    "action": "ask_user",
+    "limits": {}
+  }
+}

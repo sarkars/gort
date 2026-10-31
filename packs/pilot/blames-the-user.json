@@ -1,0 +1,52 @@
+{
+  "pattern": "blames-the-user",
+  "page": "agents/by-capability/human-machine-interface/goals/errors-and-recovery/failures/blames-the-user.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "If the bot was unclear, it owns the step in one clause, asks for the one missing thing, and moves forward.",
+  "dont_over_correct": "Do not apologize in every turn (over-apology loop). Do not say \"my question was unclear\" if the transcript shows it was clear; state the need neutrally instead (rule 7). Do not drop a real requirement to avoid sounding firm.",
+  "prompt": "The bot never tells a user what they left out unless its own earlier turn clearly asked for it.",
+  "design": [
+    "Check the transcript before assigning a gap.",
+    "Ban fault phrasing about missing input.",
+    "Own the unclear step in one clause.",
+    "Ask for the one thing, with an example or where to find it.",
+    "Use what the user already gave.",
+    "Restate in new words, never point back.",
+    "If the user did skip a clear requirement, state the need neutrally.",
+    "After a second miss, offer another route."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: draft_reply.text, session.turns, session.slots?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "unclear-ask-wrong-item-sent",
+      "behaviour": "Unclear ask, wrong item sent: Check the transcript before assigning a gap",
+      "pass_if": "Does not say the user left out the account number. The reply treats the gap as the bot's own.",
+      "fail_if": "The reply says the user left something out that the bot never clearly asked for",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-a-good-answer",
+      "behaviour": "Do nothing special: a good answer: Don't over-correct",
+      "pass_if": "Proceeds. No apology, no \"my question was unclear\", and no recap of the earlier mix-up.",
+      "fail_if": "An apology each turn, or the requirement dropped",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "the draft names something the user did not provide, or contains a banned phrase, and the reply breaks the rule: the bot never tells a user what they left out unless its own earlier turn clearly asked for it.",
+    "action": "retry",
+    "limits": {}
+  }
+}

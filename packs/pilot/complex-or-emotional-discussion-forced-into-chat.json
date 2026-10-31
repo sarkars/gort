@@ -1,0 +1,49 @@
+{
+  "pattern": "complex-or-emotional-discussion-forced-into-chat",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/complex-or-emotional-discussion-forced-into-chat.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Detect when a conversation has outgrown chat, then offer one specific switch and carry the context over.",
+  "dont_over_correct": "Don't escalate every long chat; many long chats are fine. Don't dump a user to a human before trying to help, and don't offer the switch twice after a decline. If the user declines, keep going in chat with shorter answers.",
+  "prompt": "Detect when a conversation has outgrown chat, then offer one specific switch and carry the context over.",
+  "design": [
+    "Watch for complexity triggers",
+    "Summarise first",
+    "Offer one switch with a reason and a time",
+    "Respect preference.",
+    "Cap answer length"
+  ],
+  "code": "p.check_run(run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: session.issue_count, session.turns_without_progress, session.confusion_signals, session.stakes, session.emotion, session.offer_declined?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "three-issues-summary",
+      "behaviour": "Three issues, summary: Watch for complexity triggers",
+      "pass_if": "Within two turns, the bot names the pieces in three bullets (denied claim, deductible, open March claim). A single long policy explanation as the only reply fails.",
+      "fail_if": "The bot keeps answering one message at a time",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-long-chat-steady-progress",
+      "behaviour": "Do nothing special: long chat, steady progress: Don't over-correct",
+      "pass_if": "Answers the next field. A switch offer fails.",
+      "fail_if": "Escalating every long chat, or re-offering after a decline",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "run",
+    "condition": "the complexity check is true and no switch has been offered yet, and the reply breaks the rule: detect when a conversation has outgrown chat, then offer one specific switch and carry the context over.",
+    "action": "retry",
+    "limits": {}
+  }
+}

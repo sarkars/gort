@@ -1,0 +1,52 @@
+{
+  "pattern": "repair-failure",
+  "page": "agents/by-capability/human-machine-interface/goals/voice/failures/repair-failure.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Treat a correction as a pointer to the last thing said, fix only that, confirm it, and have a second way out when speech keeps failing.",
+  "dont_over_correct": "Do not read back every detail of every turn, which slows calls. Do not ask the caller to repeat when you already have a confident, corrected value. Do not treat every \"no\" as a correction (\"No, that's all\" ends the call).",
+  "prompt": "Treat a correction as a pointer to the last thing said, change only that detail, and read the new value back.",
+  "design": [
+    "Recognize correction turns.",
+    "Repair the slot, not the whole turn.",
+    "Ask a targeted question when unsure.",
+    "Read the new value back and wait for a yes.",
+    "Expect harder audio on corrections.",
+    "Vary the repair.",
+    "Honor \"say that again\" and \"stop\" at once.",
+    "Hand off after two failed repairs"
+  ],
+  "code": "p.check_run(run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: turn.text, repair.count, repair.method, state.slot_values, reply.text?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "day-correction",
+      "behaviour": "Day correction: A correction changes only the named detail",
+      "pass_if": "One slot changes; the rest stay",
+      "fail_if": "The whole state resets or the old value stays",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-no-that-s-all",
+      "behaviour": "Do nothing special: \"No, that's all.\": A correction changes only the named detail",
+      "pass_if": "One slot changes; the rest stay",
+      "fail_if": "The whole state resets or the old value stays",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "run",
+    "condition": "the caller corrects a detail or asks for a repeat, and again after each failed repair, and the reply breaks the rule: treat a correction as a pointer to the last thing said, change only that detail, and read the new value back.",
+    "action": "retry",
+    "limits": {}
+  }
+}

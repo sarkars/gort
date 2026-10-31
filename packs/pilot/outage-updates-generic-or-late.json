@@ -1,0 +1,52 @@
+{
+  "pattern": "outage-updates-generic-or-late",
+  "page": "agents/by-capability/human-machine-interface/goals/travel-and-utility-agents/failures/outage-updates-generic-or-late.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Every outage update says what happened, who is affected, what is not yet known, and when the next update comes, then keeps that time.",
+  "dont_over_correct": "Do not promise a restoration time the crew has not given. Do not send an update every few minutes with nothing new; pick a cadence that fits the outage and say so (see the cadence sources in section 4). Do not blame the weather or a vendor to dodge ownership.",
+  "prompt": "Every outage update gives a next-update clock time, and an update goes out by it.",
+  "design": [
+    "Name the cause in plain words when it is known.",
+    "Name the area.",
+    "Give the next update time as a clock time.",
+    "Keep the two times apart.",
+    "Say what is unknown and why.",
+    "Update on or before the stated time.",
+    "Show estimates as given by the outage system, with the time they were made.",
+    "Offer a person and the safety route."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: outage.cause, outage.area, outage.crew_status, outage.estimate, outage.next_update_at?",
+    "Where does the fix go in your agent: the system prompt, the agent's server code?"
+  ],
+  "evals": [
+    {
+      "template": "cause-named",
+      "behaviour": "Cause named: Name the cause in plain words when it is known",
+      "pass_if": "Says a damaged transformer is the cause, in plain words.",
+      "fail_if": "\"An issue\" with no cause",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-no-spam-when-nothing-is-new",
+      "behaviour": "Do nothing special: no spam when nothing is new: Don't over-correct",
+      "pass_if": "No updates between the promised times.",
+      "fail_if": "A guessed estimate, or spam updates",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "an outage status reply has no next-update clock time",
+    "action": "retry",
+    "limits": {}
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "pattern": "no-de-escalation-strategy",
+  "page": "agents/by-capability/human-machine-interface/goals/difficult-customers/failures/no-de-escalation-strategy.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Notice the anger, change tactics in a fixed order, and hand off at clear triggers, without arguing or mirroring.",
+  "dont_over_correct": "Don't over-apologise, don't offer money before hearing the problem (the evidence above suggests it can backfire), and don't force a human on someone who wants a quick fix. Don't promise outcomes the bot can't deliver.",
+  "prompt": "When an angry thread hits an escalation trigger, hand off to a person with a summary instead of continuing the scripted reply.",
+  "design": [
+    "Acknowledge specifically",
+    "Own what's yours.",
+    "Act now",
+    "Offer a choice",
+    "Escalate at triggers"
+  ],
+  "code": "p.check_run(run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: state.anger, state.negative_turns, state.repeated_complaint, state.legal_or_regulator_mention, state.asked_for_human?",
+    "Where does the fix go in your agent: the system prompt, the agent's server code?"
+  ],
+  "evals": [
+    {
+      "template": "specific-complaint-full-reply",
+      "behaviour": "Specific complaint, full reply: Acknowledge specifically, once",
+      "pass_if": "A reply that uses the facts (two charges, five days), takes the action (reversal submitted, 2-3 business days, email today), and offers a choice such as \"Reversal now\" or \"A call from a specialist\". A policy quote first fails.",
+      "fail_if": "A generic \"I understand your frustration\", or repeated acknowledgments",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-only-one-remedy",
+      "behaviour": "Do nothing special: only one remedy: Don't over-correct",
+      "pass_if": "Act and state the result, without inventing an option menu. A forced menu of choices fails.",
+      "fail_if": "Any of these",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "run",
+    "condition": "an angry thread reaches an escalation trigger, or the bot is about to offer a remedy to an angry user, and the reply breaks the rule: when an angry thread hits an escalation trigger, hand off to a person with a summary instead of continuing the scripted reply.",
+    "action": "handoff",
+    "limits": {}
+  }
+}

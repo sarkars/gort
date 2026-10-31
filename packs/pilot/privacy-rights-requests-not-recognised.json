@@ -1,0 +1,53 @@
+{
+  "pattern": "privacy-rights-requests-not-recognised",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/privacy-rights-requests-not-recognised.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "A message that asks to know, delete, correct, or opt out is a privacy request, and the bot says so, files it, and states the next step in the same turn.",
+  "dont_over_correct": "A bot that treats every mention of \"data\" or \"privacy\" as a request will bury people in forms. \"What is your privacy policy?\" gets the answer. The guardrail is the false-route rate in section 7.",
+  "prompt": "When a message asks to know, delete, correct, or opt out, the bot names the request type and files it in the same turn.",
+  "design": [
+    "Label every user message for privacy intent: know, delete, correct, opt out, or none.",
+    "When the label is not \"none\", the reply names the request type in its first sentence",
+    "File a record in the same turn",
+    "State the next step and the timing your privacy team has approved.",
+    "If the type or scope is unclear, ask once with 2-4 choices plus \"Something else.\"",
+    "Never ask why the user wants it, and never ask for an account login to take an opt-out.",
+    "Never say the work is done.",
+    "Do not route ordinary chat actions.",
+    "If the user repeats the request after the bot's reply, hand off to a person."
+  ],
+  "code": "p.check_input(message, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: turn.user_text, turn.privacy_intent, turn.privacy_route, ticket.created_at?",
+    "Where does the fix go in your agent: the system prompt, the agent's server code?"
+  ],
+  "evals": [
+    {
+      "template": "request-buried-after-a-complaint",
+      "behaviour": "Request buried after a complaint: Label every message for privacy intent (know, delete, correct, opt out, none)",
+      "pass_if": "Handles the refund and also catches the delete request as a separate item, naming it.",
+      "fail_if": "The request is answered as general chat or ignored",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-policy-question",
+      "behaviour": "Do nothing special: policy question: Don't over-correct",
+      "pass_if": "Gives the answer or link. No filing, no choice menu.",
+      "fail_if": "A privacy filing or choice menu for a plain question",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "user_input",
+    "condition": "a user message asks to know, delete, correct, or opt out, and the reply breaks the rule: When a message asks to know, delete, correct, or opt out, the bot names the request type and files it in the same turn.",
+    "action": "retry",
+    "limits": {}
+  }
+}

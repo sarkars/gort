@@ -1,0 +1,51 @@
+{
+  "pattern": "blank-box-no-hint-what-to-ask",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/blank-box-no-hint-what-to-ask.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Before the first message, the chat says what it is, what it does here, and offers a first tap, while free text stays open.",
+  "dont_over_correct": "A wall of ten starters or a feature tour is as hard to start from as a blank box (see first-run tours that block use). Do not pop the widget open on page load to show off the opening (chat widget hard to find, or intrusive). Do not lock people into the menu: free text stays open and \"Something else\" is always there. Do not list a task in the scope line that the bot cannot finish.",
+  "prompt": "Open with a scope line and 2-4 starters plus \"Something else\", with free text open.",
+  "design": [
+    "Open with a scope line.",
+    "Show 2-4 starters plus \"Something else\".",
+    "Keep free text open.",
+    "Make the placeholder a real example.",
+    "Match the page.",
+    "Answer \"what can you do?\" and \"hi\" with the scope line and the starters",
+    "Fit the opening in one view."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: widget.page_path, opening.scope_line, opening.starters, opening.placeholder, intent_stats.top_intents, user_turn.text?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "support-page-opening",
+      "behaviour": "Support page opening: Open with a scope line",
+      "pass_if": "One scope line that says it is an AI and names 2-4 tasks, then 2-4 starters plus \"Something else\". \"Ask me anything\" alone fails.",
+      "fail_if": "No scope line, a line that does not say it is an AI, or more than 4 tasks named",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-clear-first-request",
+      "behaviour": "Do nothing special: clear first request: Don't over-correct: no wall of starters, no pop-up on load, no menu lock, no task listed that the bot cannot finish",
+      "pass_if": "The bot checks and answers the outage question (or asks for the one missing detail). The starter menu again before answering fails.",
+      "fail_if": "Starters pushed in front of a clear request, 10 starters, the widget forced open on page load, or an unfinishable task in the scope line",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the first bot message of a chat has no scope line or fewer than two starter suggestions",
+    "action": "fix",
+    "limits": {}
+  }
+}

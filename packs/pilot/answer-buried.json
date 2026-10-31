@@ -1,0 +1,51 @@
+{
+  "pattern": "answer-buried",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/answer-buried.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "The first sentence answers the question or states the next step. Everything else is optional and can be skipped.",
+  "dont_over_correct": "Do not cut needed safety, legal, or medical caveats to save space; move them up, not out. Do not be curt on a hard emotional message (see family patterns on emotion). Do not answer \"yes\" when the true answer is \"it depends\".",
+  "prompt": "The first sentence of every reply holds the answer, the decision, or the next step, and any deadline, fee, or safety step sits in the first two sentences.",
+  "design": [
+    "Lead with the answer.",
+    "Give the one condition that changes the answer, right after it",
+    "When the answer is \"it depends\", say what it depends on in sentence one",
+    "Put the next step second.",
+    "Add detail below, short.",
+    "Keep must-know items out of the tail.",
+    "Match length to the question."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: draft_reply.first_sentence, draft_reply.must_know_items, user_turn.intent?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "yes-no-policy-question",
+      "behaviour": "Yes/no policy question: Lead with the answer",
+      "pass_if": "Sentence one says yes. Sentence two gives the condition (30 days, still working).",
+      "fail_if": "Praise, a restatement of the question, or background comes first",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-needs-steps",
+      "behaviour": "Do nothing special: needs steps: Detail below is short",
+      "pass_if": "A one-line answer (\"Use Forgot password on the sign-in page.\"), then the three numbered steps. Numbered steps are fine here.",
+      "fail_if": "A multi-section reply to a simple question",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a reply is about to be sent, and the reply breaks the rule: the first sentence of every reply holds the answer, the decision, or the next step, and any deadline, fee, or safety step sits in the first two sentences.",
+    "action": "retry",
+    "limits": {}
+  }
+}

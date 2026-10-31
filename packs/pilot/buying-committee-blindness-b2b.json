@@ -1,0 +1,52 @@
+{
+  "pattern": "buying-committee-blindness-b2b",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/buying-committee-blindness-b2b.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "After answering the visitor's question, ask once who else decides, record the roles in their own words, and give the rep that map.",
+  "dont_over_correct": "Do not turn a first chat into an interview. A small, low-price purchase by a solo user needs no stakeholder map, so skip the question when the visitor is buying for themselves. Do not ask about internal politics, budget owners' names or competitors' roles. Do not contact a named third party without the visitor's consent.",
+  "prompt": "After answering, ask once who else would weigh in on the purchase, and record the roles in the visitor's own words.",
+  "design": [
+    "Answer first, then ask.",
+    "Ask who approves, not whether they are the buyer.",
+    "Store roles, not only the contact.",
+    "Do not score authority from a job title.",
+    "Never penalize a larger group.",
+    "Ask for roles first, names only if offered.",
+    "Accept a decline.",
+    "Pass the stakeholders block on handoff."
+  ],
+  "code": "@p.guard(\"<tool>\") on the tool function",
+  "setup_questions": [
+    "Can your agent supply these fields: session.intent, session.stakeholders, session.contact_title, lead.status, handoff.summary?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "integration-question-then-a-demo",
+      "behaviour": "Integration question, then a demo: Answer first, then ask, in the same turn, before booking or handoff",
+      "pass_if": "Answers the integration question first. Then asks once who else would weigh in, before offering a demo.",
+      "fail_if": "Books the demo with no question, or asks without answering",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-solo-freelancer-20-plan",
+      "behaviour": "Do nothing special: solo freelancer, $20 plan: Don't over-correct",
+      "pass_if": "Answers the question. Asks no stakeholder question.",
+      "fail_if": "A stakeholder question to a freelancer buying a $20 plan",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "tool_call",
+    "condition": "a demo booking, lead qualification or handoff tool call is made and no buying-committee roles are recorded for the visitor",
+    "action": "ask_user",
+    "limits": {}
+  }
+}

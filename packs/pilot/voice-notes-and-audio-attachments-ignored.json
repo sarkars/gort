@@ -1,0 +1,52 @@
+{
+  "pattern": "voice-notes-and-audio-attachments-ignored",
+  "page": "agents/by-capability/human-machine-interface/goals/multimodal-input/failures/voice-notes-and-audio-attachments-ignored.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "When an audio file or voice note arrives, say you received it, show the transcript, name any part you could not hear or open, and act only after the person confirms or corrects it.",
+  "dont_over_correct": "Do not make the person confirm a transcript that is clear and low-stakes, and do not paste a long transcript above a one-line answer. For a short, clear note, a one-line \"I heard: ...\" followed by the answer is enough. Do not offer a menu in place of the transcript. The cost of too much checking is the over-confirmation failure.",
+  "prompt": "When an audio attachment arrives, say you received it, show the transcript, name what could not be heard, and let the person correct it before you act.",
+  "design": [
+    "Acknowledge every audio attachment.",
+    "Transcribe, then show the transcript.",
+    "Say what could not be heard.",
+    "Let the person correct it.",
+    "Check the file before the model sees it.",
+    "If you cannot transcribe it, say so and give a way forward.",
+    "Confirm before acting on high-risk details.",
+    "Keep the audio's status in the log."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: attachment.type, attachment.status, attachment.reason, attachment.transcript, attachment.unclear, draft_reply.text?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "voice-note-treated-as-empty",
+      "behaviour": "Voice note treated as empty: Acknowledge every audio attachment",
+      "pass_if": "First line says a voice note (0:40) arrived. Then it works from the content.",
+      "fail_if": "The reply treats the turn as empty, or never mentions the audio",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-short-clear-note",
+      "behaviour": "Do nothing special: short clear note: Don't over-correct",
+      "pass_if": "One line such as \"I heard: 'What are your office hours?'\" followed by the hours. No confirm step.",
+      "fail_if": "A confirm step, a menu in place of the transcript, or a long transcript above a one-line answer",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the turn holds an audio attachment and the reply carries no transcript of it",
+    "action": "retry",
+    "limits": {}
+  }
+}

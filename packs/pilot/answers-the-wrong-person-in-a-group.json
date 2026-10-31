@@ -1,0 +1,51 @@
+{
+  "pattern": "answers-the-wrong-person-in-a-group",
+  "page": "agents/by-capability/human-machine-interface/goals/group-and-shared-chats/failures/answers-the-wrong-person-in-a-group.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Record who said each message and who each reply is for, and never answer from a guess about the speaker.",
+  "dont_over_correct": "A bot that asks \"who is that for?\" on every message, or that adds a name to every line, becomes noise in a busy channel. Ask only when the asker is unclear. A bot that stays silent unless @-mentioned may also miss a plain follow-up from the person it just answered; treat a reply to the bot's message as addressing it.",
+  "prompt": "The bot answers each addressed member by name, from a list of who asked what, and asks when the asker is unclear.",
+  "design": [
+    "Tag every message with its sender.",
+    "Keep an open-request list.",
+    "Address each reply to its asker.",
+    "Answer only when addressed.",
+    "When the asker is unclear, ask.",
+    "Never answer as a member.",
+    "Close the request."
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: thread.members, thread.open_requests, message.sender_id, message.mentions, reply.addressee_id?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "names-reach-the-model",
+      "behaviour": "Names reach the model: Tag every message with its sender",
+      "pass_if": "The sent transcript shows \"Dana: ...\" and \"Marcus: ...\", a name on every human turn. Both as \"user:\" fails.",
+      "fail_if": "A turn labeled only \"user\", or a name missing",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-one-asker-clear-request",
+      "behaviour": "Do nothing special: one asker, clear request: Don't over-correct",
+      "pass_if": "A direct answer. No \"who is this for?\" question. A name or reply-to is fine; a question about who is asking fails.",
+      "fail_if": "A question the thread already answered, or silence toward a plain follow-up",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a reply is about to be sent in a thread with more than one human member, and the reply breaks the rule: the bot answers each addressed member by name, from a list of who asked what, and asks when the asker is unclear.",
+    "action": "retry",
+    "limits": {}
+  }
+}

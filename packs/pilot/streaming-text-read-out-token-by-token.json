@@ -1,0 +1,52 @@
+{
+  "pattern": "streaming-text-read-out-token-by-token",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/streaming-text-read-out-token-by-token.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Keep the streaming text out of the spoken channel; announce a short status, then the full reply once.",
+  "dont_over_correct": "Do not go silent: a page that announces nothing leaves a blind user not knowing a reply is coming (the status in rule 3 matters). Do not announce every sentence \"to be safe\", which brings back the chatter W3C warns about. Do not remove streaming for sighted users; this fix changes only what is spoken. Do not use `assertive` for ordinary replies.",
+  "prompt": {
+    "not_applicable": "The fix is enforced in the chat widget, not the prompt."
+  },
+  "design": [
+    "Put the status in its own region, in the page from the start.",
+    "While the reply streams, the reply body is not a live region.",
+    "Announce \"Generating a response\" once per reply",
+    "Expose the complete reply in one update",
+    "Announce completion once.",
+    "Never move focus",
+    "Announce failure once, as a complete message.",
+    "Test the live stream with the real screen readers"
+  ],
+  "code": {
+    "not_applicable": "The fix lives in the chat widget; no package helper applies."
+  },
+  "setup_questions": [
+    "Can your agent supply these fields: reply.stream_start_ts, reply.stream_end_ts, live_region.writes, focus.changes, reply.length?",
+    "Where does the fix go in your agent: the chat widget?"
+  ],
+  "evals": [
+    {
+      "template": "inspect-the-page-before-the-first-message",
+      "behaviour": "Inspect the page before the first message: Put the status in its own region, in the page from the start",
+      "pass_if": "One empty `role=\"status\"` element with `aria-live=\"polite\"` is already present. A region created on the first reply fails.",
+      "fail_if": "No status region at load, a region added at the first reply, or the reply body used as the status",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-ordinary-reply-is-still-spoken",
+      "behaviour": "Do nothing special: ordinary reply is still spoken: Announce \"Generating a response\" once per reply",
+      "pass_if": "The same start status and one completion announcement. No extra speech, and no `assertive` interruption. Staying silent through the whole reply, with no status at all, is over-correcting and fails.",
+      "fail_if": "No start status, a repeat, or sentence-by-sentence updates",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "not_applicable": "The fix is in the chat widget's markup (live regions); the widget's accessibility test checks it, not a live check on the agent's replies."
+  }
+}

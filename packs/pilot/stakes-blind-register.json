@@ -1,0 +1,50 @@
+{
+  "pattern": "stakes-blind-register",
+  "page": "agents/by-capability/human-machine-interface/goals/stakes-calibration/failures/stakes-blind-register.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Judge the stakes every turn, and let the stakes set the register, the evidence standard, and how quickly a person gets involved.",
+  "dont_over_correct": "Don't turn every chat into a funeral. Misclassifying low-stakes questions as serious makes the bot cold and slow. Keep the classifier conservative about *raising* stakes only on clear signals, and let users say \"just give me the quick answer.\"",
+  "prompt": "Judge the stakes every turn, and let the stakes set the register, the evidence standard, and how quickly a person gets involved.",
+  "design": [
+    "Classify stakes each turn",
+    "Change register at high stakes",
+    "Answer from a source, not memory",
+    "State limits honestly",
+    "Offer written confirmation",
+    "No upsell or promotion"
+  ],
+  "code": "p.check_reply(reply, run) -> action",
+  "setup_questions": [
+    "Can your agent supply these fields: state.stakes, turn.topic_label, reply.citations, session.handoff_offered?",
+    "Where does the fix go in your agent: the system prompt?"
+  ],
+  "evals": [
+    {
+      "template": "bereavement-fare",
+      "behaviour": "Bereavement fare: Classify stakes each turn",
+      "pass_if": "A calm opening about the loss with no emoji or exclamation marks, the policy points as written (request before booking), and an offer to connect a person. \"Good news! 😊 Just book now\" fails.",
+      "fail_if": "A serious topic handled like store hours, or the reverse",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "do-nothing-special-store-hours",
+      "behaviour": "Do nothing special: store hours: Don't over-correct",
+      "pass_if": "A friendly, brief answer: \"6 a.m. Central.\" No solemnity, no offer of a person. A heavy or solemn reply fails.",
+      "fail_if": "A solemn tone on ordinary questions, a refusal of the short answer, or a person pushed after the user declined",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a reply is about to be sent on a turn classified high stakes, and the reply breaks the rule: judge the stakes every turn, and let the stakes set the register, the evidence standard, and how quickly a person gets involved.",
+    "action": "retry",
+    "limits": {}
+  }
+}
