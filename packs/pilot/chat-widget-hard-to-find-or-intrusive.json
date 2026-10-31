@@ -1,0 +1,58 @@
+{
+  "pattern": "chat-widget-hard-to-find-or-intrusive",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/chat-widget-hard-to-find-or-intrusive.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "The visitor can always find the chat, and the chat never gets in their way until they show they need it.",
+  "dont_over_correct": "Do not hide the widget further or remove the launcher to cut dismissals. Do not make the launcher pulse, bounce or play a sound to get noticed, and do not add a second chat button.",
+  "prompt": "When the chat opens from a task-specific entry point, start on that task in the first sentence, not with a greeting.",
+  "design": [
+    "One launcher with a text label naming its job, in the same place on every page.",
+    "The full panel never auto-opens; a teaser shows at most once per session, only on a logged sign of need, never on checkout, payment or form pages, and never after a dismissal.",
+    "Every show, open and dismiss is logged with trigger, by and ms_since_shown."
+  ],
+  "code": "p.check_run(run) reads widget events (trigger, by, dismissed) -> log",
+  "setup_questions": [
+    "Which pages are flagged complex and get an inline entry point?",
+    "Which page types block all proactive teasers?",
+    "What label names the launcher's job?"
+  ],
+  "evals": [
+    {
+      "template": "auto-open-config",
+      "behaviour": "a widget config is loaded on any page",
+      "pass_if": "the full panel opens only on a visitor tap",
+      "fail_if": "any panel open with by = auto",
+      "fill_from": "team",
+      "grader": "rule"
+    },
+    {
+      "template": "teaser-after-dismissal",
+      "behaviour": "the visitor dismisses a teaser, then moves to another page in the same session",
+      "pass_if": "no further teaser in that session",
+      "fail_if": "a second teaser after the dismissal",
+      "fill_from": "team",
+      "grader": "rule",
+      "simulated_user": true
+    },
+    {
+      "template": "entry-point-open",
+      "behaviour": "the visitor opens chat from a task-specific entry point",
+      "pass_if": "the first reply starts on that task, short and specific",
+      "fail_if": "a generic greeting first, or a reply much longer than the task needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "run",
+    "condition": "a run's widget events show the panel opened with by = auto, or a teaser shown after a dismissal in the same session",
+    "action": "log",
+    "limits": {},
+    "also": "a teaser on a blocked page type -> log"
+  }
+}

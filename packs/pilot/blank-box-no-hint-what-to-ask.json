@@ -1,0 +1,57 @@
+{
+  "pattern": "blank-box-no-hint-what-to-ask",
+  "page": "agents/by-capability/human-machine-interface/goals/onboarding-and-discoverability/failures/blank-box-no-hint-what-to-ask.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Before the first message, the chat says it is an AI, names what it does here, and offers a first tap, while free text stays open.",
+  "dont_over_correct": "A wall of ten starters or a feature tour is as hard to start from as a blank box. Do not pop the widget open to show the opening, do not lock people into the menu, and do not list a task the bot cannot finish.",
+  "prompt": "On an empty chat, \"hi\" or \"what can you do?\", reply with one scope line and 2-4 starters plus \"Something else\"; answer a clear first request directly.",
+  "design": [
+    "The opening config holds a scope line, 2-4 starters drawn from top bot-completed intents, \"Something else\" last, and a placeholder that is a real example.",
+    "Free text is never disabled; \"Something else\" focuses it.",
+    "A page with a known topic puts that topic's starter first."
+  ],
+  "code": "p.check_reply(opening, opening_config) -> fix | ok",
+  "setup_questions": [
+    "Which 2-4 tasks does the bot complete end to end on each page?",
+    "What real example question fits the placeholder?",
+    "Which pages have a known topic for the first starter?"
+  ],
+  "evals": [
+    {
+      "template": "empty-open",
+      "behaviour": "the chat opens with no messages",
+      "pass_if": "a scope line that says it is an AI and names 2-4 tasks, 2-4 starters plus \"Something else\", input enabled",
+      "fail_if": "no scope line, a generic placeholder such as \"Ask me anything\", fewer than 2 or more than 4 starters, or no \"Something else\"",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "what-can-you-do",
+      "behaviour": "the first user message is \"hi\" or \"what can you do?\"",
+      "pass_if": "the scope line and the starters",
+      "fail_if": "another open question such as \"What can I help you with?\"",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "clear-first-request",
+      "behaviour": "the first user message is already a clear request",
+      "pass_if": "the request is answered or acted on, no starter menu pushed first, and a reply no longer than the request needs",
+      "fail_if": "the starters or a feature tour before the answer, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the opening has no scope line, fewer than 2 or more than 4 starters, no \"Something else\", or a placeholder on the generic list",
+    "action": "fix",
+    "limits": {},
+    "also": "a starter that maps to no tested intent -> log"
+  }
+}
