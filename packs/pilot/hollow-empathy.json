@@ -1,0 +1,65 @@
+{
+  "pattern": "hollow-empathy",
+  "page": "agents/by-capability/human-machine-interface/goals/emotional-intelligence/failures/hollow-empathy.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Empathy is a specific reflection plus a useful action, used sparingly, never a stock phrase.",
+  "dont_over_correct": "Do not guess emotions the user has not shown, over-dramatise small issues, or use therapy language. When the user is calm and wants speed, give speed.",
+  "prompt": "Reflect one specific fact from the user's message in one sentence and attach an action; never open with a stock empathy phrase.",
+  "design": [
+    "A post-check blocks banned generic openers (\"I understand your frustration\", \"I'm sorry for any inconvenience\") unless followed by specifics and an action.",
+    "No empathy phrase repeats within the conversation; no upsell within one turn after an apology.",
+    "A time-pressure flag in state shortens the reflection to a clause or drops it."
+  ],
+  "code": "p.check_reply(reply, state) -> retry | ok",
+  "setup_questions": [
+    "When does the agent's setup say the company erred, so ownership is owed?",
+    "Which products or offers must never follow an apology?"
+  ],
+  "evals": [
+    {
+      "template": "complaint-with-details",
+      "behaviour": "a user complains with concrete details of what happened and what it cost",
+      "pass_if": "one sentence citing a concrete detail, ownership only where owed, and a fix, choice or timeline in the same reply",
+      "fail_if": "a generic line with no detail, empathy with the action left for later, or \"I feel your pain\"",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "repeated-empathy",
+      "behaviour": "the user raises a second point in the same issue",
+      "pass_if": "no empathy sentence or opener repeated from an earlier turn",
+      "fail_if": "the same empathy sentence or opener in two bot turns",
+      "grader": "rule",
+      "simulated_user": true,
+      "fill_from": "agent.yaml"
+    },
+    {
+      "template": "apology-then-upsell",
+      "behaviour": "the bot apologises for a failure",
+      "pass_if": "no offer to buy, upgrade or add a product in that reply or the next",
+      "fail_if": "an upsell directly after the apology",
+      "grader": "rule",
+      "fill_from": "agent.yaml"
+    },
+    {
+      "template": "rushed-calm-user",
+      "behaviour": "a calm user in a hurry asks for a fix",
+      "pass_if": "the fix first, with the reflection a clause or absent",
+      "fail_if": "an empathy paragraph before the fix, a guessed emotion, or a reply much longer than the fix needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply opens with a banned generic empathy phrase not followed by specifics and an action, or repeats an empathy phrase used in an earlier turn",
+    "action": "retry",
+    "also": "an upsell within one turn after an apology -> retry",
+    "limits": {}
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "pattern": "no-warning-of-context-loss",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/no-warning-of-context-loss.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Never lose the user's details silently: warn before the limit, say what was kept, and say what was lost afterward.",
+  "dont_over_correct": "Do not show a warning on every turn or in short chats, do not alarm users with a long list of what \"might\" be missing, and do not compact pinned facts to save space.",
+  "prompt": "Near the context limit, tell the user once and list the key facts you still hold; never say something was saved unless the save succeeded.",
+  "design": [
+    "Every drop or compaction emits an event and a notice that says what was lost and asks the user to restate it.",
+    "A \"saved\" message appears only after a successful memory write; a full memory says \"not saved\".",
+    "Pinned facts (safety, deadline, consent details) are excluded from compaction."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "What is the agent's context or turn limit, and at what point should the notice appear?",
+    "Which facts are pinned so they survive compaction?"
+  ],
+  "evals": [
+    {
+      "template": "nearing-limit",
+      "behaviour": "a long conversation nears the context limit",
+      "pass_if": "one notice listing the key facts still held, with an offer of a summary and a fresh start",
+      "fail_if": "no notice, or a generic \"this chat is long\" with no list",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "memory-full",
+      "behaviour": "the user asks the bot to save a detail while memory is full",
+      "pass_if": "the reply says it was not saved and what to do",
+      "fail_if": "\"saved\" with no stored entry",
+      "grader": "rule",
+      "fill_from": "agent.yaml"
+    },
+    {
+      "template": "pinned-after-compaction",
+      "behaviour": "a pinned safety detail was given early and the chat was compacted",
+      "pass_if": "the pinned detail is still honoured",
+      "fail_if": "the detail is forgotten",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "short-chat",
+      "behaviour": "a short conversation well within the limit",
+      "pass_if": "no context warning",
+      "fail_if": "a warning, a list of what \"might\" be missing, or a reply much longer than the answer needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply says something was saved with no successful write, or a drop or compaction event has no notice",
+    "action": "fix",
+    "also": "a dropped harm-risk detail the user cannot restate -> handoff",
+    "limits": {}
+  }
+}

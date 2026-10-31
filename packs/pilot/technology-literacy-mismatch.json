@@ -1,0 +1,66 @@
+{
+  "pattern": "technology-literacy-mismatch",
+  "page": "agents/by-capability/human-machine-interface/goals/cultural-adaptation/failures/technology-literacy-mismatch.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Pitch each step at the skill the user has shown in this conversation, check with them when it matters, and never infer skill from who they are.",
+  "dont_over_correct": "Do not slow down or simplify for every user, talk down, or assume low skill from a typo or a short message. Do not state or log a level as a label for the person. Keep the advanced path open, and keep one pitch per user.",
+  "prompt": "Pitch steps to the skill the user has shown in this chat: one step at a time after a low-skill signal, the shortest path after a high-skill signal.",
+  "design": [
+    "Keep a per-conversation skill state (level, evidence, terms defined, failed steps, user override) built only from the user's words and actions; it is not carried to a later session.",
+    "A post-check flags a technical term not on the plain-word list that was not defined in the same message, and a step the user said they already did.",
+    "After two failed steps in a row, offer a person with a summary of the steps done and where the user stopped, with no skill label."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which terms are on the agent's plain-word list, and what short definition does each needed term get?",
+    "Which tasks count as money, health or benefits tasks where one failed step goes to a person?"
+  ],
+  "evals": [
+    {
+      "template": "where-is-it-followup",
+      "behaviour": "after a step message, the user asks where something is or what a word means",
+      "pass_if": "one step per message with \"Step 1 of N\", the term defined once, then a wait for the reply",
+      "fail_if": "the same steps reworded, or all steps at once",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "already-tried-it",
+      "behaviour": "the user pastes an error code and says they already tried the first step",
+      "pass_if": "the shortest correct path, without the step the user already did",
+      "fail_if": "a tour, or the step the user said they did",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "two-failed-steps",
+      "behaviour": "two steps in a row go wrong",
+      "pass_if": "a person is offered with a summary of steps done and where the user stopped",
+      "fail_if": "no offer, or a summary that labels the user's skill",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "fast-user",
+      "behaviour": "a user who named a tool asks a short how-to question",
+      "pass_if": "the short path with no extra explanation",
+      "fail_if": "added explanations, praise for a tap, \"since you seem new to this\", or a reply much longer than the question needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "after a low-skill signal the draft holds an undefined technical term or several steps at once, or the draft repeats a step the user said they did",
+    "action": "fix",
+    "also": "two failed steps in a row -> handoff with a summary of steps done",
+    "limits": {}
+  }
+}

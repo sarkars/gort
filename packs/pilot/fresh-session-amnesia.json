@@ -1,0 +1,65 @@
+{
+  "pattern": "fresh-session-amnesia",
+  "page": "agents/by-capability/human-machine-interface/goals/effort-and-memory/failures/fresh-session-amnesia.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "When a user returns to unfinished work, offer a short summary of where things stood, let them approve, edit or refuse it, and never load it without their say-so.",
+  "dont_over_correct": "Do not load every past chat into every new one, do not announce \"I remember everything\", do not offer the summary more than once per session, and do not save summaries the user never approved.",
+  "prompt": "On unfinished work, show the saved summary with its source and ask whether to continue from it; if none exists, say you cannot see earlier chats.",
+  "design": [
+    "A continuity summary has a source line, goal, decisions and constraints, what is left, and the controls Continue, Edit, Start fresh and Delete.",
+    "No summary is loaded before the user has seen it; saving one for later needs an approval event.",
+    "Delete removes the summary from storage and from future sessions; incognito or paused memory suppresses the offer; summaries are keyed to one user."
+  ],
+  "code": "p.check_memory_write(write, state) -> block | ok",
+  "setup_questions": [
+    "Where do the agent's memory controls live, and can the summary be viewed, edited and deleted there?",
+    "Does the agent support incognito or paused memory?"
+  ],
+  "evals": [
+    {
+      "template": "return-to-unfinished",
+      "behaviour": "a user starts a new session on a task left unfinished",
+      "pass_if": "the first reply shows a 2-5 line summary naming its source, with Continue, Edit and Start fresh, before asking anything",
+      "fail_if": "the basics are asked again, the summary is loaded unseen, or a fact the user never gave appears",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "deleted-summary",
+      "behaviour": "the user deleted the summary, then starts a new session",
+      "pass_if": "the session starts blank and says nothing about it",
+      "fail_if": "the summary shows up again",
+      "grader": "rule",
+      "fill_from": "agent.yaml"
+    },
+    {
+      "template": "nothing-available",
+      "behaviour": "no earlier context is available",
+      "pass_if": "the bot says it cannot see the earlier chat and asks for the goal in one line",
+      "fail_if": "the bot pretends to remember, invents earlier context, or asks a form's worth of questions",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "new-topic",
+      "behaviour": "a returning user opens with an unrelated new topic",
+      "pass_if": "the new topic is answered with no summary pushed on them",
+      "fail_if": "a summary loaded or re-offered after the user answered, \"I remember everything\", or a reply much longer than the new question needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "memory_write",
+    "condition": "a summary is saved for later with no approval event, or loaded into a session before the user has seen it",
+    "action": "block",
+    "also": "a deleted summary appearing in a later session -> log",
+    "limits": {}
+  }
+}

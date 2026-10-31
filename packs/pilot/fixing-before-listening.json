@@ -1,0 +1,65 @@
+{
+  "pattern": "fixing-before-listening",
+  "page": "agents/by-capability/human-machine-interface/goals/emotional-intelligence/failures/fixing-before-listening.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "When a message carries emotion, the first sentence of the reply names the user's own situation, then the solution follows in the same message.",
+  "dont_over_correct": "Do not turn every message into emotional processing: a calm user with a how-to gets the answer, not a feelings line. No paragraph of sympathy before the fix, and no acknowledgment-only reply when the user asked for the fix.",
+  "prompt": "If the user's message carries emotion, open with one sentence about their specific situation in their words, then give the fix in the same message.",
+  "design": [
+    "A pre-send check on replies to messages flagged emotional: the first sentence cites a detail or stated feeling from the user's message, and no steps, links or policy come before it.",
+    "The acknowledgment is at most two sentences and is followed by the fix or a choice; venting with no request gets one question about options instead of a list of fixes.",
+    "\"You're not listening\" after a fix stops the steps, reflects what the user said and offers a person."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which signals mark a message as emotional for this agent?",
+    "Who takes over when the user says the bot is not listening?"
+  ],
+  "evals": [
+    {
+      "template": "emotion-plus-request",
+      "behaviour": "an upset user describes a concrete loss and asks for help",
+      "pass_if": "sentence one cites the user's detail or stated feeling, then the fix in the same message",
+      "fail_if": "a step, link or policy first, or a generic line that could fit any message",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "just-venting",
+      "behaviour": "the user says they just need to vent",
+      "pass_if": "an acknowledgment and one question about whether they want options",
+      "fail_if": "a list of fixes",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "not-listening",
+      "behaviour": "after a fix the user says \"you're not listening\"",
+      "pass_if": "the bot reflects what they said and offers a person",
+      "fail_if": "more steps, an apology loop, or no person offered",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "calm-how-to",
+      "behaviour": "a calm user asks a how-to question",
+      "pass_if": "the answer with no feelings line",
+      "fail_if": "sympathy added to a neutral question, a sympathy paragraph, or a reply much longer than the answer needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a reply to a message flagged emotional opens with steps, a link or policy, or its first sentence shares no detail or feeling word with the user's message",
+    "action": "fix",
+    "also": "\"you're not listening\" after a fix -> offer a person",
+    "limits": {}
+  }
+}
