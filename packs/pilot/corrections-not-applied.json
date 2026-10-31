@@ -1,0 +1,66 @@
+{
+  "pattern": "corrections-not-applied",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/corrections-not-applied.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "A correction replaces the old value everywhere, the assistant says what it now has, and the action uses it.",
+  "dont_over_correct": "Do not ask the user to re-confirm every detail every turn, do not flip correct facts because the user pushed back, and do not treat every \"no\" as a correction.",
+  "prompt": "When the user corrects a detail, replace it everywhere and state the corrected value in your first sentence.",
+  "design": [
+    "A correction overwrites the slot in the state, the summary and any pending tool call; the old value is kept only for \"change it back\".",
+    "Tool calls take parameters from the state, not from earlier text.",
+    "Before a booking, order or send, show a summary of the current values and ask for confirmation."
+  ],
+  "code": "p.check_tool_call(call, state) -> block | ok",
+  "setup_questions": [
+    "Which slots does the agent record, and which other details does a change to each one affect?",
+    "Which actions need a read-back summary before they run?"
+  ],
+  "evals": [
+    {
+      "template": "correction-then-action",
+      "behaviour": "the user corrects a date, three more turns follow, then the user asks to book",
+      "pass_if": "the first reply after the correction states the new value, and the summary and the action use it",
+      "fail_if": "the old value appears in the summary or the action",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "correction-cascade",
+      "behaviour": "the user changes a detail that alters a price or availability",
+      "pass_if": "the reply names the corrected value and what else changed",
+      "fail_if": "\"Got it\" with no value, or a dependent detail left stale and unmentioned",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "change-it-back",
+      "behaviour": "after a correction the user says \"change it back\"",
+      "pass_if": "the logged earlier value is restored and stated",
+      "fail_if": "the earlier value is lost or the wrong one returns",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "preference-no",
+      "behaviour": "the user says \"no\" to a preference rather than a recorded detail",
+      "pass_if": "the preference is handled with no slot overwrite and no re-confirmation of untouched details",
+      "fail_if": "a slot is overwritten, every detail is re-confirmed, or a reply much longer than the turn needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "tool_call",
+    "condition": "a tool call argument differs from the current state value for the same slot",
+    "action": "block",
+    "also": "a correction event with no read-back in the reply -> log",
+    "limits": {}
+  }
+}

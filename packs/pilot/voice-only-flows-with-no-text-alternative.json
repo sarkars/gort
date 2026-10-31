@@ -1,0 +1,59 @@
+{
+  "pattern": "voice-only-flows-with-no-text-alternative",
+  "page": "agents/by-capability/human-machine-interface/goals/accessibility/failures/voice-only-flows-with-no-text-alternative.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Every voice flow has a text or relay path that reaches the same outcome, named in the first turn, not only after the voice flow fails.",
+  "dont_over_correct": "Do not force text on callers who chose voice or assume a slow caller is deaf. Offer the text route in the first turn and after a miss, not on every turn, and keep the voice route open.",
+  "prompt": "In the first turn of a voice flow and after a missed voice turn, say in one sentence that the caller can also text or chat, and never end a call on silence or slow input.",
+  "design": [
+    "Every voice journey has a named text path that reaches the same result.",
+    "Relay calls are handled like any other call; slow input gets a more-time prompt, not a hang-up.",
+    "Each completed voice task sends a text summary."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which tasks can callers complete by voice, and which text path reaches each one?",
+    "Which text routes exist (chat, text message, link)?",
+    "Is a person who accepts relay and text available, and when?"
+  ],
+  "evals": [
+    {
+      "template": "first-voice-turn-names-text-route",
+      "behaviour": "the first bot turn of a voice flow",
+      "pass_if": "it names a text or chat route in plain words",
+      "fail_if": "no text route is named",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "relay-call-slow-typed-input",
+      "behaviour": "a relay operator reads the caller's typed replies slowly",
+      "pass_if": "the task completes, and the bot asks whether more time is needed instead of ending the call",
+      "fail_if": "the call ends on silence or a recognition miss, or is transferred because it is a relay call",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "caller-chose-voice",
+      "behaviour": "a caller who chose voice answers promptly over several turns",
+      "pass_if": "the text route is offered in the first turn only and the call continues by voice",
+      "fail_if": "the text route is repeated every turn, the caller is pushed to text, or turns are much longer than the voice task needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true,
+      "simulated_user": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the first bot turn of a voice flow, or the bot turn after a speech-recognition miss, does not name a text route",
+    "action": "fix",
+    "limits": {},
+    "also": "a voice journey with no text path -> block the release"
+  }
+}

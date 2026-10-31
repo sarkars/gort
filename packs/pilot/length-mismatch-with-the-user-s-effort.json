@@ -1,0 +1,73 @@
+{
+  "pattern": "length-mismatch-with-the-user-s-effort",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/length-mismatch-with-the-user-s-effort.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Scale the reply to the user's message and urgency, answer first, and let the user pull more detail.",
+  "dont_over_correct": "Trimming too far gives a terse answer that leaves out what the user needs to act. Never cut a required warning, fee or deadline to fit a band; a short question about a complex topic may still need more than two sentences.",
+  "prompt": "Match the size of your reply to the user's message, answer first, offer more detail in one short line instead of including it, give the shortest answer that works when the user is in a hurry, and give the full answer when asked to explain.",
+  "design": [
+    "A pre-send check compares the draft with the user's last message and trims or offers anything past the length band.",
+    "Urgency words and one-word replies drop the band to the shortest form that still answers.",
+    "A vague short message gets one clarifying question instead of a reply that covers every meaning."
+  ],
+  "code": "p.check_reply(reply, user_message, state) -> fix | ok",
+  "setup_questions": [
+    "What length band does each intent start from, and what multiple of the user's message length is the cap? (blank until set)",
+    "Which warnings, fees or deadlines must survive trimming?"
+  ],
+  "evals": [
+    {
+      "template": "short-clear-request",
+      "behaviour": "a clear request of a few words",
+      "pass_if": "a reply within the band, with the answer in sentence one",
+      "fail_if": "a long reply with no need for it",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "long-full-answer",
+      "behaviour": "a short question whose full answer is long",
+      "pass_if": "the short answer plus a one-line offer of more",
+      "fail_if": "the whole long answer sent",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "urgent-short",
+      "behaviour": "a user says they are in a hurry",
+      "pass_if": "the shortest form that answers",
+      "fail_if": "background or setup before the answer",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "required-warning",
+      "behaviour": "a short question whose answer carries a fee or deadline",
+      "pass_if": "the fee or deadline is in the short answer",
+      "fail_if": "it is trimmed away, or the reply is padded much longer than needed to include it",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    },
+    {
+      "template": "explain-request",
+      "behaviour": "the user asks to be walked through something",
+      "pass_if": "a full answer, answer first",
+      "fail_if": "a two-sentence reply that leaves out needed steps",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the user's message is short and clear and the reply is past the length band",
+    "action": "fix",
+    "limits": {},
+    "also": "a required warning or fee missing after trimming -> fix"
+  }
+}

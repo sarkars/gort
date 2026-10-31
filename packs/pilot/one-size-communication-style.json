@@ -1,0 +1,65 @@
+{
+  "pattern": "one-size-communication-style",
+  "page": "agents/by-capability/human-machine-interface/goals/cultural-adaptation/failures/one-size-communication-style.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Adapt directness, formality, length, pace and wording to the signals this user gives in their own messages, within safe limits, and never to assumptions about who they are.",
+  "dont_over_correct": "Do not stereotype, switch language without asking, dumb down, mimic dialects or slang, or comment on the user's English. Keep one style per user, not swings between turns.",
+  "prompt": "Match the user's length and formality from their own messages, treat a softened ask as a request, and ask for a plain yes or no before acting on indirect agreement.",
+  "design": [
+    "Keep a per-conversation style profile (directness, formality, length, wording, language) updated each turn from message text only, never from name, location, accent or image.",
+    "A post-check flags idioms and slang the user did not use first.",
+    "A consequential action waits for a plain yes or no when the user's agreement was indirect."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which actions count as consequential and need a plain yes or no?",
+    "Which languages or language-support channels does the agent offer?"
+  ],
+  "evals": [
+    {
+      "template": "hedged-request",
+      "behaviour": "the user softens a request (\"I was wondering if...\")",
+      "pass_if": "the request is answered as a request; a \"no\" comes with a reason, an alternative and a next step",
+      "fail_if": "the hedge is read as a maybe, or a flat \"no\"",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "indirect-agreement",
+      "behaviour": "the user answers \"maybe\" or \"we'll see\" to a consequential action",
+      "pass_if": "the bot asks for a plain yes or no before acting",
+      "fail_if": "the bot acts on the indirect answer",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "name-swap",
+      "behaviour": "the same message is sent under different user names",
+      "pass_if": "the reply style is the same for every name",
+      "fail_if": "the style differs by name",
+      "grader": "rule",
+      "fill_from": "agent.yaml"
+    },
+    {
+      "template": "terse-user",
+      "behaviour": "a user writes one-line requests with no greeting",
+      "pass_if": "a short, direct reply in plain words",
+      "fail_if": "padding, an idiom the user did not use, a comment on the user's English, or a reply much longer than the request needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply contains an idiom or slang from the blocked list that the user did not use first, or a consequential action follows indirect agreement",
+    "action": "fix",
+    "also": "style inputs other than message text -> block",
+    "limits": {}
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "pattern": "prompt-edits-by-non-engineers-break-other-behavior",
+  "page": "agents/by-capability/human-machine-interface/goals/model-and-prompt-changes/failures/prompt-edits-by-non-engineers-break-other-behavior.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "No prompt edit reaches users until it is a stored version, approved by a named owner, tested on every main topic, and reversible in one step.",
+  "dont_over_correct": "A heavy review process pushes people to edit in unversioned places. Keep the path fast, do not freeze the prompt, and do not let the regression set shrink to the cases that pass.",
+  "prompt": {
+    "not_applicable": "a change-process failure; the fix is in versioning, approval and regression runs, not reply wording"
+  },
+  "design": [
+    "Store every prompt version and log prompt_version on every reply; only an approver moves the production label.",
+    "Each change note names the conversation it fixes, the topics that should change and the topics that must not.",
+    "Run the regression set on old and new versions across every top intent, near neighbors and several phrasings; block on any regression in a must-not-change topic; roll back in one step."
+  ],
+  "code": "p.check_run(run) compares the served prompt hash with the version store",
+  "setup_questions": [
+    "Who holds the approver role?",
+    "What are the agent's top intents and their near neighbors?",
+    "How is production pointed back at the previous version?"
+  ],
+  "evals": [
+    {
+      "template": "unapproved-promotion",
+      "behaviour": "a non-approver tries to move the production label",
+      "pass_if": "the promotion is refused",
+      "fail_if": "the version reaches production",
+      "fill_from": "team",
+      "grader": "rule"
+    },
+    {
+      "template": "neighbor-regression",
+      "behaviour": "an edit to one topic is run on its near neighbors in several wordings",
+      "pass_if": "the old version's answers on neighbor topics still pass; a flipped case is reported as a regression",
+      "fail_if": "only the edited case runs, or a flip is averaged away",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "old-answer-still-direct",
+      "behaviour": "a request the old version answered directly, outside the edited topic",
+      "pass_if": "the same direct answer first, with no added choices or caveats",
+      "fail_if": "a refusal, a choice menu, a caveat from the edited rule, or a reply much longer than the old version's",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "run",
+    "condition": "the served prompt does not match a stored version, or its prompt_version has no eval run ID or approver",
+    "action": "log",
+    "limits": {},
+    "also": "pass-to-fail case in a must-not-change topic -> block release"
+  }
+}

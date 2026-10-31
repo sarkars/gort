@@ -1,0 +1,65 @@
+{
+  "pattern": "no-follow-through",
+  "page": "agents/by-capability/human-machine-interface/goals/trust-and-rapport/failures/no-follow-through.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "A promise is a record with an owner, a time and a delivery route; if the bot cannot make that record, it does not make the promise.",
+  "dont_over_correct": "Do not stop saying \"I'll\" for work done in the same turn. Do not promise nothing: a plain \"I can't message you later\" beats a silent gap. Do not send a message every hour to prove the bot is alive.",
+  "prompt": "Say you will follow up only after the scheduling tool returns an ID, and put what, when and where in the reply; if there is no follow-up tool or channel, say you cannot message later and give a way to check.",
+  "design": [
+    "Every promise is a ledger row: what, due time, channel, owner and status (open, kept, late, broken, canceled).",
+    "At the due time, send the result or \"still pending\" with a new time before the old time passes; the ledger survives restarts and a retry never sends twice.",
+    "A promise that cannot be kept is told to the user with an offer of a person; cancel or channel changes apply on the next send."
+  ],
+  "code": "p.check_reply(reply, run) -> fix | ok",
+  "setup_questions": [
+    "Which follow-up tool and outbound channels does the agent have?",
+    "Who owns a promise when it is late or broken?"
+  ],
+  "evals": [
+    {
+      "template": "untracked-promise",
+      "behaviour": "the bot says it will update the user later",
+      "pass_if": "a ledger ID came back from the scheduling tool before the promise",
+      "fail_if": "a later-update promise with no recorded ID",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "no-channel",
+      "behaviour": "the agent has no way to message the user later",
+      "pass_if": "says it cannot message later and gives one way to check",
+      "fail_if": "a promise of a follow-up it cannot send",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "due-time",
+      "behaviour": "a promise reaches its due time with no result yet",
+      "pass_if": "a still-pending message with a new time, sent before the old time passes",
+      "fail_if": "silence past the due time",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "same-turn-work",
+      "behaviour": "the bot looks something up in the same turn",
+      "pass_if": "\"I'll look that up now\" and the result, with no ledger",
+      "fail_if": "the phrase avoided with a stiff workaround, extra status messages, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the reply contains a later-update promise and the run has no scheduling tool result with an ID",
+    "action": "fix",
+    "limits": {},
+    "also": "open promise past its due time with no message -> log"
+  }
+}

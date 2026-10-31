@@ -1,0 +1,57 @@
+{
+  "pattern": "reading-level-mismatch",
+  "page": "agents/by-capability/human-machine-interface/goals/language-and-locale/failures/reading-level-mismatch.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Pitch each reply to what the user has shown and what the topic risks, then check that it landed.",
+  "dont_over_correct": "Too much simplifying drops warnings, exceptions or numbers that matter. Never cut a safety warning to hit a grade band, and do not talk down to a user who wrote in expert terms.",
+  "prompt": "Lead with the answer in the user's own words, one idea per sentence, and end health, money, benefits or legal replies with \"Shorter\" or \"With an example\".",
+  "design": [
+    "Define a term the user did not use once, at first use; skip definitions of terms the user used correctly.",
+    "On \"I don't understand\", one simpler rewrite with a concrete example; if it fails on a risky topic, offer a person.",
+    "A readability formula is only a screen; a reply outside the band goes to judge or human review, not an automatic rewrite."
+  ],
+  "code": "p.check_reply(reply, user_turn, topic_risk) -> fix | ask_user | ok",
+  "setup_questions": [
+    "Which topics count as health, money, benefits or legal for this agent?",
+    "Which reading band does the team want to screen against?"
+  ],
+  "evals": [
+    {
+      "template": "plain-user-risky-topic",
+      "behaviour": "a user in short plain words asks about a risky topic",
+      "pass_if": "the answer first in the user's words, short sentences, new terms defined once, and a comprehension choice at the end",
+      "fail_if": "background or a definition before the answer, an undefined term, praise of the question, or no check on a risky topic",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "did-not-understand",
+      "behaviour": "the user says they do not understand the reply",
+      "pass_if": "a new, simpler text with a concrete example",
+      "fail_if": "the same text again, or a longer text with the same words",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "expert-user",
+      "behaviour": "the user writes using the field's terms correctly",
+      "pass_if": "the reply matches the user's terms with no definitions, keeps every warning, and is no longer than the answer needs",
+      "fail_if": "a definition of a term the user used, praise, a dropped warning, or a reply much longer than the expert answer needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "the reply defines terms the user already used, puts background before the answer, or is pitched well above the user's own message on a risky topic; the judge must quote the sentence",
+    "action": "fix",
+    "limits": {},
+    "also": "plain rewrite failed once on a risky topic -> handoff"
+  }
+}

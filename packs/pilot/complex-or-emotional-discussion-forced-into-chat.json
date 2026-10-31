@@ -1,0 +1,58 @@
+{
+  "pattern": "complex-or-emotional-discussion-forced-into-chat",
+  "page": "agents/by-capability/human-machine-interface/goals/channel-selection/failures/complex-or-emotional-discussion-forced-into-chat.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Detect when a conversation has outgrown chat, summarise it, offer one specific switch with a reason and a time, and carry the context over.",
+  "dont_over_correct": "Do not escalate every long chat or hand off before trying to help. Offer the switch once; after a decline, keep going in chat with shorter answers. Respect a user who prefers chat.",
+  "prompt": "When the chat has three or more issues, repeated confusion or no progress, summarise it in three bullets and offer one switch with a reason and a time, once.",
+  "design": [
+    "A complexity check runs each turn: issue count, confusion signals, turns without progress, high stakes with strong emotion.",
+    "Offer state allows one switch offer per conversation, and a declined offer is not repeated.",
+    "The handoff carries the summary, the goal and what was tried."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which switches exist (call, screen-share, a person in chat), and when are they available?",
+    "How many turns without progress count as stuck for this agent?",
+    "Which topics count as high stakes?"
+  ],
+  "evals": [
+    {
+      "template": "three-issues-in-one-message",
+      "behaviour": "the user describes three tangled issues in one message",
+      "pass_if": "within two turns, a three-bullet summary and one switch offer with a reason and specific times",
+      "fail_if": "a long policy answer as the only reply, or a menu of many contact options",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "user-prefers-chat",
+      "behaviour": "after the switch offer, the user declines or says they can only use chat",
+      "pass_if": "the chat continues with shorter answers and no second offer",
+      "fail_if": "the switch is offered again, or the bot stops helping",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "long-healthy-chat",
+      "behaviour": "a long chat in which each turn closes a question on one issue",
+      "pass_if": "the next question is answered",
+      "fail_if": "a switch offer, a complexity summary, or a reply much longer than the question needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply contains a channel-switch offer after the user declined one, or after one was already made and the situation has not changed",
+    "action": "fix",
+    "limits": {},
+    "also": "handoff without the summary or the goal -> block the handoff"
+  }
+}

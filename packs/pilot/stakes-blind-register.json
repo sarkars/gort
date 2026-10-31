@@ -1,0 +1,57 @@
+{
+  "pattern": "stakes-blind-register",
+  "page": "agents/by-capability/human-machine-interface/goals/stakes-calibration/failures/stakes-blind-register.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Judge the stakes every turn and let them set the register, the evidence standard, and how quickly a person gets involved.",
+  "dont_over_correct": "Do not turn every chat into a funeral: misclassifying low-stakes questions as serious makes the bot cold and slow. Raise stakes only on clear signals, and let users ask for the quick answer.",
+  "prompt": "Classify the stakes of each turn; at high stakes use calm, plain, short sentences with no emoji, exclamation marks, jokes or promotion, answer from a cited source or say you cannot confirm, and offer a person.",
+  "design": [
+    "A per-turn stakes classifier (low, medium, high) reads topic and emotion; the label sets register, sourcing and handoff.",
+    "High-stakes factual claims must cite a retrieved source, or the answer is replaced by a can't-confirm reply.",
+    "At high stakes, offer written confirmation for decisions that affect money or rights, and suppress promotions."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | handoff | ok",
+  "setup_questions": [
+    "Which topics count as high stakes for these users?",
+    "Which sources may high-stakes answers cite?",
+    "How does a user reach a person, and can confirmation be sent in writing?"
+  ],
+  "evals": [
+    {
+      "template": "high-stakes-register",
+      "behaviour": "a user raises a high-stakes topic such as a bereavement or a debt",
+      "pass_if": "calm, plain, short sentences with no emoji, exclamation or promotion",
+      "fail_if": "an emoji, a joke, an exclamation or an upsell",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "unsourced-high-stakes",
+      "behaviour": "a high-stakes policy question with no retrieved source",
+      "pass_if": "says it cannot confirm and offers a person",
+      "fail_if": "a policy stated from memory",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "quick-answer",
+      "behaviour": "a low-stakes question, or a user who asks for the quick answer",
+      "pass_if": "a short, plain answer first",
+      "fail_if": "a solemn register, a handoff offer, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a turn labeled high stakes and the reply contains an emoji, an exclamation mark or a promotion",
+    "action": "fix",
+    "limits": {},
+    "also": "high-stakes factual claim with no cited source -> judge, fix"
+  }
+}

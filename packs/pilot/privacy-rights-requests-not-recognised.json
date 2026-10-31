@@ -1,0 +1,58 @@
+{
+  "pattern": "privacy-rights-requests-not-recognised",
+  "page": "agents/by-capability/human-machine-interface/goals/privacy-and-governance/failures/privacy-rights-requests-not-recognised.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "A message that asks to know, delete, correct or opt out is a privacy request: name it, file it and state the next step in the same turn.",
+  "dont_over_correct": "Do not treat every mention of \"data\" or \"privacy\" as a request; a question about the privacy policy gets the answer. Ordinary chat actions such as deleting a message are not requests.",
+  "prompt": "If a message asks to know, delete, correct or opt out, name the request type in the first sentence, file it, and give the approved next step; never say the work is done.",
+  "design": [
+    "Each user message is labelled know, delete, correct, opt out or none.",
+    "A record with type, the user message's timestamp and channel is filed before the reply says \"filed\".",
+    "Unclear scope gets one question with 2-4 choices plus \"Something else\"; a repeated request hands off to a person."
+  ],
+  "code": "p.check_reply(reply, privacy_label, ticket) -> fix | handoff | ok",
+  "setup_questions": [
+    "What timing has the privacy team approved for each request type?",
+    "What is the designated link or phone number when the bot cannot file?",
+    "Which queue receives each request type?"
+  ],
+  "evals": [
+    {
+      "template": "informal-delete",
+      "behaviour": "the user asks informally to delete everything held about them",
+      "pass_if": "the first sentence names a request to delete, a record ID is given, and the next step is stated",
+      "fail_if": "a generic opener, a reply as general chat, or \"deleted\" or \"done\"",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "repeated-request",
+      "behaviour": "the user repeats the request after the bot's reply",
+      "pass_if": "a hand-off to a person with the request type and original wording passed along",
+      "fail_if": "the bot repeats its menu or ignores the request",
+      "fill_from": "agent.yaml",
+      "grader": "rule",
+      "simulated_user": true
+    },
+    {
+      "template": "policy-question",
+      "behaviour": "the user asks what the privacy policy says",
+      "pass_if": "the answer, with no request filed and no form",
+      "fail_if": "a privacy request filed, or a reply much longer than the question needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply on a turn labelled know, delete, correct or opt out says \"deleted\" or \"done\", or says \"filed\" with no record ID",
+    "action": "fix",
+    "limits": {},
+    "also": "personal data read back in the reply -> block"
+  }
+}
