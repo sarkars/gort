@@ -1,3 +1,6 @@
+import json
+import re
+from collections import Counter
 from pathlib import Path
 
 from gortguard.packformat import load_entry
@@ -62,3 +65,43 @@ def test_over_correct_eval_names_length():
     for e in entries():
         oc = [v for v in e["evals"] if v.get("over_correct")]
         assert oc and any("longer" in v["fail_if"] for v in oc), e["pattern"]
+
+
+def test_all_fifty_present():
+    """protects=complete pilot; fails_when=a file is missing or extra; no_claim=entry quality"""
+    assert sorted(p.stem for p in PILOT) == sorted(IDS)
+
+
+def test_no_denylisted_names():
+    """protects=generic entries; fails_when=a page's example company or person name leaks in; no_claim=names the regex misses (owner review)"""
+    deny = json.loads((ROOT / "tests" / "data" / "pilot-denylist.json").read_text(encoding="utf-8"))
+    assert set(deny) == set(IDS)
+    for e in entries():
+        body = json.dumps(e, ensure_ascii=False)
+        assert not [n for n in deny[e["pattern"]] if n in body], e["pattern"]
+
+
+def count_files():
+    c = Counter()
+    for e in entries():
+        g = e["guardrail"]
+        c["guardrail " + ("not_applicable" if "not_applicable" in g else g["kind"])] += 1
+        if "not_applicable" not in g:
+            c["checks " + g["checks"]] += 1
+        for part in ("prompt", "design", "code", "setup_questions", "evals", "guardrail"):
+            c["not_applicable " + part] += isinstance(e[part], dict) and "not_applicable" in e[part]
+        evals = e["evals"] if isinstance(e["evals"], list) else []
+        c["evals"] += len(evals)
+        c["evals simulated_user"] += sum(bool(v.get("simulated_user")) for v in evals)
+        c["evals over_correct"] += sum(bool(v.get("over_correct")) for v in evals)
+    return c
+
+
+def test_count_page_matches_files():
+    """protects=honest count page; fails_when=a number on docs/pilot-count.md differs from the files; no_claim=measured results"""
+    page = (ROOT / "docs" / "pilot-count.md").read_text(encoding="utf-8")
+    assert "Proposed entries, not measured." in page and "## Schema changes" in page
+    rows = {k: int(n) for k, n in re.findall(r"^\| ([a-z_ ]+) \| (\d+) \|$", page, re.M)}
+    files = count_files()
+    assert rows and all(rows[k] == files[k] for k in rows)
+    assert all(k in rows for k, n in files.items() if n)

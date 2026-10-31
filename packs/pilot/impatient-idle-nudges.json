@@ -1,0 +1,68 @@
+{
+  "pattern": "impatient-idle-nudges",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/impatient-idle-nudges.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Never nudge a person who is plausibly working on the task; when a nudge is sent, say what happens next and let one reply extend the time.",
+  "dont_over_correct": "Do not keep sessions open forever: that wastes resources and leaves personal data on screen. Keep a timeout cap tuned to stakes and close softly; do not turn off timeouts for sensitive data without a security review.",
+  "prompt": "When you ask the user to find or fetch something, say how long you will keep the chat open; send at most one nudge, with the time left and the options more time, save and come back later, or something else.",
+  "design": [
+    "The idle clock starts only after the bot's last message is fully shown; typing, uploads and running tool calls reset it.",
+    "One nudge with choices, then a soft close that says what is saved (only if true) and how to resume; any reply or \"more time\" resets the clock, at least ten times.",
+    "Stalled high-stakes tasks offer a callback or a person instead of closing."
+  ],
+  "code": "p.check_run(run) reads typing, upload, tool and nudge events -> log",
+  "setup_questions": [
+    "How long is the first-nudge delay and the session cap per task? (blank until set)",
+    "Which tasks are high-stakes enough to offer a callback instead of closing?"
+  ],
+  "evals": [
+    {
+      "template": "typing-user",
+      "behaviour": "the user starts typing after the bot's message",
+      "pass_if": "no nudge while typing continues",
+      "fail_if": "a nudge or close during typing",
+      "fill_from": "agent.yaml",
+      "grader": "rule",
+      "simulated_user": true
+    },
+    {
+      "template": "effort-request",
+      "behaviour": "the bot asks the user to find a document",
+      "pass_if": "the bot states how long it will wait and sends no nudge before then",
+      "fail_if": "a nudge before the stated wait",
+      "fill_from": "agent.yaml",
+      "grader": "rule",
+      "simulated_user": true
+    },
+    {
+      "template": "nudge-text",
+      "behaviour": "a simple question gets no reply past the delay",
+      "pass_if": "one neutral nudge with the time left and the options",
+      "fail_if": "\"hello?\", an accusation, or a chain of nudges",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "soft-close",
+      "behaviour": "no reply after the nudge window",
+      "pass_if": "a short close that says what is saved and how to resume",
+      "fail_if": "the session deleted, a session left open with no cap, or a close message much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true,
+      "simulated_user": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "run",
+    "condition": "a nudge or idle close event follows a typing, upload or tool event in the same idle window",
+    "action": "log",
+    "limits": {},
+    "also": "more than one nudge in one idle window -> log"
+  }
+}
