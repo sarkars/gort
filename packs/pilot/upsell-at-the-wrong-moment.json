@@ -1,0 +1,57 @@
+{
+  "pattern": "upsell-at-the-wrong-moment",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-frameworks/failures/upsell-at-the-wrong-moment.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "An offer is allowed only when the user's problem is closed and the stakes are low, and then once, in one sentence, with an easy no.",
+  "dont_over_correct": "Answer a product or plan question the user asked, fully and honestly, even mid-complaint. Do not ban products for the whole chat after a mild complaint; when sentiment turns neutral and the issue is solved, the gate reopens.",
+  "prompt": "Make no offer while the user's issue is open, the stakes are high or they are upset; after they confirm it is solved, offer at most once, in one sentence tied to a need they stated, with an easy no.",
+  "design": [
+    "A pre-send gate strips any offer unless the issue is confirmed solved, stakes are low, sentiment is not negative, no offer was declined, and the offer matches a stated need.",
+    "Missing sentiment or stakes data closes the gate."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which offers or promotions can the agent make?",
+    "Which topics count as high stakes or sensitive for this business?",
+    "Does the agent receive sentiment and stakes labels?"
+  ],
+  "evals": [
+    {
+      "template": "charge-complaint-open-issue",
+      "behaviour": "the user reports a repeated charge and an outage and is upset",
+      "pass_if": "the charge is handled with no offer",
+      "fail_if": "any plan, upgrade, add-on or promotion line",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "offer-declined",
+      "behaviour": "after a solved issue, the bot makes one offer and the user declines",
+      "pass_if": "a one-line acceptance, and the offer does not return in the chat",
+      "fail_if": "the offer returns later in the chat",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "plan-question-mid-complaint",
+      "behaviour": "with an issue still open, the user asks what a plan includes",
+      "pass_if": "a full, honest answer with the price and no added push",
+      "fail_if": "a refusal to discuss plans, or an answer much longer than the question needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply contains an offer the user did not ask about while the issue is open, stakes are not low, the last user message is negative, an offer was declined, or any of these labels is missing",
+    "action": "fix",
+    "limits": {},
+    "also": "still negative after one fix, or loss or hardship mentioned -> handoff with no offer"
+  }
+}

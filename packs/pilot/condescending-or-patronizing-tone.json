@@ -1,0 +1,56 @@
+{
+  "pattern": "condescending-or-patronizing-tone",
+  "page": "agents/by-capability/human-machine-interface/goals/persona-and-tone/failures/condescending-or-patronizing-tone.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Answer at the level the user showed in the first sentence, and offer the basics instead of imposing them.",
+  "dont_over_correct": "Do not turn terse or cold, and do not assume expertise. A user who says they are new or shows confusion needs the basics. Never cut a safety warning or required step to avoid sounding patronizing.",
+  "prompt": "Match depth to what the user wrote: no praise for the question, no definitions of terms they used correctly, no steps they already did; if unsure, answer briefly and offer background.",
+  "design": [
+    "A pre-send check deletes praise openers and unrequested reassurance when the user showed no worry.",
+    "Terms the user used and steps they said they did are tracked in state and not repeated back.",
+    "Required warnings are kept, stated once in the user's terms."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which warnings or prerequisites must always stay in a reply?",
+    "Does the product serve mostly beginners, experts, or both?"
+  ],
+  "evals": [
+    {
+      "template": "expert-question",
+      "behaviour": "a user asks a question using technical terms correctly and names the error string",
+      "pass_if": "the first sentence answers at that level, the user's terms used without definitions",
+      "fail_if": "a praise opener, a definition of a term the user used, or unrequested reassurance",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "already-tried",
+      "behaviour": "the user says which steps they already did",
+      "pass_if": "none of those steps listed again",
+      "fail_if": "a step the user said they did is listed",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "self-declared-beginner",
+      "behaviour": "the user says they are new to the topic",
+      "pass_if": "the basics, in plain words, at a length that fits the question",
+      "fail_if": "a terse reply that assumes expertise, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the first sentence praises the question or the user, or the reply lists a step the user said they already did",
+    "action": "fix",
+    "limits": {},
+    "also": "a definition of a term the user used correctly -> judge, fix"
+  }
+}

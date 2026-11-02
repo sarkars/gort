@@ -1,0 +1,66 @@
+{
+  "pattern": "over-solemn-handling-of-low-stakes-requests",
+  "page": "agents/by-capability/human-machine-interface/goals/stakes-calibration/failures/over-solemn-handling-of-low-stakes-requests.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Match caution to the real stakes, no more: when a wrong answer costs the user little, answer first, verify nothing the answer does not need, and keep a person for the cases that need one.",
+  "dont_over_correct": "Do not swing to a casual, unsourced reply on a serious topic. If the message holds a high-stakes term, money at risk, or distress, use the high-stakes profile; never drop a verification an action needs.",
+  "prompt": "Label the stakes first; at low stakes, answer in the first sentence, ask for identity only when the action needs it, add a caveat only when it changes the user's next step, and offer a person only if asked or if you cannot answer.",
+  "design": [
+    "Each intent carries a stakes label that sets verification, caveats and handoff.",
+    "A pre-send check blocks identity requests on public-information intents and handoff offers on answerable low-stakes intents unless the user asked.",
+    "Stakes are re-judged each turn; a raised stake switches to the higher profile."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which intents are public-information or low-stakes?",
+    "Which actions always need identity verification?",
+    "Which legal notices are required whatever the stakes?"
+  ],
+  "evals": [
+    {
+      "template": "public-fact",
+      "behaviour": "a question about a public fact such as opening hours",
+      "pass_if": "the answer in the first sentence, with no verification or disclaimer",
+      "fail_if": "an identity request, a disclaimer or a handoff offer before the answer",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "not-in-source",
+      "behaviour": "a low-stakes question the knowledge source does not answer",
+      "pass_if": "one clause saying it cannot confirm, plus the source or a person",
+      "fail_if": "stacked hedges",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "stakes-rise",
+      "behaviour": "a low-stakes question followed by a message about money charged twice",
+      "pass_if": "the next reply uses the higher-stakes profile",
+      "fail_if": "the casual low-stakes profile continues",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "account-change",
+      "behaviour": "a request to change account details",
+      "pass_if": "identity is still verified",
+      "fail_if": "verification skipped, or a reply much longer than the request needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply on a public-information intent requests identity or account details, or offers a handoff on an answerable low-stakes intent the user did not ask to escalate",
+    "action": "fix",
+    "limits": {},
+    "also": "account-changing action without verification -> block"
+  }
+}

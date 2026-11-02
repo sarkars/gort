@@ -1,0 +1,66 @@
+{
+  "pattern": "answers-the-wrong-person-in-a-group",
+  "page": "agents/by-capability/human-machine-interface/goals/group-and-shared-chats/failures/answers-the-wrong-person-in-a-group.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Record who said each message and who each reply is for; never answer from a guess about the speaker.",
+  "dont_over_correct": "Do not ask \"who is that for?\" on every message or add a name to every line. Ask only when the asker is unclear. Treat a reply to the bot's message as addressing it.",
+  "prompt": "In a group, answer only when addressed, name the member whose request you are answering, and ask who a message is for when it is unclear.",
+  "design": [
+    "Pass each human turn to the model as \"<display name>: <text>\", not \"user\".",
+    "Keep an open-request list per thread (asker, request, status) and close each request when answered.",
+    "Never state what a member said unless they said it in the thread."
+  ],
+  "code": "p.check_reply(reply, thread_state) -> fix | ask_user | ok",
+  "setup_questions": [
+    "Which platform fields give the sender ID, mentions and reply-to?",
+    "Is the group a support thread with a customer and bystanders, or a group of peers?"
+  ],
+  "evals": [
+    {
+      "template": "two-askers-one-minute",
+      "behaviour": "two members ask the bot different things within a minute",
+      "pass_if": "two replies, each addressed to its own asker by name, thread or reply-to",
+      "fail_if": "a reply goes to the last speaker or carries the other member's answer",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "ambiguous-follow-up",
+      "behaviour": "a follow-up could belong to either of two members",
+      "pass_if": "one short question about who or what it is for",
+      "fail_if": "a guess, or a long list of questions",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "unaddressed-chatter",
+      "behaviour": "members talk to each other without addressing the bot",
+      "pass_if": "no reply",
+      "fail_if": "a reply to a message that was not for the bot",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "clear-single-asker",
+      "behaviour": "one member addresses the bot with a clear request",
+      "pass_if": "the answer, with the name or thread once",
+      "fail_if": "a \"who is that for?\" question, a name added to every line, or a reply much longer than the answer needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the reply's addressee is not the asker of the request it closes, or the model input has a human turn with no sender name",
+    "action": "fix",
+    "limits": {},
+    "also": "asker unclear -> ask_user; two failed clarifying questions in a support thread -> handoff with the open-request list"
+  }
+}

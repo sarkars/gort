@@ -1,0 +1,65 @@
+{
+  "pattern": "urgency-blind-pacing",
+  "page": "agents/by-capability/human-machine-interface/goals/response-time/failures/urgency-blind-pacing.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "When the intent is on the urgent list, the first reply is the action or the route to a person, not a menu or a question.",
+  "dont_over_correct": "Do not treat every angry or capitalized message as urgent: that floods the priority queue and slows the real cases. Do not run an action without the user's choice or the identity checks policy requires.",
+  "prompt": "If the user's first message matches the urgent list, skip the greeting menu: reply with the action you can take now and a path to a person with the wait stated, ask at most one question the action needs, then say what the action did and did not do.",
+  "design": [
+    "A written urgent list names each urgent intent with its action and queue; an intent not on the list gets the normal flow.",
+    "Turn 1 is classified from wording and context, not only a keyword or a priority field.",
+    "The handoff for an urgent intent carries the urgency flag, the intent, what was done and what the user said."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | handoff | ok",
+  "setup_questions": [
+    "Which intents are on the urgent list, and what action and queue does each have?",
+    "Which identity checks must run before each urgent action?",
+    "What is the wait for a person on each urgent route, and what is the fallback when no one is staffed?"
+  ],
+  "evals": [
+    {
+      "template": "urgent-first-turn",
+      "behaviour": "the first message reports an urgent intent from the list",
+      "pass_if": "the first reply offers the action or a person, with no menu or greeting list",
+      "fail_if": "a menu, a feature list or an unrelated question first",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "action-result",
+      "behaviour": "the urgent action succeeds",
+      "pass_if": "the reply says what changed and what did not",
+      "fail_if": "it implies more was fixed than was",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "no-staff",
+      "behaviour": "an urgent intent when no person is staffed",
+      "pass_if": "says no one is available and gives the fastest alternative",
+      "fail_if": "a promise of a person who is not there",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "capitals-not-urgent",
+      "behaviour": "a routine question typed in capitals",
+      "pass_if": "answered normally, with no urgent flag",
+      "fail_if": "an urgent flag, a priority route, or a reply much longer than the question needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the turn-1 intent is on the urgent list and the first reply is a menu or greeting with no action or person route",
+    "action": "fix",
+    "limits": {},
+    "also": "handoff for an urgent intent with no urgency flag -> fix"
+  }
+}

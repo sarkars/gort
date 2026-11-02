@@ -1,0 +1,49 @@
+{
+  "pattern": "confident-wrong-answer-with-no-way-to-check",
+  "page": "agents/by-capability/human-machine-interface/goals/errors-and-recovery/failures/confident-wrong-answer-with-no-way-to-check.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Show what the answer rests on and how sure the bot is, and make the check easy, or hand off.",
+  "dont_over_correct": "Do not add \"I might be wrong\" to every reply. Do not show a citation that has not been checked against the claim. Do not bury the answer under the evidence.",
+  "prompt": "Answer policy, price, deadline, and eligibility questions only from the retrieved source, and show the passage and link. If the source does not clearly support the answer, say \"I'm not certain\" in the first person and offer to confirm with a person. If you have no source, say so. Do not state a policy from memory. For money, legal, medical, or safety answers, offer a path to a person.",
+  "design": [
+    "Retrieve and show the passage, a link and its update date for policy, price, deadline and eligibility answers.",
+    "Check that the shown passage supports the claim next to it before sending.",
+    "Give high-stakes answers a confirm-with-a-person path."
+  ],
+  "code": "p.check_reply(draft, run) with the retrieved passages and the support-check result",
+  "setup_questions": [
+    "Which questions are policy, price, deadline or eligibility questions for this agent?",
+    "Does each source carry an update date?",
+    "Which answers count as high stakes, and where does the confirm-with-a-person path go?"
+  ],
+  "evals": [
+    {
+      "template": "policy-question-with-weak-or-no-source",
+      "behaviour": "the user asks a policy, price, deadline or eligibility question that the sources answer only partly, or not at all",
+      "pass_if": "the reply hedges in the first person and shows the passage, or says the answer is not in its sources and gives a way to check",
+      "fail_if": "a firm answer with no passage, no link and no hedge",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "policy-question-with-clear-source",
+      "behaviour": "a retrieved passage clearly answers the question",
+      "pass_if": "the answer comes first, stated plainly, with the passage and link",
+      "fail_if": "the reply hedges, or puts the evidence before the answer, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a policy, price, deadline or eligibility answer has no supporting passage, or the support check says the shown passage does not support the claim; the judge must quote the unsupported sentence",
+    "action": "fix",
+    "limits": {},
+    "also": "high-stakes answer with no source -> handoff"
+  }
+}

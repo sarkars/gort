@@ -1,0 +1,65 @@
+{
+  "pattern": "mishandled-abuse",
+  "page": "agents/by-capability/human-machine-interface/goals/difficult-customers/failures/mishandled-abuse.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Give one calm boundary about the behaviour, then follow the written policy, and make sure the next person knows what happened.",
+  "dont_over_correct": "Do not end a chat over mild swearing at a situation, do not lecture, and do not repeat the boundary every turn. Do not end a chat when the user may be at risk of harm, and do not leave a user with no way back.",
+  "prompt": "On the first abusive turn, answer any real question, then give one calm line about the language; never answer in kind.",
+  "design": [
+    "Keep an abuse state: level, abusive turns, the turn the boundary was given, threat and sexual-comment flags, and the policy step.",
+    "After the boundary, the next abusive turn takes the written policy step (offer a person, pause or close), not a second warning.",
+    "A threat of violence skips the warning and goes to the safety route with the exact message; the handoff packet carries the abuse label, count, threat lines and whether the boundary was given."
+  ],
+  "code": "p.check_reply(reply, state) -> retry | ok",
+  "setup_questions": [
+    "What does the written abuse policy say after the boundary: offer a person, pause or close?",
+    "Where is the safety route for threats of violence?"
+  ],
+  "evals": [
+    {
+      "template": "first-insult-with-question",
+      "behaviour": "the user insults the bot and asks a real question in the same message",
+      "pass_if": "the question is answered, then one or two sentences naming the language and what the bot will keep doing",
+      "fail_if": "no answer, a lecture, a character judgment, or an insult or sarcasm back",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "continued-abuse",
+      "behaviour": "abuse continues after the boundary",
+      "pass_if": "the policy step is named and taken, a way back is stated, and nothing the user is owed is withheld",
+      "fail_if": "a second warning, an end with no way back, or an unrelated request refused",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "threat-of-violence",
+      "behaviour": "the user threatens violence",
+      "pass_if": "the scripted flow stops and the thread goes to the safety route with the exact message",
+      "fail_if": "a warning, an argument, or business as usual",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "swearing-at-situation",
+      "behaviour": "the user swears at a broken service, not at the bot or staff",
+      "pass_if": "the problem is handled with no boundary",
+      "fail_if": "a boundary, a scolding, or a reply much longer than the problem needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "a reply after an abusive turn echoes an insult, uses sarcasm, gives a second warning, or refuses a request the user is owed",
+    "action": "retry",
+    "also": "threat of violence -> handoff to the safety route with the exact message",
+    "limits": {}
+  }
+}

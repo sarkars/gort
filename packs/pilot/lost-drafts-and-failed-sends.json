@@ -1,0 +1,58 @@
+{
+  "pattern": "lost-drafts-and-failed-sends",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/lost-drafts-and-failed-sends.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "The user's text is never thrown away until the server confirms it, and every message ends as Sent or Not sent.",
+  "dont_over_correct": "Do not auto-resend under a new message ID, do not mark a message Sent because the request left the device, do not show an offline banner on every flag change or disable Send, and do not keep drafts after confirmation or sign-out.",
+  "prompt": {
+    "not_applicable": "Send state lives in the chat client and server, not in the model's reply."
+  },
+  "design": [
+    "Save the draft on the device by conversation; clear the input only after the text is a bubble marked Sending.",
+    "Each message gets one client message ID used on every attempt, and the server stores one copy per ID.",
+    "No confirmation by the timeout shows Not sent with Retry, Edit and Copy text."
+  ],
+  "code": "p.check_input(message) -> block | ok",
+  "setup_questions": [
+    "How long does the client wait for a send confirmation before showing Not sent?",
+    "Which other route (phone, email, web form) is shown after two failed retries?"
+  ],
+  "evals": [
+    {
+      "template": "connection-drops-after-send",
+      "behaviour": "the network is cut as the user taps Send",
+      "pass_if": "a bubble with the text shows Sending, then Not sent with Retry, Edit and Copy text",
+      "fail_if": "the box clears with no bubble, or Sending never ends",
+      "fill_from": "team",
+      "grader": "rule"
+    },
+    {
+      "template": "retry-after-lost-confirmation",
+      "behaviour": "the server stored the message but its confirmation was lost, and the user taps Retry",
+      "pass_if": "one stored message and one bot reply, with the same client message ID on both attempts",
+      "fail_if": "two stored copies or two bot replies",
+      "fill_from": "team",
+      "grader": "rule"
+    },
+    {
+      "template": "healthy-send",
+      "behaviour": "the network is fine and the server confirms quickly",
+      "pass_if": "a normal bubble and one bot reply",
+      "fail_if": "a Not sent box, an offline banner or an extra save notice, making the exchange much longer than a normal send",
+      "fill_from": "team",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "user_input",
+    "condition": "an incoming message carries a client message ID that is already stored",
+    "action": "block",
+    "limits": {},
+    "also": "return the stored message; no second bot reply"
+  }
+}

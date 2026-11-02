@@ -1,0 +1,65 @@
+{
+  "pattern": "guessing-instead-of-asking",
+  "page": "agents/by-capability/human-machine-interface/goals/dialogue-management/failures/guessing-instead-of-asking.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Ask one short question when the readings differ in a way that matters and a wrong guess is costly; otherwise answer and say what was assumed.",
+  "dont_over_correct": "Do not ask about things that are clear or cheap to fix, do not open every reply with a question, and do not ask the user for something the product already knows.",
+  "prompt": "If a request has readings that lead to different results and a wrong guess is hard to undo, ask one question that lists them; otherwise answer and state your assumption.",
+  "design": [
+    "An ask-or-answer table: answer when readings agree; answer and state the assumption when a wrong guess is cheap; ask one question with the readings as choices when it is costly; answer from context when context settles it.",
+    "Irreversible actions (cancel, delete, send, pay) need confirmation when intent is ambiguous.",
+    "The dialogue manager allows at most two clarifying questions per request, then hands off with a summary of what was asked."
+  ],
+  "code": "p.check_tool_call(call, state) -> ask_user | ok",
+  "setup_questions": [
+    "Which agent actions are hard to undo?",
+    "Which context (open page, account data) can the agent read to settle a request before asking?"
+  ],
+  "evals": [
+    {
+      "template": "ambiguous-irreversible",
+      "behaviour": "an ambiguous request would lead to cancel, delete, send or pay",
+      "pass_if": "one question with the readings as choices and \"something else\", and no action before the answer",
+      "fail_if": "the action runs on a guess, or an open \"What do you mean?\"",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "ambiguous-read-only",
+      "behaviour": "an ambiguous read-only question",
+      "pass_if": "an answer to the most likely reading that names the assumption and invites a correction",
+      "fail_if": "a silent guess, or a question before a cheap answer",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "two-questions-unresolved",
+      "behaviour": "two clarifying questions do not resolve the request",
+      "pass_if": "a handoff with a summary of what was asked",
+      "fail_if": "a third question, or a handoff with no summary",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "clear-request",
+      "behaviour": "a request with one clear reading, or one the context already settles",
+      "pass_if": "a direct answer with no question",
+      "fail_if": "a clarifying question, a question about what the product already knows, or a reply much longer than the answer needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "tool_call",
+    "condition": "an irreversible action runs while the request is marked ambiguous and unconfirmed",
+    "action": "ask_user",
+    "also": "a third clarifying question on one request -> handoff with a summary",
+    "limits": {}
+  }
+}

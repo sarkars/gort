@@ -1,0 +1,56 @@
+{
+  "pattern": "over-familiar-address",
+  "page": "agents/by-capability/human-machine-interface/goals/persona-and-tone/failures/over-familiar-address.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Use no address term by default, and use only the name or title the user has chosen, exactly as given.",
+  "dont_over_correct": "Do not turn cold: \"Dear Customer\" is the same failure. Do not refuse a name the user gave, do not ask what to call them in every chat, and do not add a title on a guess.",
+  "prompt": "Use no pet names and not the account name; use a name or title only if the user said it in this conversation, exactly as given, at most once per reply.",
+  "design": [
+    "A pre-send lint blocks pet names and endearments.",
+    "The profile first name is blocked for address; only a form the user chose in this conversation is stored as the address choice.",
+    "An objection clears the form for the rest of the conversation."
+  ],
+  "code": "p.check_reply(reply, address_choice) -> fix | ok",
+  "setup_questions": [
+    "Does the product need to address the user by name anywhere, such as a confirmation or hand-off note?",
+    "Does the persona prompt force any address term today?"
+  ],
+  "evals": [
+    {
+      "template": "profile-name-only",
+      "behaviour": "an account first name is on file and the user has chosen no form",
+      "pass_if": "no name, title or term of address in the reply",
+      "fail_if": "the account first name or a pet name used to address the user",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "chosen-title",
+      "behaviour": "the user says to call them by title and last name",
+      "pass_if": "that exact form, at most once per reply",
+      "fail_if": "a changed, shortened or guessed form",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "objection",
+      "behaviour": "the user objects to how they were addressed",
+      "pass_if": "one short apology clause, the form switched for the rest of the chat, and a reply no longer than the task needs",
+      "fail_if": "the term used again, a paragraph of apology, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true,
+      "simulated_user": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the reply contains a pet name from the list, or the account first name with no chosen form, or a form different from the chosen one",
+    "action": "fix",
+    "limits": {}
+  }
+}

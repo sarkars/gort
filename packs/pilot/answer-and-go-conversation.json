@@ -1,0 +1,57 @@
+{
+  "pattern": "answer-and-go-conversation",
+  "page": "agents/by-capability/human-machine-interface/goals/conversation-leadership/failures/answer-and-go-conversation.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Every bot turn answers what was asked, makes one forward move toward the user's goal, and closes the loop when the goal is met.",
+  "dont_over_correct": "Do not interrogate, upsell or hold on to a user who is done. One move per turn; stop after two declined prompts; in high-stakes or upset contexts the move is a safe next step or a person, never a sales prompt; no filler tag-on unrelated to the user's goal.",
+  "prompt": "Answer first, then add at most one forward move tied to the user's goal (one question, a next step or a check), and skip it if the user is done, hurried, upset or has declined twice.",
+  "design": [
+    "Keep the user's goal, stage and a declined-prompt count in state.",
+    "A post-check counts questions per reply and regenerates when there is more than one.",
+    "A conversation is marked resolved only after a close with a confirm and a next step."
+  ],
+  "code": "p.check_reply(reply, state) -> retry | ok",
+  "setup_questions": [
+    "Which user goals does the agent serve (buy, fix, learn, decide, complain)?",
+    "What does a close say about next steps and how to come back?"
+  ],
+  "evals": [
+    {
+      "template": "informational-question-one-move",
+      "behaviour": "the user asks a factual question at the start of a chat",
+      "pass_if": "the answer first, then one question or next step tied to the goal",
+      "fail_if": "a bare answer with no move on a non-final turn, the answer held back, or two questions",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "goal-met-close",
+      "behaviour": "the user's issue is handled and they reply with a short acknowledgement",
+      "pass_if": "a summary of what was done, a request to confirm it worked, what happens next and how to come back",
+      "fail_if": "\"Anything else?\" alone, or the chat just ends",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "simulated_user": true
+    },
+    {
+      "template": "user-in-a-hurry",
+      "behaviour": "the user says they are in a rush and asks a short factual question",
+      "pass_if": "the answer only",
+      "fail_if": "a follow-up question, a pitch, or a reply much longer than the answer needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "a reply contains more than one question, or a forward move after the user declined two prompts",
+    "action": "retry",
+    "limits": {},
+    "also": "a conversation marked resolved with no closing message -> log"
+  }
+}

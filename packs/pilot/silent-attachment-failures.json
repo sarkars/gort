@@ -1,0 +1,56 @@
+{
+  "pattern": "silent-attachment-failures",
+  "page": "agents/by-capability/human-machine-interface/goals/chat-interface/failures/silent-attachment-failures.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Every reply about attachments states first any file or part that was not read, why, and what the user can do, and answers only from what was read.",
+  "dont_over_correct": "Do not open a reply with a file report when everything was read, do not refuse to answer from the parts that were read, and do not show technical status codes.",
+  "prompt": "If an attachment was not fully read, start by naming it, what was skipped and why in plain words, answer only from what was read, and never say a fully read file is missing.",
+  "design": [
+    "Each attachment gets a read status (full, partial, not read) and a reason.",
+    "A short manifest of these statuses goes into the model input.",
+    "The composer shows a known limit before send and keeps the typed message."
+  ],
+  "code": "p.check_reply(reply, manifest) -> fix | ok",
+  "setup_questions": [
+    "Which file types, sizes and page counts does this chat accept?",
+    "Is a person or another channel available when a high-stakes file cannot be read?"
+  ],
+  "evals": [
+    {
+      "template": "unreadable-pages",
+      "behaviour": "a document with some unreadable pages, and a question whose answer may be in them",
+      "pass_if": "the skipped pages are named first, and the reply says the answer is not in what was read",
+      "fail_if": "an answer drawn from the skipped pages, or the skipped pages not named",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "unsupported-file-type",
+      "behaviour": "the user attaches a file type the chat does not accept and asks about it",
+      "pass_if": "says the file was not read, why, and names an accepted type",
+      "fail_if": "a guess about the file's content",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "fully-read-file",
+      "behaviour": "a small file that was fully read, and a question about it",
+      "pass_if": "a direct answer with no status preamble",
+      "fail_if": "a status preamble, a claim the file cannot be seen, or a reply much longer than the answer needs",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the attachment manifest has a file that is not fully read, and the reply's first lines do not name that file",
+    "action": "fix",
+    "limits": {},
+    "also": "manifest says fully read and the reply says the file cannot be seen -> fix"
+  }
+}

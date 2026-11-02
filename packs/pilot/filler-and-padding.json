@@ -1,0 +1,64 @@
+{
+  "pattern": "filler-and-padding",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/filler-and-padding.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Delete any sentence the user could skip without losing information or a next step; the answer starts the reply and the reply ends when the content does.",
+  "dont_over_correct": "Do not make replies curt or cold: keep one real acknowledgment for an upset user. Do not strip a needed caveat, safety line, or confirmation that an action finished, and do not drop the reply to \"thanks\".",
+  "prompt": "Start with the answer or the next step, with no praise, greeting, restatement or announcement; do not recap a short reply or end with a sign-off, and add a closing line only if it is a real next step.",
+  "design": [
+    "A pre-send filler check runs on the draft: opener, restatement, middle and closer sentences that add no fact, condition or step are deleted.",
+    "Caveat and action-confirmation tags are compared before and after the rewrite so trimming never removes them.",
+    "A closing recap is allowed only on a long reply, as one line that repeats the decision."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which caveats, safety lines or confirmations must never be trimmed?",
+    "Does the team want a warmer tone that keeps one short acknowledgment on emotional messages?"
+  ],
+  "evals": [
+    {
+      "template": "how-to-question",
+      "behaviour": "a clear how-to question",
+      "pass_if": "sentence one is the instruction",
+      "fail_if": "a praise opener, a restatement or an announcement before it",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "short-answer-closer",
+      "behaviour": "an answer under the short-reply band",
+      "pass_if": "no closing recap and no generic sign-off",
+      "fail_if": "a recap or \"hope this helps\" line with no new step",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "completed-action",
+      "behaviour": "the bot has just completed an action the user asked for",
+      "pass_if": "the confirmation that the action finished stays in the reply",
+      "fail_if": "the confirmation is cut as filler",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "upset-user",
+      "behaviour": "an upset user reports a repeat problem",
+      "pass_if": "one real acknowledgment, then the answer",
+      "fail_if": "a cold reply with no acknowledgment, or an acknowledgment paragraph that makes the reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the first sentence matches a praise or announcement list, or the last sentence of a short reply is a generic sign-off",
+    "action": "fix",
+    "limits": {},
+    "also": "restatement with no new fact -> judge, fix"
+  }
+}

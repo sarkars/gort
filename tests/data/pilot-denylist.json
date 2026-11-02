@@ -1,0 +1,93 @@
+{
+ "answer-and-go-conversation": [],
+ "answer-buried": [],
+ "answers-the-wrong-person-in-a-group": [],
+ "blank-box-no-hint-what-to-ask": [
+  "Elm St",
+  "Northfield Fiber"
+ ],
+ "chat-widget-hard-to-find-or-intrusive": [
+  "Oak St"
+ ],
+ "child-user-treated-as-adult": [],
+ "complex-or-emotional-discussion-forced-into-chat": [],
+ "condescending-or-patronizing-tone": [],
+ "confident-wrong-answer-with-no-way-to-check": [],
+ "corrections-not-applied": [],
+ "dead-end-i-don-t-understand-replies": [],
+ "dialect-and-name-quality-gap": [
+  "Emily Carter",
+  "Jamal Washington"
+ ],
+ "filler-and-padding": [],
+ "fixing-before-listening": [
+  "Change Flight",
+  "Manage Trips",
+  "Skyline Air"
+ ],
+ "fresh-session-amnesia": [
+  "Plan B",
+  "Plan C"
+ ],
+ "generic-error-messages": [],
+ "guessing-instead-of-asking": [],
+ "handoff-summary-is-wrong-or-misleading": [],
+ "hollow-empathy": [],
+ "identity-checks-that-exclude-disabled-users": [],
+ "impatient-idle-nudges": [],
+ "length-mismatch-with-the-user-s-effort": [],
+ "lost-drafts-and-failed-sends": [],
+ "mishandled-abuse": [],
+ "missed-crisis-signals": [
+  "Crisis Lifeline"
+ ],
+ "no-de-escalation-strategy": [],
+ "no-follow-through": [
+  "Reminder R"
+ ],
+ "no-warning-of-context-loss": [],
+ "one-size-communication-style": [],
+ "over-familiar-address": [
+  "Lakeside Imaging",
+  "Margaret Chen"
+ ],
+ "over-solemn-handling-of-low-stakes-requests": [
+  "Maple Home"
+ ],
+ "privacy-rights-requests-not-recognised": [
+  "Harbor Outfitters"
+ ],
+ "prompt-edits-by-non-engineers-break-other-behavior": [],
+ "reading-level-mismatch": [],
+ "refusal-with-no-reason-or-next-step": [],
+ "romantic-or-parasocial-dependence": [],
+ "scam-victim-not-interrupted": [],
+ "sensitive-category-inference": [
+  "Brightway Market"
+ ],
+ "sensitive-data-collected-in-chat": [],
+ "silent-attachment-failures": [],
+ "silent-sandbagging": [],
+ "stakes-blind-register": [
+  "Air Canada"
+ ],
+ "talk-to-a-human-ignored-or-looped": [],
+ "technology-literacy-mismatch": [
+  "Device Management"
+ ],
+ "tone-changes-shipped-with-no-regression-test": [],
+ "unchecked-translation-in-high-stakes-text": [],
+ "undisclosed-bot-identity": [
+  "Customer Care"
+ ],
+ "upsell-at-the-wrong-moment": [
+  "Pinecrest Mobile",
+  "Unlimited Plus"
+ ],
+ "urgency-blind-pacing": [
+  "Harbor Credit Union"
+ ],
+ "voice-only-flows-with-no-text-alternative": [
+  "Your Friday"
+ ]
+}

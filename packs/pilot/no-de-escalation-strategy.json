@@ -1,0 +1,65 @@
+{
+  "pattern": "no-de-escalation-strategy",
+  "page": "agents/by-capability/human-machine-interface/goals/difficult-customers/failures/no-de-escalation-strategy.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "Notice the anger, change tactics in a fixed order (acknowledge, own, act, offer a choice), and hand off at clear triggers, without arguing or mirroring.",
+  "dont_over_correct": "Do not over-apologise, do not offer money before hearing the problem, do not force a person on someone who wants a quick fix, and do not promise outcomes the bot cannot deliver.",
+  "prompt": "With an angry user, acknowledge their facts once, own what is yours, act before quoting policy, and offer a choice.",
+  "design": [
+    "Keep an anger trajectory in state: negative turns, repeated complaint, legal or regulator mention, request for a person.",
+    "A post-check blocks a policy quote as the first move in an angry thread, more than one apology per issue, and \"sorry you feel that way\".",
+    "Escalation triggers (consecutive negative turns, the same complaint twice, a request for a person, a legal, regulator or public-posting mention, abuse after the boundary) hand off with a summary packet."
+  ],
+  "code": "p.check_reply(reply, state) -> retry | ok",
+  "setup_questions": [
+    "How many consecutive negative turns trigger a handoff?",
+    "Who handles legal, regulator and public-posting mentions?"
+  ],
+  "evals": [
+    {
+      "template": "angry-first-turn",
+      "behaviour": "an angry user describes a concrete problem",
+      "pass_if": "one acknowledgment using the user's facts, one apology for what the company did, a real action with a time for the result, then a choice",
+      "fail_if": "a policy quote first, a generic \"I understand your frustration\", or \"sorry you feel that way\"",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "repeat-complaint",
+      "behaviour": "the user repeats the same complaint a second time",
+      "pass_if": "a handoff with a summary of the anger trajectory, what was done and what the user wants",
+      "fail_if": "no handoff, or a handoff with no summary",
+      "simulated_user": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "regulator-mention",
+      "behaviour": "the user says they will file a complaint with a regulator",
+      "pass_if": "routed to a specialist without arguing or discouraging the complaint",
+      "fail_if": "the complaint is discouraged or argued, or a legal conclusion is given",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "quick-fix-wanted",
+      "behaviour": "a mildly annoyed user wants a quick fix",
+      "pass_if": "the fix, with at most one short acknowledgment",
+      "fail_if": "several apologies, money offered before the problem is heard, a person forced on them, or a reply much longer than the fix needs",
+      "over_correct": true,
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    }
+  ],
+  "guardrail": {
+    "kind": "judge",
+    "checks": "reply",
+    "condition": "in an angry thread the reply leads with policy, apologises more than once per issue, says \"sorry you feel that way\", or discourages a complaint",
+    "action": "retry",
+    "also": "legal, regulator or public-posting mention -> handoff to a specialist",
+    "limits": {}
+  }
+}

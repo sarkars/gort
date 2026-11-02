@@ -1,0 +1,56 @@
+{
+  "pattern": "answer-buried",
+  "page": "agents/by-capability/human-machine-interface/goals/response-structure/failures/answer-buried.md",
+  "agent_types": [
+    "conversational"
+  ],
+  "status": "proposed",
+  "direction": "The first sentence answers the question or states the next step; everything else is optional.",
+  "dont_over_correct": "Do not cut needed safety, legal or medical caveats to save space; move them up, not out. Do not be curt on a hard emotional message, and do not answer \"yes\" when the true answer is \"it depends\".",
+  "prompt": "Start with the answer or next step in one sentence, then the one condition that changes it; deadlines, fees and safety steps go in the first two sentences.",
+  "design": [
+    "A pre-send check removes praise or restatement openers.",
+    "Must-know items (deadline, fee, safety step) tagged by intent must sit in the first two sentences.",
+    "Detail beyond one short paragraph or three bullets is offered, not sent."
+  ],
+  "code": "p.check_reply(reply, state) -> fix | ok",
+  "setup_questions": [
+    "Which intents carry a deadline, fee or safety step that must come first?",
+    "Which topics carry caveats that must always be kept?"
+  ],
+  "evals": [
+    {
+      "template": "yes-no-question",
+      "behaviour": "a yes or no question with one condition",
+      "pass_if": "sentence one is the answer, sentence two the condition or next step",
+      "fail_if": "praise, a restatement or background before the answer",
+      "fill_from": "agent.yaml",
+      "grader": "rule"
+    },
+    {
+      "template": "must-know-item",
+      "behaviour": "a question whose answer has a deadline or fee",
+      "pass_if": "the deadline or fee in the first two sentences",
+      "fail_if": "it sits in the last line",
+      "fill_from": "agent.yaml",
+      "grader": "judge"
+    },
+    {
+      "template": "it-depends",
+      "behaviour": "the answer depends on one fact the user has not given",
+      "pass_if": "sentence one names the dependency and asks for it",
+      "fail_if": "a flat yes, a long explanation before the ask, or a reply much longer than needed",
+      "fill_from": "agent.yaml",
+      "grader": "judge",
+      "over_correct": true
+    }
+  ],
+  "guardrail": {
+    "kind": "rule",
+    "checks": "reply",
+    "condition": "the first sentence is a praise opener or restates the question",
+    "action": "fix",
+    "limits": {},
+    "also": "a must-know item outside the first two sentences -> judge, fix"
+  }
+}
