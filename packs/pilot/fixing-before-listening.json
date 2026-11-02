@@ -59,7 +59,7 @@
     "checks": "reply",
     "condition": "a reply to a message flagged emotional opens with steps, a link or policy, or its first sentence shares no detail or feeling word with the user's message",
     "action": "fix",
-    "also": "\"you're not listening\" after a fix -> offer a person",
+    "also": "\"you're not listening\" after a fix -> ask_user, offering a person",
     "limits": {}
   }
 }

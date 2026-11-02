@@ -3,6 +3,8 @@ import re
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 from gortguard.packformat import load_entry
 
 ROOT = Path(__file__).parent.parent
@@ -105,3 +107,127 @@ def test_count_page_matches_files():
     files = count_files()
     assert rows and all(rows[k] == files[k] for k in rows)
     assert all(k in rows for k, n in files.items() if n)
+
+
+DATA = ROOT / "src" / "gortguard" / "data"
+TAXONOMY = {p["id"]: p for p in json.loads((DATA / "patterns.json").read_text(encoding="utf-8"))}
+RUBRICS = json.loads((DATA / "evals.json").read_text(encoding="utf-8"))
+ACTIONS = "log|fix|retry|ask_user|block|handoff"
+
+
+def test_page_is_the_taxonomy_page():
+    """protects=entry traces to its library page; fails_when=page path differs from patterns.json; no_claim=page content read"""
+    for e in entries():
+        assert e["page"] == TAXONOMY[e["pattern"]]["page"], e["pattern"]
+
+
+def test_code_calls_its_check_point():
+    """protects=one API name per check point for step 10; fails_when=code names a method other than check_<checks>; no_claim=method exists yet"""
+    for e in entries():
+        g, code = e["guardrail"], e["code"]
+        if "not_applicable" in g or isinstance(code, dict):
+            continue
+        assert re.match(rf"p\.check_{g['checks']}\(", code), (e["pattern"], code)
+        assert set(re.findall(r"p\.(\w+)\(", code)) <= {f"check_{c}" for c in SCHEMA_CHECKS}, e["pattern"]
+
+
+def test_also_clauses_use_schema_actions():
+    """protects=secondary guardrails are buildable; fails_when=an also clause has no '->' or an action outside the schema; no_claim=clause logic"""
+    for e in entries():
+        for clause in e["guardrail"].get("also", "").split(";"):
+            if clause.strip():
+                assert re.search(rf"\S.*->\s*((rule|judge),\s*)?({ACTIONS})\b", clause), (e["pattern"], clause)
+
+
+# ISO/IEC 7812 card numbers are 13 to 19 digits: a format fact, not a business threshold.
+NUMBER_FACTS = {"sensitive-data-collected-in-chat": {"13", "19"}}
+_NUM = r"\b(\d+|two|three|four|five|six|seven|eight|nine|ten|twice|second|third|fourth|fifth)\b"
+_CARDINAL = {"twice": "two", "second": "two", "third": "three", "fourth": "four", "fifth": "five"}
+
+
+def _numbers(text):
+    return {_CARDINAL.get(n, n) for n in re.findall(_NUM, text)}
+
+
+def test_numbers_come_from_the_library():
+    """protects=no invented thresholds; fails_when=a count in a guardrail, prompt or eval is not in the pattern's starter rule or rubric; no_claim=number words the regex misses"""
+    for e in entries():
+        k, g = e["pattern"], e["guardrail"]
+        src = (TAXONOMY[k]["starter_rule"] + json.dumps(RUBRICS.get(k, ""), ensure_ascii=False)).lower()
+        text = " ".join(
+            [g.get("condition", ""), g.get("also", ""), e["prompt"] if isinstance(e["prompt"], str) else ""]
+            + [v["pass_if"] + " " + v["fail_if"] for v in e["evals"]]
+        ).lower()
+        invented = _numbers(text) - _numbers(src) - NUMBER_FACTS.get(k, set())
+        assert not invented, (k, invented)
+
+
+def test_every_pattern_has_a_rubric_and_enough_evals():
+    """protects=evals written from the rubric; fails_when=no evals.json rubric, or fewer evals than min(rubric lines, 2); no_claim=eval-to-rubric wording"""
+    for e in entries():
+        rubric = RUBRICS[e["pattern"]]["rubric"]
+        assert len(e["evals"]) >= min(len(rubric), 2), e["pattern"]
+
+
+def test_evals_are_distinct():
+    """protects=each eval tests something new; fails_when=a template repeats or pass_if equals fail_if; no_claim=evals disagree in spirit"""
+    for e in entries():
+        names = [v["template"] for v in e["evals"]]
+        assert len(set(names)) == len(names), e["pattern"]
+        assert all(v["pass_if"].strip().lower() != v["fail_if"].strip().lower() for v in e["evals"]), e["pattern"]
+
+
+def test_entries_are_not_copies():
+    """protects=entries written per pattern; fails_when=two entries share near-identical direction, prompt or condition; no_claim=paraphrased copies"""
+    from difflib import SequenceMatcher
+
+    es = entries()
+    for field in ("direction", "dont_over_correct", "prompt"):
+        for i, a in enumerate(es):
+            for b in es[i + 1 :]:
+                if isinstance(a[field], str) and isinstance(b[field], str):
+                    assert SequenceMatcher(None, a[field], b[field]).ratio() < 0.75, (field, a["pattern"], b["pattern"])
+
+
+def test_placement_parts_are_filled():
+    """protects=a fix placed in prompt or code has that part; fails_when=placement.json says prompt or code and the part is not_applicable; no_claim=part quality"""
+    place = json.loads((DATA / "placement.json").read_text(encoding="utf-8"))["place"]
+    for e in entries():
+        for part in set(place.get(e["pattern"], ["prompt"])) & {"prompt", "code"}:
+            assert not isinstance(e[part], dict), (e["pattern"], part)
+
+
+SCHEMA_CHECKS = ["user_input", "reply", "retrieved", "memory_write", "tool_call", "handoff", "run"]
+
+
+def _drop(part):
+    return lambda e: e.pop(part)
+
+
+def _broken(tmp_path, mutate):
+    e = json.loads((ROOT / "packs" / "pilot" / "answer-buried.json").read_text(encoding="utf-8"))
+    mutate(e)
+    p = tmp_path / "e.json"
+    p.write_text(json.dumps(e), encoding="utf-8")
+    return p
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        *[_drop(part) for part in ("direction", "dont_over_correct", "prompt", "design", "code", "setup_questions", "evals", "guardrail")],
+        lambda e: e["evals"][0].update(fail_if=""),
+        lambda e: e["evals"][0].pop("pass_if"),
+        lambda e: e.update(evals=[]),
+        lambda e: e["guardrail"]["limits"].update(max_words=80),
+        lambda e: e["guardrail"].update(action="apologise"),
+        lambda e: e["guardrail"].update(checks="widget"),
+        lambda e: e.update(pattern="not-a-real-pattern"),
+        lambda e: e.update(score=0.9),
+        lambda e: e.update(prompt={"not_applicable": ""}),
+    ],
+)
+def test_loader_rejects_broken_entries(tmp_path, mutate):
+    """protects=the load tests above mean something; fails_when=load_entry accepts a broken copy of a real entry; no_claim=every possible break"""
+    with pytest.raises(ValueError):
+        load_entry(_broken(tmp_path, mutate))

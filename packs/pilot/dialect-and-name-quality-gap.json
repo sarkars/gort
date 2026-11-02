@@ -13,7 +13,7 @@
     "Never infer protected traits; no dialect-correlated text features in risk or fraud scoring.",
     "A paired-test suite (same request, only name or dialect changed) is a release gate; adverse decisions go to human review."
   ],
-  "code": "p.check_run(run) on paired variants; p.check_tool(risk_flag) -> handoff",
+  "code": "p.check_run(run) on paired variants; p.check_tool_call(call, state) -> handoff when it sets a risk flag",
   "setup_questions": [
     "Which requests can lead to a risk flag, a denial or extra verification?",
     "Which functions truly need the user's name?",
