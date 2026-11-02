@@ -6,6 +6,8 @@ import re
 from enum import Enum
 from importlib.resources import files
 
+from gortguard.guard import Guards
+
 _DATA = files("gortguard") / "data"
 PATTERNS = json.loads((_DATA / "patterns.json").read_text(encoding="utf-8"))
 _CFG = json.loads((_DATA / "bundles.json").read_text(encoding="utf-8"))
@@ -119,8 +121,22 @@ def _focus(name: str):
     )
 
 
-class Pack:
-    def __init__(self, preset=None, bundles=(), exclude=()):
+_NEGATION = r"\b(?:never|not|no|don't|do not|avoid)\b"
+_MODAL = re.compile(_NEGATION + r"|\b(?:always|must|should)\b")
+
+
+def _split(text: str) -> list[str]:
+    return [s.strip() for s in re.split(r"(?<=[.!?;])\s+|\n+", text) if s.strip()]
+
+
+def _core(sentence: str) -> tuple[bool, str]:
+    """(negated, words left after removing negation and modal words)."""
+    low = sentence.lower()
+    return bool(re.search(_NEGATION, low)), " ".join(re.findall(r"[a-z0-9']+", _MODAL.sub(" ", low)))
+
+
+class Pack(Guards):
+    def __init__(self, preset=None, bundles=(), exclude=(), **guard_settings):
         names = list(PRESETS[resolve_preset(preset)]["bundles"]) if preset else []
         names += [resolve_bundle(b) for b in bundles]
         self.bundles = list(dict.fromkeys(names))
@@ -133,19 +149,55 @@ class Pack:
                 raise ValueError(f"Unknown pattern '{pid}'.{hint}")
         fams = {f for b in self.bundles for f in BUNDLES[b]["families"]}
         self.patterns = [p for p in PATTERNS if p["family"] in fams and p["id"] not in set(exclude)]
+        self.not_in_prompt: list[str] = []
+        Guards.__init__(self, {p["id"] for p in self.patterns}, **guard_settings)
 
     @property
     def prompt_patterns(self) -> list[dict]:
         return [p for p in self.patterns if "prompt" in p["place"]]
 
-    def policy(self) -> str:
-        """The policy block: precedence line, then one line per rule the model can follow."""
+    def _lines(self) -> dict[str, list[str]]:
         merged: dict[str, list[str]] = {}
         for p in self.prompt_patterns:
             merged.setdefault(_rule(p["starter_rule"]), []).append(p["id"])
-        lines = [f"- {rule} [{', '.join(ids)}]" for rule, ids in merged.items()]
-        head = f"<!-- gort policy. Bundles: {', '.join(self.bundles)}. {len(merged)} lines. -->"
+        return merged
+
+    def policy(self) -> str:
+        """The policy block: precedence line, then one line per rule the model can follow."""
+        return self.prompt()
+
+    def prompt(self, budget=None, rank=None) -> str:
+        """The policy block, its rule lines within a size budget (characters, set by the team; None is no budget).
+
+        rank maps Pattern ID to a score (severity times likelihood, from gort init); higher goes first.
+        Lines that do not fit are left out and their Pattern IDs listed in self.not_in_prompt
+        ("tested, not in prompt"). The head and the precedence line always stay.
+        """
+        rank = rank or {}
+        merged = sorted(self._lines().items(), key=lambda kv: -max(rank.get(i, 0) for i in kv[1]))
+        lines, self.not_in_prompt, size = [], [], 0
+        for rule, ids in merged:
+            line = f"- {rule} [{', '.join(ids)}]"
+            if budget is not None and size + len(line) + 1 > budget:
+                self.not_in_prompt += ids
+                continue
+            lines.append(line)
+            size += len(line) + 1
+        head = f"<!-- gort policy. Bundles: {', '.join(self.bundles)}. {len(lines)} lines. -->"
         return "\n".join([head, PRECEDENCE, "", *lines]) + "\n"
+
+    def conflicts(self, team_prompt: str) -> list[tuple[str, str]]:
+        """Sentence pairs where the team's prompt and a pack line say the same thing, one of them negated.
+
+        A person decides each pair. Only exact matches once negation and modal words are removed are found.
+        """
+        # ponytail: exact match after dropping negation words; paraphrased conflicts need a judge (gort lint, later)
+        pack_lines = [(_core(s), s) for rule in self._lines() for s in _split(rule)]
+        pairs = []
+        for t in _split(team_prompt):
+            neg, words = _core(t)
+            pairs += [(t, s) for (pneg, pwords), s in pack_lines if words and pwords == words and pneg != neg]
+        return pairs
 
     def checklist(self) -> str:
         """Fixes that do not belong in the prompt, grouped by where they go."""
@@ -202,5 +254,6 @@ class Pack:
         return cases
 
 
-def pack(preset=None, bundles=(), exclude=()) -> Pack:
-    return Pack(preset, bundles, exclude)
+def pack(preset=None, bundles=(), exclude=(), **guard_settings) -> Pack:
+    """guard_settings: enforce, budgets, on_error, log_path, keep_raw, retention_days, settings (see guard.Guards)."""
+    return Pack(preset, bundles, exclude, **guard_settings)
