@@ -23,3 +23,4 @@ jobs:
       - run: ruff check .
       - run: pytest -q
       - run: gort --version
+      - run: gort check packs/pilot examples/packs
