@@ -200,6 +200,10 @@ def test_placement_parts_are_filled():
 SCHEMA_CHECKS = ["user_input", "reply", "retrieved", "memory_write", "tool_call", "handoff", "run"]
 
 
+def _drop(part):
+    return lambda e: e.pop(part)
+
+
 def _broken(tmp_path, mutate):
     e = json.loads((ROOT / "packs" / "pilot" / "answer-buried.json").read_text(encoding="utf-8"))
     mutate(e)
@@ -211,7 +215,7 @@ def _broken(tmp_path, mutate):
 @pytest.mark.parametrize(
     "mutate",
     [
-        *[(lambda part: lambda e: e.pop(part))(part) for part in ("direction", "dont_over_correct", "prompt", "design", "code", "setup_questions", "evals", "guardrail")],
+        *[_drop(part) for part in ("direction", "dont_over_correct", "prompt", "design", "code", "setup_questions", "evals", "guardrail")],
         lambda e: e["evals"][0].update(fail_if=""),
         lambda e: e["evals"][0].pop("pass_if"),
         lambda e: e.update(evals=[]),
