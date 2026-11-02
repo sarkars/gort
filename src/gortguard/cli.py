@@ -69,6 +69,24 @@ def _build(args):
         print("Not yet run. `gort test` will run them against your agent.")
 
 
+def _check(args):
+    from gortguard.packformat import load_entry
+
+    files = [f for a in args.paths for f in (sorted(Path(a).glob("*.json")) if Path(a).is_dir() else [Path(a)])]
+    if not files:
+        print("gort check: no pack entries found", file=sys.stderr)
+        return 1
+    bad = 0
+    for f in files:
+        try:
+            load_entry(f)
+        except (ValueError, OSError) as e:  # json.JSONDecodeError is a ValueError
+            bad += 1
+            print(e if str(f) in str(e) else f"{f}: {e}")
+    print(f"Checked {len(files)} pack entries: {len(files) - bad} pass, {bad} fail.")
+    return 1 if bad else 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="gort", description="GORT: best-practice packs for chat agents.")
     parser.add_argument("--version", action="version", version=f"gort {__version__}")
@@ -92,6 +110,9 @@ def main(argv=None):
     s.add_argument("--focus", help="comma-separated: bundle, family, place (prompt, code, ui, process), "
                    "Pattern ID or over-correct")
     s.set_defaults(fn=_build)
+    s = sub.add_parser("check", help="check pack entries: every part present, every eval with a pass and a fail")
+    s.add_argument("paths", nargs="+", help="pack entry files or folders of them")
+    s.set_defaults(fn=_check)
     args = parser.parse_args(argv)
     if not args.cmd:
         parser.print_help()

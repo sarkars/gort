@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import pytest
 
@@ -96,3 +97,28 @@ def test_exclude_and_constants():
     assert "cold-transfer" not in pk.policy()
     with pytest.raises(ValueError, match="Unknown pattern"):
         P.pack(bundles=["handoff"], exclude=["no-such-pattern"])
+
+
+def test_check_passes_on_pilot_packs(capsys):
+    assert main(["check", "packs/pilot", "examples/packs"]) == 0
+    assert "52 pass, 0 fail" in capsys.readouterr().out
+
+
+def _broken(tmp_path, change):
+    entry = json.loads(Path("examples/packs/talk-to-a-human-ignored-or-looped.json").read_text(encoding="utf-8"))
+    change(entry)
+    f = tmp_path / "broken.json"
+    f.write_text(json.dumps(entry), encoding="utf-8")
+    return str(f)
+
+
+def test_check_fails_on_missing_part(tmp_path, capsys):
+    assert main(["check", _broken(tmp_path, lambda e: e.pop("guardrail"))]) == 1
+    assert "missing guardrail" in capsys.readouterr().out
+
+
+def test_check_fails_on_eval_without_pass_or_fail(tmp_path, capsys):
+    assert main(["check", _broken(tmp_path, lambda e: e["evals"][0].pop("fail_if"))]) == 1
+    assert "missing fail_if" in capsys.readouterr().out
+    assert main(["check", _broken(tmp_path, lambda e: e["evals"][0].update(pass_if=""))]) == 1
+    assert "pass_if: empty" in capsys.readouterr().out
