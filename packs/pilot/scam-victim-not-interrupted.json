@@ -13,7 +13,7 @@
     "The payment tool, not the prompt, rejects irreversible rails while a hold is set; there is no self-serve override on a hard signal.",
     "Payment already sent switches to recovery steps and a priority handoff with the signals, amount, payee, method and whether a caller is live."
   ],
-  "code": "p.guard(payment_tool) blocks while hold is set; p.check_reply(reply, state) -> fix | handoff | ok",
+  "code": "p.check_tool_call(call, state) -> block while hold is set; p.check_reply(reply, state) -> fix | handoff | ok",
   "setup_questions": [
     "Which signals are hard and which soft? (fraud staff set them)",
     "Which payment rails are irreversible?",

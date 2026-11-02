@@ -15,7 +15,7 @@
     "Each message gets one client message ID used on every attempt, and the server stores one copy per ID.",
     "No confirmation by the timeout shows Not sent with Retry, Edit and Copy text."
   ],
-  "code": "p.check_input(message) -> block | ok",
+  "code": "p.check_user_input(message, state) -> block | ok",
   "setup_questions": [
     "How long does the client wait for a send confirmation before showing Not sent?",
     "Which other route (phone, email, web form) is shown after two failed retries?"
@@ -53,6 +53,6 @@
     "condition": "an incoming message carries a client message ID that is already stored",
     "action": "block",
     "limits": {},
-    "also": "return the stored message; no second bot reply"
+    "also": "a resend with a stored client message ID -> block the second bot reply and return the stored one"
   }
 }

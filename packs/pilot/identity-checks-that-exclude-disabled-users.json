@@ -60,6 +60,6 @@
     "condition": "a reply shows an identity check with fewer than two methods that need different abilities, or with no route to a person",
     "action": "fix",
     "limits": {},
-    "also": "a check failed -> name what failed and offer the other routes"
+    "also": "a check failed -> fix: name what failed and offer the other routes"
   }
 }

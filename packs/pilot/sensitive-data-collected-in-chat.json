@@ -12,7 +12,7 @@
     "An inbound filter masks checksum-valid card numbers and ID-number formats before logs, analytics and the model.",
     "Payment uses a hosted page or token, never raw card data."
   ],
-  "code": "p.check_input(message) -> fix | ok",
+  "code": "p.check_user_input(message, state) -> fix | ok",
   "setup_questions": [
     "Which secure path exists for payment (hosted page, secure link, keypad entry on calls)?",
     "Which government ID-number formats apply to this agent's users?",
